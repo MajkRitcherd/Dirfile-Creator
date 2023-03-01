@@ -1,0 +1,21 @@
+################ Directories ################ 
+.vs/
+
+## Lib ##
+Dirfile-lib/bin/
+Dirfile-lib/obj/
+
+## App ##
+Dirfile-Creator/bin/
+Dirfile-Creator/obj/
+
+## Tests ##
+TestResults/
+Dirfile-lib-TEST/bin/
+Dirfile-lib-TEST/obj/
+Dirfile-Creator-TEST/bin/
+Dirfile-Creator-TEST/obj/
+
+# Files
+Development.txt
+.editorconfig
