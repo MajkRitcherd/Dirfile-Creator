@@ -27,10 +27,11 @@ namespace Dirfile_lib.API.Context
 
         private string SerializePath(string str, bool pathFinder)
         {
-            if (pathFinder)
-                return this.Extractor.FindExistingPath(str);
-            else
-                return this.Extractor.FindArguments();
+            return string.Empty;
+            //if (pathFinder)
+            //    return this.Extractor.FindExistingPath(str);
+            //else
+            //    return this.Extractor.FindArguments();
         }
 
         /// <inheritdoc/>
