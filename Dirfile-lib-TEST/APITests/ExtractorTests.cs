@@ -60,9 +60,9 @@ namespace Dirfile_lib_TEST.APITests
 
                 if (testData.value.Value != null)
                 {
-                    Assert.AreEqual(testData.value.Value.ExpInput, this._Extractor.InputString, $"Input strings were not the same: {testData.value.Value.ExpInput}");
-                    Assert.AreEqual(testData.value.Value.ExpDirectorPath, this._Extractor.DirectorPath, $"Input strings were not the same: {testData.value.Value.ExpDirectorPath}");
-                    Assert.AreEqual(testData.value.Value.ExpArgument, this._Extractor.Arguments, $"Input strings were not the same: {testData.value.Value.ExpArgument}");
+                    Assert.AreEqual(testData.value.Value.ExpInput, this._Extractor?.InputString, $"Input strings were not the same: {testData.value.Value.ExpInput}");
+                    Assert.AreEqual(testData.value.Value.ExpDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.value.Value.ExpDirectorPath}");
+                    Assert.AreEqual(testData.value.Value.ExpArgument, this._Extractor?.Arguments, $"Input strings were not the same: {testData.value.Value.ExpArgument}");
                 }
             }
         }
