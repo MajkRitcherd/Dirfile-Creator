@@ -29,7 +29,7 @@ namespace Dirfile_lib.Core.Dirfiles
         public Filer(FileInfo fileInfo)
         {
             this.SetMetadata(fileInfo);
-            
+
             this.Path = fileInfo.FullName.Remove(fileInfo.FullName.LastIndexOf('.'));
             this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf('\\')));
             this.DirectoryName = this.Directory.FullName;
@@ -52,7 +52,7 @@ namespace Dirfile_lib.Core.Dirfiles
                 this.Path = path;
             else
                 this.Path = path.Remove(path.LastIndexOf('.'));
-            
+
             if (!string.IsNullOrEmpty(this.Extension))
                 this.FullName = this.Path + this.Extension;
             else

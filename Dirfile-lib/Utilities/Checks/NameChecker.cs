@@ -18,7 +18,7 @@ using CD = Dirfile_lib.Core.Constants.DefaultValues;
 namespace Dirfile_lib.Utilities.Checks
 {
     /// <summary>
-    /// <see cref="NameChecker"/> checks string (only name of Director of Filer, not full path) 
+    /// <see cref="NameChecker"/> checks string (only name of Director of Filer, not full path)
     ///  and gets Dirfile name, extension and type if it is Filer, Director or emtpy string.
     /// </summary>
     /// <exception cref="DirfileException">Can throw exceptions.</exception>
@@ -33,7 +33,7 @@ namespace Dirfile_lib.Utilities.Checks
         };
 
         /// <summary>
-        /// List of invalid characters that are forbidden in Dirfile name 
+        /// List of invalid characters that are forbidden in Dirfile name
         ///  (name can't starts or ends with these symbols).
         /// </summary>
         private readonly List<char> _InvalidStartEnd = new List<char>()
@@ -155,7 +155,7 @@ namespace Dirfile_lib.Utilities.Checks
         /// <param name="strToCheck">String to check.</param>
         private void SetProps(string strToCheck)
         {
-            this.DirfileType = this._Recognizer.Recognize(strToCheck, out string name, out string ext, out bool isExtension);
+            this.DirfileType = this._Recognizer.Recognize(strToCheck, out string name, out string ext, out bool _);
             this.DirfileName = name;
             this.DirfileExtension = ext;
         }

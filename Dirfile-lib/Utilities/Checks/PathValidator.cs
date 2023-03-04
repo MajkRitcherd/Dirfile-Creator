@@ -15,7 +15,7 @@ namespace Dirfile_lib.Utilities.Checks
         /// <summary>
         /// Gets regex to validate path to the director.
         /// </summary>
-        private readonly static Regex _DirectorRegex = new Regex(@"^(?:[\w]\:|\\)(\\[a-zA-Z_\-\s0-9\.]+)*$");
+        private static readonly Regex _DirectorRegex = new Regex(@"^(?:[\w]\:|\\)(\\[a-zA-Z_\-\s0-9\.]+)*$");
 
         /// <summary>
         /// Validates path.

@@ -67,7 +67,7 @@ namespace Dirfile_lib.API.Context
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, 
+        /// Performs application-defined tasks associated with freeing,
         ///     releasing, or resetting unmanaged resources.
         /// </summary>
         /// <exception cref="DirfileException">Thrown if method is not rewritten!</exception>

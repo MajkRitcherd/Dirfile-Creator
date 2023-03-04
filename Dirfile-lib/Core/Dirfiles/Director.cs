@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Dirfile_lib.Core.Abstraction;
 using Dirfile_lib.Exceptions;

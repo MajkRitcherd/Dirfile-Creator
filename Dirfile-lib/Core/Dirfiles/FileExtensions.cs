@@ -16,8 +16,7 @@ namespace Dirfile_lib.Core
     /// </summary>
     internal class DirfileExtensions
     {
-
-    #region Audio file extensions
+        #region Audio file extensions
 
         /// <summary>
         /// File extensions related to Audio.
@@ -75,10 +74,9 @@ namespace Dirfile_lib.Core
             WPL,
         }
 
+        #endregion Audio file extensions
 
-        #endregion
-
-    #region Compressed file extensions
+        #region Compressed file extensions
 
         /// <summary>
         /// File extensions related to Compressing.
@@ -131,9 +129,9 @@ namespace Dirfile_lib.Core
             ZIP,
         }
 
-    #endregion
+        #endregion Compressed file extensions
 
-    #region Disc and media file extensions
+        #region Disc and media file extensions
 
         /// <summary>
         /// File extensions related to Discs and media.
@@ -166,9 +164,9 @@ namespace Dirfile_lib.Core
             VCD
         }
 
-    #endregion
+        #endregion Disc and media file extensions
 
-    #region Data and database file extensions
+        #region Data and database file extensions
 
         /// <summary>
         /// File extensions related to data.
@@ -232,9 +230,9 @@ namespace Dirfile_lib.Core
             SQL,
         }
 
-    #endregion
+        #endregion Data and database file extensions
 
-    #region E-mail file extension
+        #region E-mail file extension
 
         /// <summary>
         /// File extensions related to Email.
@@ -282,9 +280,9 @@ namespace Dirfile_lib.Core
             VCF
         }
 
-    #endregion
+        #endregion E-mail file extension
 
-    #region Executable file extensions
+        #region Executable file extensions
 
         /// <summary>
         /// File extensions related to Executables.
@@ -342,9 +340,9 @@ namespace Dirfile_lib.Core
             WSF
         }
 
-    #endregion
+        #endregion Executable file extensions
 
-    #region Font file extensions
+        #region Font file extensions
 
         /// <summary>
         /// File extensions related to Fonts.
@@ -372,9 +370,9 @@ namespace Dirfile_lib.Core
             TTF
         }
 
-    #endregion
+        #endregion Font file extensions
 
-    #region Image file extensions
+        #region Image file extensions
 
         /// <summary>
         /// File extensions related to Images.
@@ -447,9 +445,9 @@ namespace Dirfile_lib.Core
             WEBP
         }
 
-    #endregion
+        #endregion Image file extensions
 
-    #region Presentation file extensions
+        #region Presentation file extensions
 
         /// <summary>
         /// File extensions related to Presentation.
@@ -482,9 +480,9 @@ namespace Dirfile_lib.Core
             PPTX
         }
 
-    #endregion
+        #endregion Presentation file extensions
 
-    #region Programming file extensions
+        #region Programming file extensions
 
         /// <summary>
         /// File extensions related to Programming.
@@ -562,9 +560,9 @@ namespace Dirfile_lib.Core
             VB
         }
 
-    #endregion
+        #endregion Programming file extensions
 
-    #region Spreadsheet file extensions
+        #region Spreadsheet file extensions
 
         /// <summary>
         /// File extensions related to Spreadsheet.
@@ -592,9 +590,9 @@ namespace Dirfile_lib.Core
             XLSX
         }
 
-    #endregion
+        #endregion Spreadsheet file extensions
 
-    #region System file extensions
+        #region System file extensions
 
         /// <summary>
         /// File extensions related to System.
@@ -667,9 +665,9 @@ namespace Dirfile_lib.Core
             TMP
         }
 
-    #endregion
+        #endregion System file extensions
 
-    #region Video file extensions
+        #region Video file extensions
 
         /// <summary>
         /// File extensions related to Video.
@@ -757,9 +755,9 @@ namespace Dirfile_lib.Core
             WMV
         }
 
-    #endregion
+        #endregion Video file extensions
 
-    #region Word and text file extensions
+        #region Word and text file extensions
 
         /// <summary>
         /// File extensions related to text.
@@ -807,9 +805,9 @@ namespace Dirfile_lib.Core
             WPD
         }
 
-    #endregion
+        #endregion Word and text file extensions
 
-    #region Other extensions
+        #region Other extensions
 
         /// <summary>
         /// Other file extensions.
@@ -872,7 +870,6 @@ namespace Dirfile_lib.Core
             XHTML
         }
 
-    #endregion
-
+        #endregion Other extensions
     }
 }

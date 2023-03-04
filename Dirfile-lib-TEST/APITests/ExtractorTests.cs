@@ -7,7 +7,6 @@
 
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
-using Dirfile_lib_TEST.UtilitiesTests;
 
 namespace Dirfile_lib_TEST.APITests
 {

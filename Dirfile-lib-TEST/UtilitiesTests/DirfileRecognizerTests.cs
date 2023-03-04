@@ -38,7 +38,7 @@ namespace Dirfile_lib_TEST.UtilitiesTests
         /// <summary>
         /// Dictionary of expected results.
         /// </summary>
-        private readonly Dictionary<string, ExpectedData> Expected = new Dictionary<string, ExpectedData>()
+        private readonly Dictionary<string, ExpectedData> Expected = new()
         {
             { "TestFile1.txt", new ExpectedData() { Type = CT.Filer, Name = "TestFile1", ExtensionName = ".txt", IsExtension = true } },
             { "TestFile2.csv", new ExpectedData() { Type = CT.Filer, Name = "TestFile2", ExtensionName = ".csv", IsExtension = true } },

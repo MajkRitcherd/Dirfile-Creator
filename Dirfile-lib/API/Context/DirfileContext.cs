@@ -6,7 +6,6 @@
 //                              Last change: 13/12/2022     \\
 
 using System;
-using System.IO;
 
 namespace Dirfile_lib.API.Context
 {
@@ -18,7 +17,7 @@ namespace Dirfile_lib.API.Context
     public class DirfileContext : BaseContext
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public DirfileContext()
         {

@@ -7,7 +7,7 @@
 
 using System.Runtime.CompilerServices;
 using Dirfile_lib.Utilities.Checks;
-using CT = Dirfile_lib.Core.Constants.Texts; 
+using CT = Dirfile_lib.Core.Constants.Texts;
 
 [assembly: InternalsVisibleTo("Dirfile-Creator-TEST")]
 
@@ -67,9 +67,9 @@ namespace Dirfile_lib.Utilities
             else
             {
                 var extension = this._StringToRecognize.Substring(index);
-                isValidExtension = true;
+                isValidExtension = this.IsValidExtension(extension);
 
-                if (this.IsValidExtension(extension))
+                if (isValidExtension)
                 {
                     dirfileName = this._StringToRecognize.Substring(0, index);
                     extensionString = extension;
