@@ -33,13 +33,13 @@ namespace Dirfile_lib.API.Extraction
     internal class Extractor
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Extractor"/> class.
+        /// Initializes a new instance of the <see cref="Extractor"/> class.
         /// </summary>
         public Extractor(SlashMode mode)
         {
-            this._NormalizedInputString = string.Empty;
-            this._NormalizedDirectorPath = string.Empty;
-            this._NormalizedArguments = string.Empty;
+            this._NormalizedInputString = null;
+            this._NormalizedDirectorPath = null;
+            this._NormalizedArguments = null;
             this.ExtractMode = mode;
         }
 

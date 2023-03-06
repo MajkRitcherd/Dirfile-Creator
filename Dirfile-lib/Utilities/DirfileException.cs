@@ -15,7 +15,7 @@ namespace Dirfile_lib.Exceptions
     internal class DirfileException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="DirfileException"/> class.
+        /// Initializes a new instance of the <see cref="DirfileException"/> class.
         /// </summary>
         public DirfileException()
             : base()
@@ -23,7 +23,7 @@ namespace Dirfile_lib.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DirfileException"/> class.
+        /// Initializes a new instance of the <see cref="DirfileException"/> class.
         /// </summary>
         /// <param name="message">Message that describes the error.</param>
         public DirfileException(string message)
@@ -32,7 +32,7 @@ namespace Dirfile_lib.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DirfileException"/> class.
+        /// Initializes a new instance of the <see cref="DirfileException"/> class.
         /// </summary>
         /// <param name="message">Message that describes the error.</param>
         /// <param name="innerException">The exception that caused this exception.</param>

@@ -16,6 +16,14 @@ namespace Dirfile_lib.Utilities.Checks
     /// </summary>
     internal class ExtensionChecker : AbstractChecker
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtensionChecker"/> class.
+        /// </summary>
+        public ExtensionChecker() 
+            : base()
+        {
+        }
+
         /// <inheritdoc/>
         protected override bool Check(string strToCheck)
         {

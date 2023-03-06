@@ -28,6 +28,15 @@ namespace Dirfile_lib.Utilities.Checks
         public string ErrorMsg { get; set; }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AbstractChecker"/> class.
+        /// </summary>
+        public AbstractChecker()
+        {
+            this.DirfileExtension = null;
+            this.ErrorMsg = null;
+        }
+
+        /// <summary>
         /// Sets whether check was valid or not.
         /// </summary>
         /// <param name="strToCheck">String to check.</param>

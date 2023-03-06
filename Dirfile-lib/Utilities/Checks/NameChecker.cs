@@ -61,6 +61,16 @@ namespace Dirfile_lib.Utilities.Checks
         /// </summary>
         public string DirfileName { get; protected set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NameChecker"/> class.
+        /// </summary>
+        public NameChecker() 
+            : base()
+        {
+            this.DirfileType = null;
+            this.DirfileName = null;
+        }
+
         /// <inheritdoc/>
         protected override bool Check(string strToCheck)
         {
@@ -130,19 +140,25 @@ namespace Dirfile_lib.Utilities.Checks
         {
             if (this.ContainsInvalidCharacters(strToCheck))
             {
-                this.ErrorMsg = "The input string contains invalid character/s. or starts/ends with invalid characters";
+                this.ErrorMsg = $"The input string [input: {strToCheck}] contains invalid character/s. or starts/ends with invalid characters";
                 return false;
             }
 
             if (this.InvalidStartOrEndOfName(strToCheck))
             {
-                this.ErrorMsg = "The input string starts/ends with invalid characters";
+                this.ErrorMsg = $"The input string [input: {strToCheck}] starts/ends with invalid characters";
                 return false;
             }
 
             if (this.IsNameLengthGreater(strToCheck))
             {
-                this.ErrorMsg = "The DirfileName's length is greater than maximum allowed [30].";
+                this.ErrorMsg = $"The Dirfile name's length [input: {strToCheck}] is greater than maximum allowed [30].";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(strToCheck))
+            {
+                this.ErrorMsg = $"The input string to validate in NameChecker is empty!";
                 return false;
             }
 

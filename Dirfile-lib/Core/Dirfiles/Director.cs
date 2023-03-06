@@ -36,7 +36,7 @@ namespace Dirfile_lib.Core.Dirfiles
         public Director Root { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Director"/> class.
+        /// Initializes a new instance of the <see cref="Director"/> class.
         /// </summary>
         /// <param name="path">Path of the directory.</param>
         public Director(string path)
@@ -48,7 +48,7 @@ namespace Dirfile_lib.Core.Dirfiles
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Direcotr"/> class.
+        /// Initializes a new instance of the <see cref="Direcotr"/> class.
         /// </summary>
         /// <param name="info">Directory info.</param>
         public Director(DirectoryInfo info)
