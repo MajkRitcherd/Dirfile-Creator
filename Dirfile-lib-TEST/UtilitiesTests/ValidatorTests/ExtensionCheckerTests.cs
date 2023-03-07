@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dirfile_lib_TEST.UtilitiesTests
+namespace Dirfile_lib_TEST.UtilitiesTests.ValidatorTests
 {
     /// <summary>
     /// 

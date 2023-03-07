@@ -3,37 +3,34 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 28/02/2023     \\
+//                              Last change: 07/03/2023     \\
 
 using System;
 using System.Linq;
 using Dirfile_lib.Core;
+using Dirfile_lib.Exceptions;
+using CT = Dirfile_lib.Core.Constants.Texts;
 
-namespace Dirfile_lib.Utilities.Checks
+namespace Dirfile_lib.Utilities
 {
     /// <summary>
-    /// <see cref="ExtensionChecker"/> checks whether extension is valid.
+    /// <see cref="EnumFinder"/> implements IOverEnum to find item in enums.
     /// </summary>
-    internal class ExtensionChecker : AbstractChecker
+    internal class EnumFinder : IOverEnums
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExtensionChecker"/> class.
-        /// </summary>
-        public ExtensionChecker() 
-            : base()
-        {
-        }
-
         /// <inheritdoc/>
-        protected override bool Check(string strToCheck)
+        public object FindOverEnums<TSearch>(TSearch searchObj)
         {
+            if (typeof(TSearch) != typeof(string) && typeof(TSearch) != typeof(object))
+                throw new DirfileException("T cannot be other than string or object");
+
             var dirType = typeof(DirfileExtensions);
             var dirProps = dirType.GetMembers();
 
             // Loops over every member of a class
             foreach (var prop in dirProps.Select((value, index) => new { value, index }))
             {
-                if (prop.value.DeclaringType.Name != "DirfileExtensions" || prop.value.Name == ".ctor")
+                if (prop.value.DeclaringType.Name != CT.Props.DirfileExtensions || prop.value.Name == CT.Props.Constructor)
                     continue;
 
                 var member = (Type)dirProps.Where(_ => true).ElementAt(prop.index);
@@ -41,12 +38,12 @@ namespace Dirfile_lib.Utilities.Checks
                 // Loops over every enum defined in that class
                 foreach (var item in Enum.GetNames(member))
                 {
-                    if (("." + item.ToString()).Equals(strToCheck, StringComparison.InvariantCultureIgnoreCase))
-                        return true;
+                    if (item.Equals(searchObj.ToString().Substring(1).ToUpperInvariant(), StringComparison.InvariantCultureIgnoreCase))
+                        return Enum.Parse(member, item);
                 }
             }
 
-            return false;
+            throw new DirfileException("Extension was not found in enums.");
         }
     }
 }

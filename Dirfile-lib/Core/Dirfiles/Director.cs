@@ -3,13 +3,14 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 11/01/2023     \\
+//                              Last change: 07/03/2023     \\
 
 using System;
 using System.IO;
 using System.Reflection;
 using Dirfile_lib.Core.Abstraction;
 using Dirfile_lib.Exceptions;
+using CT = Dirfile_lib.Core.Constants.Texts;
 
 //[assembly: InternalsVisibleTo("Dirfile-Creator")]
 
@@ -182,7 +183,7 @@ namespace Dirfile_lib.Core.Dirfiles
             // Check if directory exists, if not metadata are not set
             foreach (var property in infoProperties)
             {
-                if (property.Name == "Exists")
+                if (property.Name == CT.Props.Exists)
                 {
                     if (property.GetValue(info).ToString() == false.ToString().ToLowerInvariant())
                         return;
@@ -193,7 +194,7 @@ namespace Dirfile_lib.Core.Dirfiles
             {
                 foreach (var thisProperty in thisProperties)
                 {
-                    if (thisProperty.Name == property.Name && thisProperty.Name != "Parent" && thisProperty.Name != "Root")
+                    if (thisProperty.Name == property.Name && thisProperty.Name != CT.Props.Parent && thisProperty.Name != CT.Props.Root)
                     {
                         thisProperty.SetValue(this, property.GetValue(info, null));
                         break;

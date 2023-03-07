@@ -5,12 +5,12 @@
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
 //                              Last change: 22/02/2023     \\
 
-using Dirfile_lib.Utilities.Checks;
+using Dirfile_lib.Utilities.Validation;
 using Dirfile_lib.Core;
 using Dirfile_lib.Exceptions;
 using CT = Dirfile_lib.Core.Constants.Texts;
 
-namespace Dirfile_lib_TEST.UtilitiesTests
+namespace Dirfile_lib_TEST.UtilitiesTests.ValidatorTests
 {
     /// <summary>
     /// Tests <see cref="Checker"/> class.

@@ -3,11 +3,11 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 01/03/2023     \\
+//                              Last change: 07/03/2023     \\
 
-using Dirfile_lib.Utilities.Checks;
+using Dirfile_lib.Utilities.Validation;
 
-namespace Dirfile_lib_TEST.UtilitiesTests
+namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
 {
     /// <summary>
     /// Tests <see cref="PathValidator"/> class.
@@ -36,12 +36,13 @@ namespace Dirfile_lib_TEST.UtilitiesTests
         [TestMethod]
         public void TestValidator()
         {
-            foreach (var item in this._paths.Select((item, index) => new { item, index }))
+
+            foreach (var item in _paths.Select((item, index) => new { item, index }))
             {
                 if (item.index < 6)
-                    Assert.IsTrue(PathValidator.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
+                    Assert.IsTrue(PathValidator.Instance.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
                 else
-                    Assert.IsFalse(PathValidator.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
+                    Assert.IsFalse(PathValidator.Instance.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
             }
         }
     }

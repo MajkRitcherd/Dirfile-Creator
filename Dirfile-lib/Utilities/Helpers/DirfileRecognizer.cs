@@ -3,10 +3,10 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 01/03/2023     \\
+//                              Last change: 07/03/2023     \\
 
 using System.Runtime.CompilerServices;
-using Dirfile_lib.Utilities.Checks;
+using Dirfile_lib.Utilities.Validation;
 using CT = Dirfile_lib.Core.Constants.Texts;
 
 [assembly: InternalsVisibleTo("Dirfile-Creator-TEST")]

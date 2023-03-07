@@ -51,14 +51,18 @@
     <Compile Include="Core\Dirfiles\Filer.cs" />
     <Compile Include="Core\Abstraction\MetadataTimes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\Checks\AbstractChecker.cs" />
-    <Compile Include="Utilities\Checks\NameChecker.cs" />
-    <Compile Include="Utilities\DirfileException.cs" />
-    <Compile Include="Utilities\DirfileRecognizer.cs" />
-    <Compile Include="Utilities\Checks\ExtensionChecker.cs" />
-    <Compile Include="Utilities\EnumFinder.cs" />
-    <Compile Include="Utilities\IOverEnums.cs" />
-    <Compile Include="Utilities\Checks\PathValidator.cs" />
+    <Compile Include="Utilities\Validation\AbstractBaseValidator.cs" />
+    <Compile Include="Utilities\Validation\IValidation.cs" />
+    <Compile Include="Utilities\Validation\RegexValidators\AbstractRegexValidator.cs" />
+    <Compile Include="Utilities\Validation\RegexValidators\ArgumentParser.cs" />
+    <Compile Include="Utilities\Validation\Validators\AbstractValidator.cs" />
+    <Compile Include="Utilities\Validation\Validators\NameChecker.cs" />
+    <Compile Include="Utilities\Helpers\DirfileException.cs" />
+    <Compile Include="Utilities\Helpers\DirfileRecognizer.cs" />
+    <Compile Include="Utilities\Validation\Validators\ExtensionChecker.cs" />
+    <Compile Include="Utilities\Helpers\EnumFinder.cs" />
+    <Compile Include="Utilities\Helpers\IOverEnums.cs" />
+    <Compile Include="Utilities\Validation\RegexValidators\PathValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">

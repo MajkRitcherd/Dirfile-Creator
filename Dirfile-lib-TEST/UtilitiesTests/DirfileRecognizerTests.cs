@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 01/03/2023     \\
+//                              Last change: 07/03/2023     \\
 
 using Dirfile_lib.Utilities;
 using CT = Dirfile_lib.Core.Constants.Texts;
@@ -45,8 +45,8 @@ namespace Dirfile_lib_TEST.UtilitiesTests
             { "TestFile3.tv.bat", new ExpectedData() { Type = CT.Filer, Name = "TestFile3.tv", ExtensionName = ".bat", IsExtension = true } },
             { "TestDirector", new ExpectedData() { Type = CT.Director, Name = "TestDirector", ExtensionName = string.Empty, IsExtension = false } },
             { "TestDirector2", new ExpectedData() { Type = CT.Director, Name = "TestDirector2", ExtensionName = string.Empty, IsExtension = false } },
-            { "TestDirector3.lol", new ExpectedData() { Type = CT.Director, Name = "TestDirector3.lol", ExtensionName = string.Empty, IsExtension = true } },
-            { "Test.Director4", new ExpectedData() { Type = CT.Director, Name = "Test.Director4", ExtensionName = string.Empty, IsExtension = true } },
+            { "TestDirector3.lol", new ExpectedData() { Type = CT.Director, Name = "TestDirector3.lol", ExtensionName = string.Empty, IsExtension = false } },
+            { "Test.Director4", new ExpectedData() { Type = CT.Director, Name = "Test.Director4", ExtensionName = string.Empty, IsExtension = false } },
         };
     }
 
@@ -64,7 +64,7 @@ namespace Dirfile_lib_TEST.UtilitiesTests
         /// Gets or sets the expected name of Filer or Director.
         /// </summary>
         public string? Name { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the expected extension name.
         /// </summary>
