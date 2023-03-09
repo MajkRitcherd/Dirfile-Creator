@@ -3,44 +3,27 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 03/03/2022     \\
+//                              Last change: 09/03/2022     \\
 
 using System.IO;
-using System.Linq;
 using Dirfile_lib.Exceptions;
 
 namespace Dirfile_lib.API.Extraction
 {
     /// <summary>
-    /// Mode of allowed slashes in path string.
-    /// </summary>
-    internal enum SlashMode
-    {
-        /// <summary>
-        /// Forward slash.
-        /// </summary>
-        Forward,
-
-        /// <summary>
-        /// Backward slash.
-        /// </summary>
-        Backward
-    }
-
-    /// <summary>
     /// Extracts Filers, Directors and path from given input.
     /// </summary>
-    internal class Extractor
+    internal class Extractor : BaseExtractor
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Extractor"/> class.
         /// </summary>
         public Extractor(SlashMode mode)
+            : base(mode)
         {
             this._NormalizedInputString = null;
             this._NormalizedDirectorPath = null;
             this._NormalizedArguments = null;
-            this.ExtractMode = mode;
         }
 
         /// <summary>
@@ -54,16 +37,6 @@ namespace Dirfile_lib.API.Extraction
         internal string DirectorPath => (this.ExtractMode == SlashMode.Backward) ? this._NormalizedDirectorPath : this._NormalizedDirectorPath.Replace("\\", "/");
 
         /// <summary>
-        /// Gets or sets the extract mode;
-        /// </summary>
-        internal SlashMode ExtractMode { get; set; }
-
-        /// <summary>
-        /// Gets the input string.
-        /// </summary>
-        internal string InputString => (this.ExtractMode == SlashMode.Backward) ? this._NormalizedInputString : this._NormalizedInputString.Replace("\\", "/");
-
-        /// <summary>
         /// Gets of sets normalized arguments.
         /// </summary>
         private string _NormalizedArguments { get; set; }
@@ -73,21 +46,13 @@ namespace Dirfile_lib.API.Extraction
         /// </summary>
         private string _NormalizedDirectorPath { get; set; }
 
-        /// <summary>
-        /// Gets or sets normalized input.
-        /// </summary>
-        private string _NormalizedInputString { get; set; }
-
-        /// <summary>
-        /// Extract the input string.
-        /// </summary>
-        /// <param name="input">Input string to extract.</param>
-        public void ExtractInput(string input)
+        /// <inheritdoc/>
+        internal override void Extract(string input)
         {
             if (!IsInputConsistent(input))
                 throw new DirfileException($"Input is not consistent: {input}");
 
-            this._NormalizedInputString = input;
+            this.InputString = input;
 
             this.NormalizeInput();
             this.GetDirectorPath();
@@ -120,23 +85,5 @@ namespace Dirfile_lib.API.Extraction
 
             return this._NormalizedDirectorPath;
         }
-
-        /// <summary>
-        /// Checks whether passed input is consistent, i.e. have only '/' or '\'.
-        /// </summary>
-        /// <param name="input">Input string to check.</param>
-        /// <returns>True, if consistent, otherwise false.</returns>
-        private bool IsInputConsistent(string input)
-        {
-            if (this.ExtractMode == SlashMode.Forward)
-                return !(input.Where(ch => ch == '\\').Any()) && input.Where(ch => ch == '/').Count() > 0;
-            else
-                return input.Where(ch => ch == '\\').Count() > 0 && !(input.Where(ch => ch == '/').Any());
-        }
-
-        /// <summary>
-        /// Normalizes the input string, so it workds only with '\' character.
-        /// </summary>
-        private void NormalizeInput() => this._NormalizedInputString = this._NormalizedInputString.Replace("/", "\\");
     }
 }

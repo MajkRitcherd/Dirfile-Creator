@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="API\Context\BaseContext.cs" />
     <Compile Include="API\Context\DirfileContext.cs" />
+    <Compile Include="API\Extraction\BaseExtractor.cs" />
+    <Compile Include="API\Extraction\ArgumentExtractor.cs" />
     <Compile Include="API\Extraction\Extractor.cs" />
     <Compile Include="Core\Abstraction\AbstractMetadata.cs" />
     <Compile Include="Core\Constants.cs" />

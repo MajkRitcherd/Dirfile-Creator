@@ -49,7 +49,7 @@ namespace Dirfile_lib_TEST.APITests
 
                 try
                 {
-                    this._Extractor?.ExtractInput(testData.value.Key);
+                    this._Extractor?.Extract(testData.value.Key);
                 }
                 catch (DirfileException)
                 {
