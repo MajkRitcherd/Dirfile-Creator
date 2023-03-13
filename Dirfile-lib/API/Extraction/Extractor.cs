@@ -11,7 +11,7 @@ using Dirfile_lib.Exceptions;
 namespace Dirfile_lib.API.Extraction
 {
     /// <summary>
-    /// Extracts Filers, Directors and path from given input.
+    /// Extracts arguments and path of existing Director from input.
     /// </summary>
     internal class Extractor : BaseExtractor
     {

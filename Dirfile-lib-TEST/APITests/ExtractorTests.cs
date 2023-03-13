@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 03/03/2023     \\
+//                              Last change: 13/03/2023     \\
 
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
@@ -149,26 +149,26 @@ namespace Dirfile_lib_TEST.APITests
                 }
             };
         }
-    }
-
-    /// <summary>
-    /// Represents expected data.
-    /// </summary>
-    public class ExpectedData
-    {
-        /// <summary>
-        /// Gets or sets the expected argument.
-        /// </summary>
-        public string ExpArgument { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the expected path to director.
+        /// Represents expected data.
         /// </summary>
-        public string ExpDirectorPath { get; set; } = string.Empty;
+        private class ExpectedData
+        {
+            /// <summary>
+            /// Gets or sets the expected argument.
+            /// </summary>
+            public string ExpArgument { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the expected input string.
-        /// </summary>
-        public string ExpInput { get; set; } = string.Empty;
+            /// <summary>
+            /// Gets or sets the expected path to director.
+            /// </summary>
+            public string ExpDirectorPath { get; set; } = string.Empty;
+
+            /// <summary>
+            /// Gets or sets the expected input string.
+            /// </summary>
+            public string ExpInput { get; set; } = string.Empty;
+        }
     }
 }

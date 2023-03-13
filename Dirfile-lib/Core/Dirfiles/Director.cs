@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 13/03/2023     \\
 
 using System;
 using System.IO;
@@ -42,7 +42,13 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <param name="path">Path of the directory.</param>
         public Director(string path)
         {
-            if (path.LastIndexOf('\\') == -1)
+            // Root name should be followed by '\'
+            var lastIndex = path.LastIndexOf('\\');
+
+            if (lastIndex == -1)
+                path += "\\";
+
+            if (lastIndex == 2)
                 this.Initialize(path, true);
             else
                 this.Initialize(path, false);
@@ -147,13 +153,13 @@ namespace Dirfile_lib.Core.Dirfiles
             var index = this.Path.LastIndexOf('\\');
             var lastIndex = this.Path.LastIndexOf('\\');
 
-            if (index == -1 && lastIndex == -1)
+            if (index == 2 && lastIndex == 2)
                 root = true;
 
-            if (lastIndex != -1)
+            if (lastIndex != 2)
                 this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf('\\')));
 
-            if (index == -1 && !root)
+            if (index == 2 && !root)
                 this.Root = new Director(this.Path);
 
             if (this.IsRoot)
@@ -161,7 +167,6 @@ namespace Dirfile_lib.Core.Dirfiles
                 this.Root = null;
                 this.Parent = null;
                 this.Name = this.FullName;
-                this.FullName += "\\";
                 this.Path = this.FullName;
             }
             else

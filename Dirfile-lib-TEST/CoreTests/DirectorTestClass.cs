@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 01/03/2023     \\
+//                              Last change: 13/03/2023     \\
 
 namespace Dirfile_lib_TEST.CoreTests
 {
@@ -70,11 +70,12 @@ namespace Dirfile_lib_TEST.CoreTests
         /// </summary>
         public static void TestDirectorPropertySet()
         {
+            TestRootDirectory();
+
             // Test non-existing directory using DirectoryInfo
             var dirInfo = new DirectoryInfo(_TestPath);
             var dict = new Dictionary<string, object>();
             var director = new Director(dirInfo);
-            //var filer = new Filer(fileInfo);
 
             bool result = ICoreTest.CompareProperties(dirInfo, dict, director, false);
             Assert.IsTrue(result, "Properties are not the same!");
@@ -111,13 +112,34 @@ namespace Dirfile_lib_TEST.CoreTests
         }
 
         /// <summary>
+        /// Tests if properties of a root directory are set correctly.
+        /// </summary>
+        private static void TestRootDirectory()
+        {
+            // Test root directory without '\' character
+            var rootPath = "C:";
+            var director = new Director(rootPath);
+            var dirInfo = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\DirFileTest");
+
+            bool result = ICoreTest.CompareProperties(dirInfo, GetRootDirectory(), director, true);
+            Assert.IsTrue(result, $"Properties of a root '{rootPath}' are wrong!");
+
+            // Test root directory with '\' character
+            rootPath += "\\";
+            director = new Director(rootPath);
+
+            result = ICoreTest.CompareProperties(dirInfo, GetRootDirectory(), director, true);
+            Assert.IsTrue(result, $"Properties of a root '{rootPath}' are wrong!");
+        }
+
+        /// <summary>
         /// Creates test dictionary of expected properties for Director.
         /// </summary>
         /// <param name="dictExist">True if directory exists, otherwise false.</param>
         /// <param name="pathToDict">Path to the directory.</param>
         /// <param name="root">Root director.</param>
         /// <param name="parent">Parent director.</param>
-        /// <returns></returns>
+        /// <returns>Dictionary of expected properties.</returns>
         private static Dictionary<string, object> CreateTestDictionary(bool dictExist, string pathToDict, Director root, Director parent)
         {
             return new Dictionary<string, object>()
@@ -137,6 +159,31 @@ namespace Dirfile_lib_TEST.CoreTests
                 { "Root", root },
                 { "Parent", parent },
                 { "Path", _TestPath }
+            };
+        }
+
+        /// <summary>
+        /// Gets properties of a root path of 'C:\'.
+        /// </summary>
+        private static Dictionary<string, object> GetRootDirectory()
+        {
+            return new Dictionary<string, object>()
+            {
+                { "Attributes", FileAttributes.Hidden | FileAttributes.System | FileAttributes.Directory },
+                { "CreationTime", Directory.GetCreationTime("C:\\") },
+                { "CreationTimeUtc", Directory.GetCreationTimeUtc("C:\\") },
+                { "Exists", true },
+                { "Extension", null },
+                { "FullName", "C:\\" },
+                { "LastAccessTime", Directory.GetLastAccessTime("C:\\") },
+                { "LastAccessTimeUtc", Directory.GetLastAccessTimeUtc("C:\\") },
+                { "LastWriteTime", Directory.GetLastWriteTime("C:\\") },
+                { "LastWriteTimeUtc", Directory.GetLastWriteTimeUtc("C:\\") },
+                { "LinkTarget", null },
+                { "Name", "C:\\" },
+                { "Root", null },
+                { "Parent", null },
+                { "Path", "C:\\" }
             };
         }
     }
