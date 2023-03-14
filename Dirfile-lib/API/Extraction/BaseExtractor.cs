@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 09/03/2022     \\
+//                              Last change: 14/03/2022     \\
 
 using System.Linq;
 
@@ -76,6 +76,6 @@ namespace Dirfile_lib.API.Extraction
         /// <summary>
         /// Normalizes the input string, so it workds only with '\' character.
         /// </summary>
-        protected void NormalizeInput() => this._NormalizedInputString = this.InputString.Replace("/", "\\");
+        protected void NormalizeInput() => this._NormalizedInputString = this.InputString.Replace("/", "\\").Trim();
     }
 }

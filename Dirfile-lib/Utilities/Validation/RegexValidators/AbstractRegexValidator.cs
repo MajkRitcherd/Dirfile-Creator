@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2022     \\
+//                              Last change: 14/03/2022     \\
 
 using System.Text.RegularExpressions;
 
@@ -42,6 +42,13 @@ namespace Dirfile_lib.Utilities.Validation
         public bool IsInvalid(string strToValidate) => !this.IsValid(strToValidate);
 
         /// <inheritdoc/>
-        public bool IsValid(string strToValidate) => this._Regex.IsMatch(strToValidate);
+        public bool IsValid(string strToValidate) => this._Regex.IsMatch(strToValidate) && !EndsWithControlCharacter(strToValidate);
+
+        /// <summary>
+        /// Checks whether string ends with control character.
+        /// </summary>
+        /// <param name="strToValidate">String to validate.</param>
+        /// <returns>True, if ends with an operator, otherwise false.</returns>
+        private bool EndsWithControlCharacter(string strToValidate) => strToValidate.EndsWith("\\") || strToValidate.EndsWith(">") || strToValidate.EndsWith(":>");
     }
 }

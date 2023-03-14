@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 09/03/2023     \\
+//                              Last change: 14/03/2023     \\
 
 using System.Collections.Generic;
 using Dirfile_lib.Exceptions;
@@ -35,8 +35,6 @@ namespace Dirfile_lib.API.Extraction
             : base(mode)
         {
             this.InputString = arguments;
-            this.DirectorArguments = new List<string>();
-            this.FilerArguments = new List<string>();
             this.NameChecker = new NameChecker();
 
             this.NormalizeInput();
@@ -47,16 +45,6 @@ namespace Dirfile_lib.API.Extraction
             this._NormalizedInputString = this._NormalizedInputString.Trim('\\');
             this.Extract(this._NormalizedInputString);
         }
-
-        /// <summary>
-        /// Gets list of arguments of type "Director".
-        /// </summary>
-        internal List<string> DirectorArguments { get; private set; }
-
-        /// <summary>
-        /// Gets list of arguments of type "Filer".
-        /// </summary>
-        internal List<string> FilerArguments { get; private set; }
 
         /// <summary>
         /// Gets <see cref="NameChecker"/> instance.
@@ -110,12 +98,10 @@ namespace Dirfile_lib.API.Extraction
                 switch (this.NameChecker.DirfileType)
                 {
                     case CT.Director:
-                        this.DirectorArguments.Add(this.NameChecker.DirfileName);
                         ArgumentsInOrder.Add(new KeyValuePair<string, string>(CT.Director, this.NameChecker.DirfileName));
                         break;
 
                     case CT.Filer:
-                        this.FilerArguments.Add(this.NameChecker.DirfileName + this.NameChecker.DirfileExtension);
                         ArgumentsInOrder.Add(new KeyValuePair<string, string>(CT.Filer, this.NameChecker.DirfileName + this.NameChecker.DirfileExtension));
                         break;
                 }
