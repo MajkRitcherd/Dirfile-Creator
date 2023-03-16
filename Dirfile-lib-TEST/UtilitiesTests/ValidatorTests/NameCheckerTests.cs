@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 22/02/2023     \\
+//                              Last change: 16/03/2023     \\
 
 using Dirfile_lib.Utilities.Validation;
 using Dirfile_lib.Core;
@@ -62,7 +62,7 @@ namespace Dirfile_lib_TEST.UtilitiesTests.ValidatorTests
                         ext = null;
                     }
 
-                    Assert.AreEqual(data.Value.Type, returned, $"Checker returned wrongly on {data.Key}");
+                    Assert.AreEqual(data.Value!.Type, returned, $"Checker returned wrongly on {data.Key}");
                     Assert.AreEqual(data.Value.Name, checker.DirfileName, $"Checker returned wrongly Name on {data.Key}");
                     Assert.AreEqual(data.Value.ExtensionName, checker.DirfileExtension, $"Checker returned wrongly ExtensionName on {data.Key}");
                     Assert.AreEqual(data.Value.Extension, ext, $"Checker returned wrongly Extension on {data.Key}");

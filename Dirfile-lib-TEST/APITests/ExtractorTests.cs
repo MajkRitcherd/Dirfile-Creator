@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 13/03/2023     \\
+//                              Last change: 15/03/2023     \\
 
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
@@ -14,7 +14,7 @@ namespace Dirfile_lib_TEST.APITests
     /// Tests <see cref="Extractor"/> class.
     /// </summary>
     [TestClass]
-    public class ExtractorTests
+    public class ExtractorTests : BaseExtractingTestClass
     {
         /// <summary>
         /// Gets or sets the <see cref="Extractor"/> class.
@@ -26,11 +26,9 @@ namespace Dirfile_lib_TEST.APITests
         /// </summary>
         private SlashMode _SlashMode { get; set; }
 
-        /// <summary>
-        /// Test initializing.
-        /// </summary>
+        /// <inheritdoc/>
         [TestInitialize]
-        public void Init()
+        public override void Init()
         {
             this._SlashMode = SlashMode.Backward;
             this._Extractor = new Extractor(this._SlashMode);
@@ -40,9 +38,9 @@ namespace Dirfile_lib_TEST.APITests
         /// Tests whole <see cref="Extractor"/>.
         /// </summary>
         [TestMethod]
-        public void TestExtractor()
+        public override void TestExtracting()
         {
-            foreach (var testData in PrepareTestData().Select((value, index) => new { value, index }))
+            foreach (var testData in PrepareExtractorTestData().Select((value, index) => new { value, index }))
             {
                 if (testData.index >= 5)
                     this._SlashMode = SlashMode.Forward;
@@ -64,111 +62,6 @@ namespace Dirfile_lib_TEST.APITests
                     Assert.AreEqual(testData.value.Value.ExpArgument, this._Extractor?.Arguments, $"Input strings were not the same: {testData.value.Value.ExpArgument}");
                 }
             }
-        }
-
-        /// <summary>
-        /// Prepares test data.
-        /// </summary>
-        /// <returns>Dictionary of strings and expected data.</returns>
-        private static Dictionary<string, ExpectedData?> PrepareTestData()
-        {
-            string currDir = Directory.GetCurrentDirectory();
-            currDir = currDir[..currDir.LastIndexOf('\\')];
-
-            return new Dictionary<string, ExpectedData?>()
-            {
-                {
-                    currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1",
-                    null
-                },
-                {
-                    currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
-                    }
-                },
-                {
-                    currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp",
-                    null
-                },
-                {
-                    currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
-                    }
-                },
-                {
-                    currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
-                    }
-                },
-                {
-                    currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
-                    null
-                },
-                {
-                    currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp",
-                    null
-                },
-                {
-                    currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
-                    }
-                },
-                {
-                    currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
-                    }
-                },
-                {
-                    currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp3",
-                    new ExpectedData()
-                    {
-                        ExpInput = currDir + "/testDir/test.txt > testDir2/test2.csv > test3.cpp3",
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp3"
-                    }
-                }
-            };
-        }
-
-        /// <summary>
-        /// Represents expected data.
-        /// </summary>
-        private class ExpectedData
-        {
-            /// <summary>
-            /// Gets or sets the expected argument.
-            /// </summary>
-            public string ExpArgument { get; set; } = string.Empty;
-
-            /// <summary>
-            /// Gets or sets the expected path to director.
-            /// </summary>
-            public string ExpDirectorPath { get; set; } = string.Empty;
-
-            /// <summary>
-            /// Gets or sets the expected input string.
-            /// </summary>
-            public string ExpInput { get; set; } = string.Empty;
         }
     }
 }

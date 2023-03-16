@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 13/03/2023     \\
+//                              Last change: 16/03/2023     \\
 
 namespace Dirfile_lib_TEST.CoreTests
 {
@@ -74,7 +74,7 @@ namespace Dirfile_lib_TEST.CoreTests
 
             // Test non-existing directory using DirectoryInfo
             var dirInfo = new DirectoryInfo(_TestPath);
-            var dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, object?>();
             var director = new Director(dirInfo);
 
             bool result = ICoreTest.CompareProperties(dirInfo, dict, director, false);
@@ -140,9 +140,9 @@ namespace Dirfile_lib_TEST.CoreTests
         /// <param name="root">Root director.</param>
         /// <param name="parent">Parent director.</param>
         /// <returns>Dictionary of expected properties.</returns>
-        private static Dictionary<string, object> CreateTestDictionary(bool dictExist, string pathToDict, Director root, Director parent)
+        private static Dictionary<string, object?> CreateTestDictionary(bool dictExist, string pathToDict, Director root, Director parent)
         {
-            return new Dictionary<string, object>()
+            return new Dictionary<string, object?>()
             {
                 { "Attributes", FileAttributes.Directory },
                 { "CreationTime", dictExist ? Directory.GetCreationTime(pathToDict) : DateTime.MinValue },
@@ -165,9 +165,9 @@ namespace Dirfile_lib_TEST.CoreTests
         /// <summary>
         /// Gets properties of a root path of 'C:\'.
         /// </summary>
-        private static Dictionary<string, object> GetRootDirectory()
+        private static Dictionary<string, object?> GetRootDirectory()
         {
-            return new Dictionary<string, object>()
+            return new Dictionary<string, object?>()
             {
                 { "Attributes", FileAttributes.Hidden | FileAttributes.System | FileAttributes.Directory },
                 { "CreationTime", Directory.GetCreationTime("C:\\") },

@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 06/12/2022     \\
+//                              Last change: 16/03/2023     \\
 
 using System.Reflection;
 
@@ -24,7 +24,7 @@ namespace Dirfile_lib_TEST.CoreTests
         /// <param name="exists">True if file or directory exist, otherwise false.</param>
         /// <returns>True if properties are set correctly, otherwise false.</returns>
         private static bool CompareDictionary<U, V>(U expectedDictionary, V actual, bool exists)
-            where U : IDictionary<string, object>
+            where U : IDictionary<string, object?>
         {
             int setProperties = 0;
 
@@ -39,7 +39,7 @@ namespace Dirfile_lib_TEST.CoreTests
                 {
                     if (expValue.Key == actProperty.Name && expValue.Key == "Directory")
                     {
-                        var expected = ((Director)expValue.Value).FullName;
+                        var expected = ((Director)expValue.Value!).FullName;
 
                         if (actProperty.GetValue(actual) is not Director actValue)
                             return false;
@@ -169,7 +169,7 @@ namespace Dirfile_lib_TEST.CoreTests
         /// <returns>True if they're the same, otherwise returns false.</returns>
         static bool CompareProperties<T, U, V>(T expectedInfo, U expectedDictionary, V actual, bool exists)
             where T : FileSystemInfo
-            where U : IDictionary<string, object>
+            where U : IDictionary<string, object?>
         {
             if (expectedInfo.FullName == Directory.GetCurrentDirectory() + "\\DirFileTest") // Use dictionary as expected results
                 return CompareDictionary(expectedDictionary, actual, exists);

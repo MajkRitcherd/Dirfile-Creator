@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 01/03/2023     \\
+//                              Last change: 16/03/2023     \\
 
 using Dirfile_lib.Core;
 using CD = Dirfile_lib.Core.Constants.DefaultValues;
@@ -60,7 +60,7 @@ namespace Dirfile_lib_TEST.CoreTests
 
             // Test non-existing file using FileInfo
             var fileInfo = new FileInfo(path);
-            var dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, object?>();
             var filer = new Filer(fileInfo);
 
             bool result = ICoreTest.CompareProperties(fileInfo, dict, filer, false);
@@ -107,9 +107,9 @@ namespace Dirfile_lib_TEST.CoreTests
         /// <param name="pathToFile">Path to the file.</param>
         /// <param name="directory">Directoror in which the file is in.</param>
         /// <returns></returns>
-        private static Dictionary<string, object> CreateTestDictionary(bool fileExist, string pathToFile, Director directory)
+        private static Dictionary<string, object?> CreateTestDictionary(bool fileExist, string pathToFile, Director directory)
         {
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "Attributes", FileAttributes.Archive },
                 { "BufferSize", CD.BufferSize },
