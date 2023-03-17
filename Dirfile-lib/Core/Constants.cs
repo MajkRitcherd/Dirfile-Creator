@@ -16,10 +16,14 @@ namespace Dirfile_lib.Core.Constants
         internal const int MaxNameLength = 30;
     }
 
+    /// <summary>
+    /// Declaration of regex patterns.
+    /// </summary>
     internal static class RegexPatterns
     {
         internal const string ArgumentsPattern = "^\\\\(?>[^\\\\|<|>|*|/|:|?|\\\\||\"\"]{1,32}([\\\\|>]|(:>))?)+$";
-        internal const string DirfilePathPattern = @"^(?:[\w]\:|\\)(\\[a-zA-Z_\-\s0-9\.]+)*$";
+        internal const string DirfileNormalizedPathPattern = @"^(?:[\w]\:|\\)(\\[a-zA-Z_\-\s0-9\.]+)*$";
+        internal const string DirfilePathPattern = @"^(?:[\w]\:|/)(/[a-zA-Z_\-\s0-9\.]+)*$";
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ namespace Dirfile_lib.API.Extraction
     /// <summary>
     /// Mode of allowed slashes in path string.
     /// </summary>
-    internal enum SlashMode
+    public enum SlashMode
     {
         /// <summary>
         /// Forward slash.
@@ -65,6 +65,23 @@ namespace Dirfile_lib.API.Extraction
                 return !(input.Where(ch => ch == '\\').Any()) && input.Where(ch => ch == '/').Count() > 0;
             else
                 return input.Where(ch => ch == '\\').Count() > 0 && !(input.Where(ch => ch == '/').Any());
+        }
+
+        /// <summary>
+        /// Switches slash mode between '\' and '/'.
+        /// </summary>
+        internal void SwitchExtractMode()
+        {
+            switch (this.ExtractMode)
+            {
+                case SlashMode.Backward:
+                    this.ExtractMode = SlashMode.Forward;
+                    break;
+
+                case SlashMode.Forward:
+                    this.ExtractMode = SlashMode.Backward;
+                    break;
+            }
         }
 
         /// <summary>

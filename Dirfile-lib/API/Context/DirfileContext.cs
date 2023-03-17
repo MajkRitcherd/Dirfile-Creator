@@ -6,6 +6,7 @@
 //                              Last change: 13/12/2022     \\
 
 using System;
+using Dirfile_lib.API.Extraction;
 
 namespace Dirfile_lib.API.Context
 {
@@ -14,7 +15,7 @@ namespace Dirfile_lib.API.Context
     /// <para>Holds current directory, has methods for creating, deleting dirfiles,
     ///   also takes input and does the magic.</para>
     /// </summary>
-    public class DirfileContext : BaseContext
+    public class DirfileContext : BaseDirfileContext
     {
         /// <summary>
         ///
@@ -34,7 +35,7 @@ namespace Dirfile_lib.API.Context
         }
 
         /// <inheritdoc/>
-        protected override void Initialize()
+        protected override void Initialize(string path, SlashMode slashMode)
         {
             throw new NotImplementedException();
         }

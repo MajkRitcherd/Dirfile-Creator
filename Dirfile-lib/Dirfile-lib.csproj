@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Context\BaseContext.cs" />
+    <Compile Include="API\Context\BaseDirfileContext.cs" />
     <Compile Include="API\Context\DirfileContext.cs" />
+    <Compile Include="API\DirfileCreator.cs" />
+    <Compile Include="API\DiskManager.cs" />
     <Compile Include="API\Extraction\BaseExtractor.cs" />
     <Compile Include="API\Extraction\ArgumentExtractor.cs" />
     <Compile Include="API\Extraction\Extractor.cs" />

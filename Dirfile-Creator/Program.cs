@@ -10,6 +10,8 @@ namespace Creator
         {
             Console.WriteLine("Hellou Dirfile-Creator");
 
+            Console.WriteLine(PathValidator.Instance.IsValid(Directory.GetCurrentDirectory().Replace('\\', '/')));
+
             Console.ReadLine();
         }
     }
