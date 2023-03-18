@@ -229,16 +229,16 @@ namespace Dirfile_lib_TEST.APITests
             {
                 {
                     inputStrings.ElementAt(0),
-                    null
+                    new ExtractorExpectedData()
+                    {
+                        ExpInput = inputStrings.ElementAt(0),
+                        ExpDirectorPath = currDir,
+                        ExpArgument = string.Empty
+                    }
                 },
                 {
                     inputStrings.ElementAt(1),
-                    new ExtractorExpectedData()
-                    {
-                        ExpInput = inputStrings.ElementAt(1),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
-                    }
+                    null
                 },
                 {
                     inputStrings.ElementAt(2),
@@ -246,21 +246,21 @@ namespace Dirfile_lib_TEST.APITests
                     {
                         ExpInput = inputStrings.ElementAt(2),
                         ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                     }
                 },
                 {
                     inputStrings.ElementAt(3),
-                    null
+                    new ExtractorExpectedData()
+                    {
+                        ExpInput = inputStrings.ElementAt(3),
+                        ExpDirectorPath = currDir,
+                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                    }
                 },
                 {
                     inputStrings.ElementAt(4),
-                    new ExtractorExpectedData()
-                    {
-                        ExpInput = inputStrings.ElementAt(4),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
-                    }
+                    null
                 },
                 {
                     inputStrings.ElementAt(5),
@@ -268,12 +268,17 @@ namespace Dirfile_lib_TEST.APITests
                     {
                         ExpInput = inputStrings.ElementAt(5),
                         ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                        ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                     }
                 },
                 {
                     inputStrings.ElementAt(6),
-                    null
+                    new ExtractorExpectedData()
+                    {
+                        ExpInput = inputStrings.ElementAt(6),
+                        ExpDirectorPath = currDir,
+                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                    }
                 },
                 {
                     inputStrings.ElementAt(7),
@@ -281,12 +286,7 @@ namespace Dirfile_lib_TEST.APITests
                 },
                 {
                     inputStrings.ElementAt(8),
-                    new ExtractorExpectedData()
-                    {
-                        ExpInput = inputStrings.ElementAt(8),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
-                    }
+                    null
                 },
                 {
                     inputStrings.ElementAt(9),
@@ -294,7 +294,7 @@ namespace Dirfile_lib_TEST.APITests
                     {
                         ExpInput = inputStrings.ElementAt(9),
                         ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
+                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                     }
                 },
                 {
@@ -303,7 +303,7 @@ namespace Dirfile_lib_TEST.APITests
                     {
                         ExpInput = inputStrings.ElementAt(10),
                         ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp3"
+                        ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                     }
                 },
                 {
@@ -311,6 +311,15 @@ namespace Dirfile_lib_TEST.APITests
                     new ExtractorExpectedData()
                     {
                         ExpInput = inputStrings.ElementAt(11),
+                        ExpDirectorPath = currDir,
+                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp3"
+                    }
+                },
+                {
+                    inputStrings.ElementAt(12),
+                    new ExtractorExpectedData()
+                    {
+                        ExpInput = inputStrings.ElementAt(12),
                         ExpDirectorPath = currDir,
                         ExpArgument = "        > "
                     }
@@ -331,7 +340,20 @@ namespace Dirfile_lib_TEST.APITests
             return new Dictionary<string, ExpectedData?>()
             {
                 {
-                    inputStrings.ElementAt(0), // currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1"
+                    inputStrings.ElementAt(0), // currDir
+                    new ExpectedData()
+                    {
+                        ArgExpData = null,
+                        ExtExpData = new ExtractorExpectedData()
+                        {
+                            ExpInput = inputStrings.ElementAt(0),
+                            ExpDirectorPath = inputStrings.ElementAt(0),
+                            ExpArgument = string.Empty
+                        }
+                    }
+                },
+                {
+                    inputStrings.ElementAt(1), // currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1"
                     new ExpectedData()
                     {
                         ArgExpData = null,
@@ -339,7 +361,7 @@ namespace Dirfile_lib_TEST.APITests
                     }
                 },
                 {
-                    inputStrings.ElementAt(1), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
+                    inputStrings.ElementAt(2), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                     new ExpectedData()
                     {
                         ArgExpData = new ArgumentExtractorExpectedData()
@@ -356,14 +378,14 @@ namespace Dirfile_lib_TEST.APITests
                         },
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(1),
+                            ExpInput = inputStrings.ElementAt(2),
                             ExpDirectorPath = currDir,
                             ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(2), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                    inputStrings.ElementAt(3), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
                     new ExpectedData()
                     {
                         ArgExpData = new ArgumentExtractorExpectedData()
@@ -380,14 +402,14 @@ namespace Dirfile_lib_TEST.APITests
                         },
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(2),
+                            ExpInput = inputStrings.ElementAt(3),
                             ExpDirectorPath = currDir,
                             ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(3), // currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp"
+                    inputStrings.ElementAt(4), // currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = null,
@@ -395,20 +417,20 @@ namespace Dirfile_lib_TEST.APITests
                     }
                 },
                 {
-                    inputStrings.ElementAt(4), // currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
+                    inputStrings.ElementAt(5), // currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = null,
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(4),
+                            ExpInput = inputStrings.ElementAt(5),
                             ExpDirectorPath = currDir,
                             ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(5), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                    inputStrings.ElementAt(6), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = new ArgumentExtractorExpectedData()
@@ -425,14 +447,14 @@ namespace Dirfile_lib_TEST.APITests
                         },
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(5),
+                            ExpInput = inputStrings.ElementAt(6),
                             ExpDirectorPath = currDir,
                             ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(6), // currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                    inputStrings.ElementAt(7), // currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = null,
@@ -440,7 +462,7 @@ namespace Dirfile_lib_TEST.APITests
                     }
                 },
                 {
-                    inputStrings.ElementAt(7), // currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp"
+                    inputStrings.ElementAt(8), // currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = null,
@@ -448,20 +470,20 @@ namespace Dirfile_lib_TEST.APITests
                     }
                 },
                 {
-                    inputStrings.ElementAt(8), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
+                    inputStrings.ElementAt(9), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                     new ExpectedData()
                     {
                         ArgExpData = null,
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(8),
+                            ExpInput = inputStrings.ElementAt(9),
                             ExpDirectorPath = currDir,
                             ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(9), // currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
+                    inputStrings.ElementAt(10), // currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = new ArgumentExtractorExpectedData()
@@ -480,14 +502,14 @@ namespace Dirfile_lib_TEST.APITests
                         },
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(9),
+                            ExpInput = inputStrings.ElementAt(10),
                             ExpDirectorPath = currDir,
                             ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(10), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv :> test3.cpp"
+                    inputStrings.ElementAt(11), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv :> test3.cpp"
                     new ExpectedData()
                     {
                         ArgExpData = new ArgumentExtractorExpectedData()
@@ -504,20 +526,20 @@ namespace Dirfile_lib_TEST.APITests
                         },
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(10),
+                            ExpInput = inputStrings.ElementAt(11),
                             ExpDirectorPath = currDir,
                             ExpArgument = "/testDir/test.txt > testDir2/test2.csv :> test3.cpp3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(11), // currDir.Replace("\\", "/") + "        > "
+                    inputStrings.ElementAt(12), // currDir.Replace("\\", "/") + "        > "
                     new ExpectedData()
                     {
                         ArgExpData = null,
                         ExtExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(11),
+                            ExpInput = inputStrings.ElementAt(12),
                             ExpDirectorPath = currDir,
                             ExpArgument = "        > "
                         }
@@ -537,6 +559,7 @@ namespace Dirfile_lib_TEST.APITests
 
             return new List<string>()
             {
+                currDir,
                 currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1",
                 currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3",
                 currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3",

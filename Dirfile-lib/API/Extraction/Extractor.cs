@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 09/03/2022     \\
+//                              Last change: 18/03/2022     \\
 
 using System.IO;
 using Dirfile_lib.Exceptions;
@@ -49,7 +49,7 @@ namespace Dirfile_lib.API.Extraction
         /// <inheritdoc/>
         internal override void Extract(string input)
         {
-            if (!IsInputConsistent(input))
+            if (!this.IsInputConsistent(input))
                 throw new DirfileException($"Input is not consistent: {input}");
 
             this.InputString = input;
@@ -67,7 +67,7 @@ namespace Dirfile_lib.API.Extraction
         /// <summary>
         /// Extracts path to existing director.
         /// </summary>
-        private void GetDirectorPath() => this.NormalizedArguments = this.GetExistingDirectorPath(this._NormalizedInputString);
+        private void GetDirectorPath() => this.NormalizedDirectorPath = this.GetExistingDirectorPath(this._NormalizedInputString);
 
         /// <summary>
         /// Finds last directory which exists on drive.
@@ -77,6 +77,10 @@ namespace Dirfile_lib.API.Extraction
         private string GetExistingDirectorPath(string input)
         {
             var arrowIndex = input.IndexOf('>');
+
+            if (arrowIndex == -1 && Directory.Exists(this._NormalizedInputString))
+                return this._NormalizedInputString;
+
             int lastSlash = input.LastIndexOf('\\', arrowIndex == -1 ? input.Length - 1 : arrowIndex);
             this.NormalizedDirectorPath = input.Substring(0, lastSlash);
 
