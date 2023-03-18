@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 18/03/2023     \\
 
 namespace Dirfile_lib.Core.Constants
 {
@@ -22,8 +22,8 @@ namespace Dirfile_lib.Core.Constants
     internal static class RegexPatterns
     {
         internal const string ArgumentsPattern = "^\\\\(?>[^\\\\|<|>|*|/|:|?|\\\\||\"\"]{1,32}([\\\\|>]|(:>))?)+$";
-        internal const string DirfileNormalizedPathPattern = @"^(?:[\w]\:|\\)(\\[a-zA-Z_\-\s0-9\.]+)*$";
-        internal const string DirfilePathPattern = @"^(?:[\w]\:|/)(/[a-zA-Z_\-\s0-9\.]+)*$";
+        internal const string DirfileNormalizedPathPattern = @"^(?:[\w]\:|\\)(\\[^\\|<|>|*|/|:|?|\\||""]+[^ ])*$";
+        internal const string DirfilePathPattern = @"^(?:[\w]\:|/)(/[^\\|<|>|*|/|:|?|\\||""]+[^ ])*$";
     }
 
     /// <summary>

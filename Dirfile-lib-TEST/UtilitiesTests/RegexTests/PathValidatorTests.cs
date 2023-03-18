@@ -3,9 +3,11 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 18/03/2023     \\
 
 using Dirfile_lib.Utilities.Validation;
+using Microsoft.Win32;
+using System;
 
 namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
 {
@@ -26,8 +28,12 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
             Directory.GetCurrentDirectory() + "\\Test\\file1.txt",
             Directory.GetCurrentDirectory() + "\\Test\\ss",
             Directory.GetCurrentDirectory() + "\\_Test.csv",
+            Directory.GetCurrentDirectory() + "\\Test dir",
             Directory.GetCurrentDirectory() + "\\Test+Test",
+            Directory.GetCurrentDirectory() + "\\Test  ",
+            Directory.GetCurrentDirectory() + "\\Test*Fail",
             Directory.GetCurrentDirectory() + "\\Test\\Test/v",
+            Directory.GetCurrentDirectory() + "\\>Test File /"
         };
 
         /// <summary>
@@ -36,13 +42,31 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
         [TestMethod]
         public void TestValidator()
         {
-
             foreach (var item in _paths.Select((item, index) => new { item, index }))
             {
-                if (item.index < 6)
-                    Assert.IsTrue(PathValidator.Instance.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
+                var strToValidate = item.item;
+                if (item.index < 8)
+                {
+                    Assert.IsTrue(PathValidator.Instance.IsValid(strToValidate), $"Path with index: {item.index} was badly classified.");
+                    PathValidator.Instance.SwitchSlashMode();
+                    Assert.IsTrue(PathValidator.Instance.IsValid(strToValidate.Replace("\\", "/")));
+                }
                 else
-                    Assert.IsFalse(PathValidator.Instance.IsValid(item.item), $"Path with index: {item.index} was badly classified.");
+                {
+                    Assert.IsFalse(PathValidator.Instance.IsValid(strToValidate), $"Path with index: {item.index} was badly classified.");
+                    PathValidator.Instance.SwitchSlashMode();
+                    
+                    if (item.index >= 10)
+                    {
+                        strToValidate = strToValidate.Replace("\\", "/");
+                        var strToReplace = strToValidate[strToValidate.LastIndexOf("/")..];
+                        strToValidate = string.Concat(strToValidate.AsSpan(0, strToValidate.LastIndexOf("/") - 1), strToReplace.Replace("/", "\\"));
+                    }
+                    
+                    Assert.IsFalse(PathValidator.Instance.IsValid(item.item.Replace("\\", "/")), $"Path with index: {item.index} was badly classified.");
+                }
+
+                PathValidator.Instance.SwitchSlashMode();
             }
         }
     }

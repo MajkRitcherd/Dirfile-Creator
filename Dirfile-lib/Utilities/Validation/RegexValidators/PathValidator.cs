@@ -53,7 +53,7 @@ namespace Dirfile_lib.Utilities.Validation
             switch (this.SlashMode)
             {
                 case SlashMode.Backward:
-                    this.SlashMode = SlashMode.Backward;
+                    this.SlashMode = SlashMode.Forward;
                     this.ChangePattern();
                     break;
 
