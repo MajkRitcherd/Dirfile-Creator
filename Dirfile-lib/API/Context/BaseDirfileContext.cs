@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 17/03/2023     \\
+//                              Last change: 20/03/2023     \\
 
 using System;
 using System.IO;
@@ -22,19 +22,19 @@ namespace Dirfile_lib.API.Context
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
         /// </summary>
-        /// <param name="path">Path to director.</param>
-        /// <param name="slashMode">Slash mode to use.</param>
-        public BaseDirfileContext(string path, SlashMode slashMode = SlashMode.Backward)
+        protected BaseDirfileContext()
         {
-            this.Initialize(path, slashMode);
+            this.Initialize(Directory.GetCurrentDirectory(), SlashMode.Backward);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
         /// </summary>
-        protected BaseDirfileContext()
+        /// <param name="path">Path to director.</param>
+        /// <param name="slashMode">Slash mode to use.</param>
+        protected BaseDirfileContext(string path, SlashMode slashMode)
         {
-            this.Initialize(Directory.GetCurrentDirectory(), SlashMode.Backward);
+            this.Initialize(path, slashMode);
         }
 
         /// <summary>
@@ -77,6 +77,30 @@ namespace Dirfile_lib.API.Context
         public virtual void DeleteDirectorPath(string path) => DirfileCreator.Instance.DeleteDirector(path);
 
         /// <summary>
+        /// Creates Filer.
+        /// </summary>
+        /// <param name="dirName">Name of a new filer.</param>
+        public virtual void CreateFiler(string dirName) => DirfileCreator.Instance.CreateFiler(this.CurrentDirector.Path, dirName);
+
+        /// <summary>
+        /// Creates Filer.
+        /// </summary>
+        /// <param name="path">Path to the filer to create.</param>
+        public virtual void CreateFilerPath(string path) => DirfileCreator.Instance.CreateFiler(path);
+
+        /// <summary>
+        /// Deletes Filer.
+        /// </summary>
+        /// <param name="dirName">Name of a filer to delete.</param>
+        public virtual void DeleteFiler(string dirName) => DirfileCreator.Instance.DeleteFiler(this.CurrentDirector.Path, dirName);
+
+        /// <summary>
+        /// Deletes Filer.
+        /// </summary>
+        /// <param name="path">Path to the filer to delete.</param>
+        public virtual void DeleteFilerPath(string path) => DirfileCreator.Instance.DeleteFiler(path);
+
+        /// <summary>
         /// Changes the actual director and sets current path.
         /// </summary>
         /// <param name="newPath">New path of director.</param>
@@ -99,13 +123,13 @@ namespace Dirfile_lib.API.Context
         /// <exception cref="DirfileException">Thrown if method is not rewritten!</exception>
         public virtual void Dispose()
         {
-            throw new DirfileException("This method must be rewritten!");
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Switches slash mode.
         /// </summary>
-        public void SwitchSlastMode()
+        public void SwitchSlashMode()
         {
             PathValidator.Instance.SwitchSlashMode();
             this.Extractor.SwitchExtractMode();

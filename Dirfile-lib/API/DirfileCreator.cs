@@ -58,8 +58,14 @@ namespace Dirfile_lib.API
         /// <param name="filerName">Name of a new filer.</param>
         public void CreateFiler(string path, string filerName = "")
         {
-            var Filer = new Filer(string.Join("\\", path, filerName));
-            Filer.Create();
+            Filer filer;
+            
+            if (!string.IsNullOrEmpty(filerName))
+                filer = new Filer(string.Join("\\", path, filerName));
+            else
+                filer = new Filer(path);
+
+            filer.Create();
         }
 
         /// <summary>
@@ -69,8 +75,14 @@ namespace Dirfile_lib.API
         /// <param name="filerName">Name of a filer to delete.</param>
         public void DeleteFiler(string path, string filerName = "")
         {
-            var Filer = new Filer(string.Join("\\", path, filerName));
-            Filer.Delete();
+            Filer filer;
+
+            if (!string.IsNullOrEmpty(filerName))
+                filer = new Filer(string.Join("\\", path, filerName));
+            else
+                filer = new Filer(path);
+
+            filer.Delete();
         }
     }
 }

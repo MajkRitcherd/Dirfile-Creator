@@ -7,7 +7,7 @@
 
 using CT = Dirfile_lib.Core.Constants.Texts;
 
-namespace Dirfile_lib_TEST.APITests
+namespace Dirfile_lib_TEST.APITests.ExtractTests
 {
     public abstract class BaseExtractingTestClass
     {

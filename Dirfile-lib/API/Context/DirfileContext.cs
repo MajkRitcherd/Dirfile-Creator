@@ -21,8 +21,13 @@ namespace Dirfile_lib.API.Context
         ///
         /// </summary>
         public DirfileContext()
+            : base()
         {
-            this.Extractor = new Extraction.Extractor(Extraction.SlashMode.Backward);
+        }
+
+        public DirfileContext(string path, SlashMode slashMode = SlashMode.Backward)
+            : base(path, slashMode)
+        {
         }
 
         private string SerializePath(string str, bool pathFinder)
@@ -37,13 +42,14 @@ namespace Dirfile_lib.API.Context
         /// <inheritdoc/>
         protected override void Initialize(string path, SlashMode slashMode)
         {
-            throw new NotImplementedException();
+            base.Initialize(path, slashMode);
+            //throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public override void Dispose()
         {
-            base.Dispose();
+            //base.Dispose();
         }
     }
 }

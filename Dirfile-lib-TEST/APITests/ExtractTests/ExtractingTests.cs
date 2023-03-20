@@ -8,7 +8,7 @@
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
 
-namespace Dirfile_lib_TEST.APITests
+namespace Dirfile_lib_TEST.APITests.ExtractTests
 {
     /// <summary>
     /// Tests <see cref="Extractor"/> and <see cref="ArgumentExtractor"/> classes.

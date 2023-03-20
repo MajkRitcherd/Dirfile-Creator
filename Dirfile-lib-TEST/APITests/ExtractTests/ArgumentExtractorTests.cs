@@ -8,13 +8,13 @@
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
 
-namespace Dirfile_lib_TEST.APITests
+namespace Dirfile_lib_TEST.APITests.ExtractTests
 {
     /// <summary>
     /// Tests <see cref="ArgumentExtractor"/> class.
     /// </summary>
     [TestClass]
-    public class ArgumentExtractorTestClass : BaseExtractingTestClass
+    public class ArgumentExtractorTests : BaseExtractingTestClass
     {
         /// <summary>
         /// Gets or sets slash mode.
