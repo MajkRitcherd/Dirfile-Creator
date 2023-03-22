@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 15/03/2023     \\
+//                              Last change: 22/03/2023     \\
 
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
@@ -48,7 +48,8 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                 try
                 {
                     this._Extractor?.Extract(testData.value.Key);
-                    var argExtractor = new ArgumentExtractor(this._Extractor?.Arguments, this._SlashMode);
+                    var argExtractor = new ArgumentExtractor(this._SlashMode);
+                    argExtractor.Extract(this._Extractor?.Arguments);
 
                     Assert.AreEqual(testData.value.Value?.ExtExpData?.ExpInput, this._Extractor?.InputString, $"Input strings were not the same: {testData.value.Value?.ExtExpData?.ExpInput}");
                     Assert.AreEqual(testData.value.Value?.ExtExpData?.ExpDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.value.Value?.ExtExpData?.ExpDirectorPath}");

@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 18/03/2022     \\
+//                              Last change: 22/03/2022     \\
 
 using System.IO;
 using Dirfile_lib.Exceptions;
@@ -18,6 +18,7 @@ namespace Dirfile_lib.API.Extraction
         /// <summary>
         /// Initializes a new instance of the <see cref="Extractor"/> class.
         /// </summary>
+        /// <param name="mode">Slash mode to use.</param>
         public Extractor(SlashMode mode)
             : base(mode)
         {
@@ -47,7 +48,7 @@ namespace Dirfile_lib.API.Extraction
         internal string NormalizedDirectorPath { get; private set; }
 
         /// <inheritdoc/>
-        internal override void Extract(string input)
+        public override void Extract(string input)
         {
             if (!this.IsInputConsistent(input))
                 throw new DirfileException($"Input is not consistent: {input}");

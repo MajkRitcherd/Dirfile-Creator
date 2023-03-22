@@ -41,7 +41,8 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
 
                 try
                 {
-                    var extractor = new ArgumentExtractor(data.Key, this._SlashMode);
+                    var extractor = new ArgumentExtractor(this._SlashMode);
+                    extractor.Extract(data.Key);
 
                     if (data.Value != null)
                     {

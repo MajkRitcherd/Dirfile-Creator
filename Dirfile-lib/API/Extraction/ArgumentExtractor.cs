@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 14/03/2023     \\
+//                              Last change: 22/03/2023     \\
 
 using System.Collections.Generic;
 using Dirfile_lib.Exceptions;
@@ -28,22 +28,21 @@ namespace Dirfile_lib.API.Extraction
         internal List<string> OperationsInOrder = new List<string>();
 
         /// <summary>
+        /// Gets or sets temporary list.
+        /// </summary>
+        private string _TemporaryString { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ArgumentExtractor"/> class.
         /// </summary>
-        /// <param name="arguments"></param>
-        internal ArgumentExtractor(string arguments, SlashMode mode)
+        /// <param name="mode"></param>
+        internal ArgumentExtractor(SlashMode mode, string arguments = "")
             : base(mode)
         {
-            this.InputString = arguments;
             this.NameChecker = new NameChecker();
 
-            this.NormalizeInput();
-
-            if (!this._Parser.IsValid(this._NormalizedInputString))
-                throw new DirfileException($"Argument string '{arguments}' is not valid!");
-
-            this._NormalizedInputString = this._NormalizedInputString.Trim('\\');
-            this.Extract(this._NormalizedInputString);
+            if (!string.IsNullOrEmpty(arguments))
+                this.Extract(arguments);
         }
 
         /// <summary>
@@ -64,36 +63,55 @@ namespace Dirfile_lib.API.Extraction
         {
             string argument;
             var startIndex = 0;
-            index = this._NormalizedInputString.IndexOfAny(new char[] { '\\', '>', ':' }, startIndex);
+            index = this._TemporaryString.IndexOfAny(new char[] { '\\', '>', ':' }, startIndex);
 
             if (index > -1)
             {
-                if (this._NormalizedInputString[index] == ':')
-                    this.OperationsInOrder.Add(this._NormalizedInputString[index].ToString() + this._NormalizedInputString[index + 1].ToString());
+                if (this._TemporaryString[index] == ':')
+                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString() + this._TemporaryString[index + 1].ToString());
                 else
-                    this.OperationsInOrder.Add(this._NormalizedInputString[index].ToString());
+                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString());
             }
 
             if (index == -1)
-                argument = this._NormalizedInputString;
+                argument = this._TemporaryString;
             else
-                argument = this._NormalizedInputString.Substring(startIndex, index - startIndex);
+                argument = this._TemporaryString.Substring(startIndex, index - startIndex);
 
             return argument.Trim();
         }
 
         /// <inheritdoc/>
-        internal override void Extract(string input)
+        public override void Extract(string input)
+        {
+            this.ArgumentsInOrder.Clear();
+            this.OperationsInOrder.Clear();
+            this.InputString = input;
+
+            this.NormalizeInput();
+
+            if (!this._Parser.IsValid(this._NormalizedInputString))
+                throw new DirfileException($"Argument string '{input}' is not valid!");
+
+            this._TemporaryString = this._NormalizedInputString.Trim('\\');
+            this.ExtractInternal();
+        }
+
+        /// <summary>
+        /// Extracts the input string.
+        /// </summary>
+        /// <exception cref="DirfileException">Throws exception when one of arguments name is not valid.</exception>
+        private void ExtractInternal()
         {
             // Loop over every argument in a string and
             //  decide whether it if of a type 'Filer' or 'Director'
-            while (!string.IsNullOrEmpty(this._NormalizedInputString))
+            while (!string.IsNullOrEmpty(this._TemporaryString))
             {
                 var arg = this.GetArgument(out int index);
                 this.NameChecker.IsValid(arg);
 
                 if (this.NameChecker.Unsuccessful.HasValue && this.NameChecker.Unsuccessful.Value)
-                    throw new DirfileException($"Argument '{this.NameChecker.ErrorMsg}' was not valid!");
+                    throw new DirfileException($"{this.NameChecker.ErrorMsg}");
 
                 switch (this.NameChecker.DirfileType)
                 {
@@ -121,16 +139,16 @@ namespace Dirfile_lib.API.Extraction
             if (index == -1)
                 return string.Empty;
 
-            if (this._NormalizedInputString[index] == ':')
-                return this._NormalizedInputString.Substring(index + 2);
+            if (this._TemporaryString[index] == ':')
+                return this._TemporaryString.Substring(index + 2);
             else
-                return this._NormalizedInputString.Substring(index + 1);
+                return this._TemporaryString.Substring(index + 1);
         }
 
         /// <summary>
         /// Removes argument from argument string.
         /// </summary>
         /// <param name="index">Index of a new substring.</param>
-        private void RemoveArgument(int index) => this._NormalizedInputString = this.GetArgumentSubstring(index).Trim();
+        private void RemoveArgument(int index) => this._TemporaryString = this.GetArgumentSubstring(index).Trim();
     }
 }

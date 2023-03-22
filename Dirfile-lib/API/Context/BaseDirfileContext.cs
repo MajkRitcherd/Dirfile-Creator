@@ -30,7 +30,7 @@ namespace Dirfile_lib.API.Context
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
         /// </summary>
-        /// <param name="path">Path to director.</param>
+        /// <param name="path">Path to director to work from (like relative path).</param>
         /// <param name="slashMode">Slash mode to use.</param>
         protected BaseDirfileContext(string path, SlashMode slashMode)
         {

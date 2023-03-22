@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 14/03/2022     \\
+//                              Last change: 22/03/2022     \\
 
 using System.Linq;
 
@@ -31,9 +31,9 @@ namespace Dirfile_lib.API.Extraction
     internal abstract class BaseExtractor
     {
         /// <summary>
-        ///
+        /// Initializes a new instance of the <see cref="BaseExtractor"/> class.
         /// </summary>
-        /// <param name="mode"></param>
+        /// <param name="mode">Slash mode to use.</param>
         protected BaseExtractor(SlashMode mode)
         {
             this.ExtractMode = mode;
@@ -85,10 +85,10 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
-        /// Extract the input string.
+        /// Extracts the input string.
         /// </summary>
         /// <param name="input">Input string to extract.</param>
-        internal abstract void Extract(string input);
+        public abstract void Extract(string input);
 
         /// <summary>
         /// Normalizes the input string, so it workds only with '\' character.
