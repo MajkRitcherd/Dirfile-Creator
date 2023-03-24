@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 20/03/2023     \\
+//                              Last change: 24/03/2023     \\
 
 using System;
 using System.IO;
@@ -51,6 +51,11 @@ namespace Dirfile_lib.API.Context
         /// Gets or sets the Extractor.
         /// </summary>
         internal Extractor Extractor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the slash mode.
+        /// </summary>
+        internal SlashMode SlashMode { get; set; }
 
         /// <summary>
         /// Creates Director.
@@ -133,6 +138,7 @@ namespace Dirfile_lib.API.Context
         {
             PathValidator.Instance.SwitchSlashMode();
             this.Extractor.SwitchExtractMode();
+            this.SlashMode = PathValidator.Instance.SlashMode;
         }
 
         /// <summary>
@@ -140,9 +146,10 @@ namespace Dirfile_lib.API.Context
         /// </summary>
         protected virtual void Initialize(string path, SlashMode slashMode)
         {
-            this.Extractor = new Extractor(slashMode);
+            this.SlashMode = slashMode;
+            this.Extractor = new Extractor(this.SlashMode);
 
-            if (slashMode != SlashMode.Backward)
+            if (this.SlashMode != SlashMode.Backward)
                 PathValidator.Instance.SwitchSlashMode();
 
             if (PathValidator.Instance.IsInvalid(path))
