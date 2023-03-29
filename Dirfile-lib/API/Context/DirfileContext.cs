@@ -6,10 +6,10 @@
 //                              Last change: 24/03/2023     \\
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.Exceptions;
+using Dirfile_lib.Utilities.Validation;
 using CT = Dirfile_lib.Core.Constants.Texts;
 
 namespace Dirfile_lib.API.Context
@@ -61,7 +61,7 @@ namespace Dirfile_lib.API.Context
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="input"></param>
         public void Create(string input, bool isPath = false)
@@ -86,6 +86,9 @@ namespace Dirfile_lib.API.Context
         {
             this.ArgumentExtractor.Extract(input);
 
+            if (this.SlashMode == SlashMode.Forward)
+                PathValidator.Instance.SwitchSlashMode();
+
             foreach (var arg in this.ArgumentExtractor.ArgumentsInOrder.Select((val, ind) => new { val, ind }))
             {
                 Action<string> func = null;
@@ -102,6 +105,7 @@ namespace Dirfile_lib.API.Context
                         this.DirectorChange(this.CurrentDirector.Path + "\\" + this.ArgumentExtractor.ArgumentsInOrder[arg.ind - 1].Value);
                         this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
                         break;
+
                     case ">":
                         this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
                         break;
@@ -112,6 +116,9 @@ namespace Dirfile_lib.API.Context
                         break;
                 }
             }
+
+            if (this.SlashMode == SlashMode.Forward)
+                PathValidator.Instance.SwitchSlashMode();
         }
 
         /// <summary>

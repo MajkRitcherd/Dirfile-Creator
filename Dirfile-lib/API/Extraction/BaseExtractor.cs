@@ -52,7 +52,7 @@ namespace Dirfile_lib.API.Extraction
         /// <summary>
         /// Gets or sets the extract mode.
         /// </summary>
-        protected SlashMode ExtractMode { get; set; }
+        public SlashMode ExtractMode { get; set; }
 
         /// <summary>
         /// Checks whether passed input is consistent, i.w. have only '/' or '\' based on SlashMode.

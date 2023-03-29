@@ -110,10 +110,13 @@ namespace Dirfile_lib.API.Context
         /// </summary>
         /// <param name="newPath">New path of director.</param>
         /// <returns>Current path.</returns>
-        public virtual string DirectorChange(string newPath)
+        public virtual void DirectorChange(string newPath)
         {
             if (PathValidator.Instance.IsInvalid(newPath))
                 throw new DirfileException($"Invalid path when changing director: {newPath}");
+
+            if (this.SlashMode == SlashMode.Forward)
+                newPath = newPath.Replace('/', '\\');
 
             this.CurrentDirector = new Director(newPath);
             this.DiskManager.ChangeDrive(this.CurrentDirector.Path.Substring(0, 1));
