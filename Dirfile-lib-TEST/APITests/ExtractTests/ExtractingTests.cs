@@ -6,6 +6,7 @@
 //                              Last change: 22/03/2023     \\
 
 using Dirfile_lib.API.Extraction;
+using Dirfile_lib.API.Extraction.Modes;
 using Dirfile_lib.Exceptions;
 
 namespace Dirfile_lib_TEST.APITests.ExtractTests

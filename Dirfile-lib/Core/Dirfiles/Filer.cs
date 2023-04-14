@@ -3,11 +3,10 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 05/04/2023     \\
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Dirfile_lib.Core.Abstraction;
 using Dirfile_lib.Exceptions;
@@ -24,6 +23,11 @@ namespace Dirfile_lib.Core.Dirfiles
     internal class Filer : AbstractMetadata
     {
         /// <summary>
+        /// Enum finder to find item in enums.
+        /// </summary>
+        private readonly EnumFinder EnumFinder = new EnumFinder();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Filer"/> class.
         /// </summary>
         /// <param name="fileInfo">File information.</param>
@@ -32,7 +36,7 @@ namespace Dirfile_lib.Core.Dirfiles
             this.SetMetadata(fileInfo);
 
             this.Path = fileInfo.FullName.Remove(fileInfo.FullName.LastIndexOf('.'));
-            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf('\\')));
+            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(CT.BSlash)));
             this.DirectoryName = this.Directory.FullName;
         }
 
@@ -46,8 +50,12 @@ namespace Dirfile_lib.Core.Dirfiles
         {
             this.Exists = File.Exists(path);
 
-            if (path.ElementAt(path.Length - 4) == '.')
-                this.Extension = path.Substring(path.Length - 4).ToLowerInvariant();
+            var fileName = path.Substring(path.LastIndexOf(CT.BSlash) + 1);
+
+            if (fileName.LastIndexOf('.') != -1)
+                this.Extension = path.Substring(path.LastIndexOf('.')).ToLowerInvariant();
+            else
+                this.Extension = null;
 
             if (path.LastIndexOf('.') == -1)
                 this.Path = path;
@@ -61,7 +69,7 @@ namespace Dirfile_lib.Core.Dirfiles
 
             this.BufferSize = bufferSize;
             this.Options = options;
-            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf('\\')));
+            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(CT.BSlash)));
 
             this.DirectoryName = this.Directory.FullName;
 
@@ -79,7 +87,7 @@ namespace Dirfile_lib.Core.Dirfiles
             else
                 this.Attributes = FileAttributes.Archive;
 
-            this.Name = this.Path.Substring(this.Path.LastIndexOf('\\') + 1) + this.Extension;
+            this.Name = this.Path.Substring(this.Path.LastIndexOf(CT.BSlash) + 1) + this.Extension;
         }
 
         /// <summary>
@@ -91,11 +99,6 @@ namespace Dirfile_lib.Core.Dirfiles
         /// Gets directory.
         /// </summary>
         public Director Directory { get; private set; }
-
-        /// <summary>
-        /// Enum finder to find item in enums.
-        /// </summary>
-        private readonly EnumFinder EnumFinder = new EnumFinder();
 
         /// <summary>
         /// Gets directory name.
@@ -182,18 +185,6 @@ namespace Dirfile_lib.Core.Dirfiles
             File.Delete(path);
         }
 
-        /// <summary>
-        /// Creates a file.
-        /// </summary>
-        /// <param name="path">Path to the file.</param>
-        /// <param name="bufferSize">Buffer size.</param>
-        /// <param name="options">File options.</param>
-        private void Create(string path, int bufferSize, FileOptions options)
-        {
-            FileStream file = File.Create(path, bufferSize, options);
-            file.Close();
-        }
-
         /// <inheritdoc />
         protected override void SetMetadata<T>(T info)
         {
@@ -230,6 +221,18 @@ namespace Dirfile_lib.Core.Dirfiles
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a file.
+        /// </summary>
+        /// <param name="path">Path to the file.</param>
+        /// <param name="bufferSize">Buffer size.</param>
+        /// <param name="options">File options.</param>
+        private void Create(string path, int bufferSize, FileOptions options)
+        {
+            FileStream file = File.Create(path, bufferSize, options);
+            file.Close();
         }
     }
 }

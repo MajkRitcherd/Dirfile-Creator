@@ -48,6 +48,8 @@
     <Compile Include="API\Extraction\BaseExtractor.cs" />
     <Compile Include="API\Extraction\ArgumentExtractor.cs" />
     <Compile Include="API\Extraction\Extractor.cs" />
+    <Compile Include="API\Extraction\PathMode.cs" />
+    <Compile Include="API\Extraction\SlashMode.cs" />
     <Compile Include="Core\Abstraction\AbstractMetadata.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Dirfiles\Director.cs" />

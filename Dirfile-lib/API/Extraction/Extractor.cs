@@ -3,10 +3,12 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 22/03/2022     \\
+//                              Last change: 05/04/2022     \\
 
 using System.IO;
+using Dirfile_lib.API.Extraction.Modes;
 using Dirfile_lib.Exceptions;
+using CT = Dirfile_lib.Core.Constants.Texts;
 
 namespace Dirfile_lib.API.Extraction
 {
@@ -30,12 +32,12 @@ namespace Dirfile_lib.API.Extraction
         /// <summary>
         /// Gets string with arguments from input.
         /// </summary>
-        internal string Arguments => (this.ExtractMode == SlashMode.Backward) ? this.NormalizedArguments : this.NormalizedArguments.Replace("\\", "/");
+        internal string Arguments => (this.ExtractMode == SlashMode.Backward) ? this.NormalizedArguments : this.NormalizedArguments.Replace(CT.BSlash, CT.FSlash);
 
         /// <summary>
         /// Gets the director's path.
         /// </summary>
-        internal string DirectorPath => (this.ExtractMode == SlashMode.Backward) ? this.NormalizedDirectorPath : this.NormalizedDirectorPath.Replace("\\", "/");
+        internal string DirectorPath => (this.ExtractMode == SlashMode.Backward) ? this.NormalizedDirectorPath : this.NormalizedDirectorPath.Replace(CT.BSlash, CT.FSlash);
 
         /// <summary>
         /// Gets of sets normalized arguments.
@@ -82,7 +84,7 @@ namespace Dirfile_lib.API.Extraction
             if (arrowIndex == -1 && Directory.Exists(this._NormalizedInputString))
                 return this._NormalizedInputString;
 
-            int lastSlash = input.LastIndexOf('\\', arrowIndex == -1 ? input.Length - 1 : arrowIndex);
+            int lastSlash = input.LastIndexOf(CT.BSlash, arrowIndex == -1 ? input.Length - 1 : arrowIndex);
             this.NormalizedDirectorPath = input.Substring(0, lastSlash);
 
             if (!Directory.Exists(this.NormalizedDirectorPath))

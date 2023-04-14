@@ -3,9 +3,10 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 14/03/2022     \\
+//                              Last change: 05/04/2022     \\
 
 using System.Text.RegularExpressions;
+using CT = Dirfile_lib.Core.Constants.Texts;
 
 namespace Dirfile_lib.Utilities.Validation
 {
@@ -49,6 +50,6 @@ namespace Dirfile_lib.Utilities.Validation
         /// </summary>
         /// <param name="strToValidate">String to validate.</param>
         /// <returns>True, if ends with an operator, otherwise false.</returns>
-        private bool EndsWithControlCharacter(string strToValidate) => strToValidate.EndsWith("\\") || strToValidate.EndsWith(">") || strToValidate.EndsWith(":>");
+        private bool EndsWithControlCharacter(string strToValidate) => strToValidate.EndsWith(CT.BSlash) || strToValidate.EndsWith(">") || strToValidate.EndsWith(":>");
     }
 }

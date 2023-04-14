@@ -7,7 +7,7 @@
 
 using System;
 using System.Text.RegularExpressions;
-using Dirfile_lib.API.Extraction;
+using Dirfile_lib.API.Extraction.Modes;
 using CRP = Dirfile_lib.Core.Constants.RegexPatterns;
 
 namespace Dirfile_lib.Utilities.Validation
@@ -21,6 +21,14 @@ namespace Dirfile_lib.Utilities.Validation
         private static readonly Lazy<PathValidator> _Validator = new Lazy<PathValidator>(() => new PathValidator());
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PathValidator"/> class.
+        /// </summary>
+        private PathValidator()
+            : base()
+        {
+        }
+
+        /// <summary>
         /// Gets the <see cref="PathValidator"/> instance.
         /// </summary>
         public static PathValidator Instance => _Validator.Value;
@@ -29,14 +37,6 @@ namespace Dirfile_lib.Utilities.Validation
         /// Gets or sets the slash mode.
         /// </summary>
         public SlashMode SlashMode { get; set; } = SlashMode.Backward;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PathValidator"/> class.
-        /// </summary>
-        private PathValidator()
-            : base()
-        {
-        }
 
         /// <inheritdoc/>
         public override void Initialize()

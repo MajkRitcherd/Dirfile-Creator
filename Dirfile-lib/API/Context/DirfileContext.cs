@@ -3,13 +3,13 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 24/03/2023     \\
+//                              Last change: 06/04/2023     \\
 
 using System;
 using System.Linq;
 using Dirfile_lib.API.Extraction;
+using Dirfile_lib.API.Extraction.Modes;
 using Dirfile_lib.Exceptions;
-using Dirfile_lib.Utilities.Validation;
 using CT = Dirfile_lib.Core.Constants.Texts;
 
 namespace Dirfile_lib.API.Context
@@ -22,7 +22,10 @@ namespace Dirfile_lib.API.Context
     public class DirfileContext : BaseDirfileContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DirfileContext"/> class.
+        /// Initializes a new instance of the <see cref="DirfileContext"/> class. <br />
+        ///     - (initial) current directory: {Project file location}\bin\{Configuration}\net6.0 <br />
+        ///     - (initial) slash mode: BACKWARDS. <br />
+        ///     - (initial) path mode: ABSOLUTE.
         /// </summary>
         public DirfileContext()
             : base()
@@ -30,12 +33,27 @@ namespace Dirfile_lib.API.Context
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DirfileContext"/> class.
+        /// Initializes a new instance of the <see cref="DirfileContext"/> class. <br />
+        ///     - (initial) current directory: {Project file location}\bin\{Configuration}\net6.0 <br />
+        ///     - (initial) slash mode: BACKWARDS. <br />
+        ///     - (initial) path mode: ABSOLUTE.
+        /// </summary>
+        /// <param name="slashMode">Slash mode to use.</param>
+        public DirfileContext(SlashMode slashMode)
+            : base(slashMode, PathMode.Absolute)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirfileContext"/> class. <br />
+        ///     - (initial) current directory: PATH. <br />
+        ///     - (initial) slash mode: BACKWARDS. <br />
+        ///     - (initial) path mode: RELATIVE.
         /// </summary>
         /// <param name="path">Path to director to work from (like relative path).</param>
         /// <param name="slashMode">Slash mode to use.</param>
         public DirfileContext(string path, SlashMode slashMode = SlashMode.Backward)
-            : base(path, slashMode)
+            : base(path, slashMode, PathMode.Relative)
         {
         }
 
@@ -44,29 +62,14 @@ namespace Dirfile_lib.API.Context
         /// </summary>
         internal ArgumentExtractor ArgumentExtractor { get; set; }
 
-        /// <inheritdoc/>
-        protected override void Initialize(string path, SlashMode slashMode)
-        {
-            this.Extractor = new Extractor(slashMode);
-            this.Extractor.Extract(path);
-            this.ArgumentExtractor = new ArgumentExtractor(slashMode);
-
-            if (string.IsNullOrEmpty(this.Extractor.Arguments))
-                base.Initialize(path, slashMode);
-            else
-            {
-                this.ArgumentExtractor.Extract(this.Extractor.Arguments);
-                base.Initialize(this.Extractor.DirectorPath, slashMode);
-            }
-        }
-
         /// <summary>
-        ///
+        /// Creates Directors and Filers. <br />
+        ///     - Also changes current directory to directory from absolute path in input (only in mode ABSOLUTE).
         /// </summary>
-        /// <param name="input"></param>
-        public void Create(string input, bool isPath = false)
+        /// <param name="input">Input string.</param>
+        public void Create(string input)
         {
-            if (isPath)
+            if (this.PathMode == PathMode.Absolute)
             {
                 this.Extractor.Extract(input);
                 this.DirectorChange(this.Extractor.DirectorPath);
@@ -75,6 +78,22 @@ namespace Dirfile_lib.API.Context
             }
             else
                 this.CreateImpl(input);
+        }
+
+        /// <inheritdoc/>
+        protected override void Initialize(string path, SlashMode slashMode, PathMode pathMode)
+        {
+            this.Extractor = new Extractor(slashMode);
+            this.Extractor.Extract(path);
+            this.ArgumentExtractor = new ArgumentExtractor(slashMode);
+
+            if (string.IsNullOrEmpty(this.Extractor.Arguments))
+                base.Initialize(path, slashMode, pathMode);
+            else
+            {
+                this.ArgumentExtractor.Extract(this.Extractor.Arguments);
+                base.Initialize(this.Extractor.DirectorPath, slashMode, pathMode);
+            }
         }
 
         /// <summary>
@@ -86,11 +105,10 @@ namespace Dirfile_lib.API.Context
         {
             this.ArgumentExtractor.Extract(input);
 
-            if (this.SlashMode == SlashMode.Forward)
-                PathValidator.Instance.SwitchSlashMode();
-
             foreach (var arg in this.ArgumentExtractor.ArgumentsInOrder.Select((val, ind) => new { val, ind }))
             {
+                var slash = this.SlashMode == SlashMode.Backward ? CT.BSlash : CT.FSlash;
+
                 Action<string> func = null;
                 if (arg.ind == 0)
                 {
@@ -101,8 +119,8 @@ namespace Dirfile_lib.API.Context
 
                 switch (this.ArgumentExtractor.OperationsInOrder[arg.ind - 1])
                 {
-                    case "\\":
-                        this.DirectorChange(this.CurrentDirector.Path + "\\" + this.ArgumentExtractor.ArgumentsInOrder[arg.ind - 1].Value);
+                    case CT.BSlash:
+                        this.DirectorChange(this.CurrentDirectorPath + slash + this.ArgumentExtractor.ArgumentsInOrder[arg.ind - 1].Value);
                         this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
                         break;
 
@@ -111,14 +129,11 @@ namespace Dirfile_lib.API.Context
                         break;
 
                     case ":>":
-                        this.DirectorChange(this.CurrentDirector.Path.Substring(0, this.CurrentDirector.Path.LastIndexOf("\\")));
+                        this.DirectorChange(this.CurrentDirectorPath.Substring(0, this.CurrentDirectorPath.LastIndexOf(slash)));
                         this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
                         break;
                 }
             }
-
-            if (this.SlashMode == SlashMode.Forward)
-                PathValidator.Instance.SwitchSlashMode();
         }
 
         /// <summary>
@@ -156,12 +171,6 @@ namespace Dirfile_lib.API.Context
             }
 
             throw new DirfileException("No suitable function was found!");
-        }
-
-        /// <inheritdoc/>
-        public override void Dispose()
-        {
-            //base.Dispose();
         }
     }
 }

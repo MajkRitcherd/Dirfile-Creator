@@ -6,6 +6,7 @@
 //                              Last change: 22/03/2023     \\
 
 using System.Collections.Generic;
+using Dirfile_lib.API.Extraction.Modes;
 using Dirfile_lib.Exceptions;
 using Dirfile_lib.Utilities.Validation;
 using CT = Dirfile_lib.Core.Constants.Texts;
@@ -26,11 +27,6 @@ namespace Dirfile_lib.API.Extraction
         /// Gets or sets list which holds operations in order.
         /// </summary>
         internal List<string> OperationsInOrder = new List<string>();
-
-        /// <summary>
-        /// Gets or sets temporary list.
-        /// </summary>
-        private string _TemporaryString { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgumentExtractor"/> class.
@@ -56,30 +52,9 @@ namespace Dirfile_lib.API.Extraction
         private ArgumentParser _Parser { get; set; } = ArgumentParser.Instance;
 
         /// <summary>
-        /// Extracts one argument from argument string.
+        /// Gets or sets temporary list.
         /// </summary>
-        /// <returns>String argument.</returns>
-        private string GetArgument(out int index)
-        {
-            string argument;
-            var startIndex = 0;
-            index = this._TemporaryString.IndexOfAny(new char[] { '\\', '>', ':' }, startIndex);
-
-            if (index > -1)
-            {
-                if (this._TemporaryString[index] == ':')
-                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString() + this._TemporaryString[index + 1].ToString());
-                else
-                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString());
-            }
-
-            if (index == -1)
-                argument = this._TemporaryString;
-            else
-                argument = this._TemporaryString.Substring(startIndex, index - startIndex);
-
-            return argument.Trim();
-        }
+        private string _TemporaryString { get; set; }
 
         /// <inheritdoc/>
         public override void Extract(string input)
@@ -127,6 +102,32 @@ namespace Dirfile_lib.API.Extraction
                 this.RemoveArgument(index);
                 this.NameChecker.Clean();
             }
+        }
+
+        /// <summary>
+        /// Extracts one argument from argument string.
+        /// </summary>
+        /// <returns>String argument.</returns>
+        private string GetArgument(out int index)
+        {
+            string argument;
+            var startIndex = 0;
+            index = this._TemporaryString.IndexOfAny(new char[] { '\\', '>', ':' }, startIndex);
+
+            if (index > -1)
+            {
+                if (this._TemporaryString[index] == ':')
+                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString() + this._TemporaryString[index + 1].ToString());
+                else
+                    this.OperationsInOrder.Add(this._TemporaryString[index].ToString());
+            }
+
+            if (index == -1)
+                argument = this._TemporaryString;
+            else
+                argument = this._TemporaryString.Substring(startIndex, index - startIndex);
+
+            return argument.Trim();
         }
 
         /// <summary>

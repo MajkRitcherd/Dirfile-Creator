@@ -3,28 +3,14 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 22/03/2022     \\
+//                              Last change: 05/04/2022     \\
 
 using System.Linq;
+using Dirfile_lib.API.Extraction.Modes;
+using CT = Dirfile_lib.Core.Constants.Texts;
 
 namespace Dirfile_lib.API.Extraction
 {
-    /// <summary>
-    /// Mode of allowed slashes in path string.
-    /// </summary>
-    public enum SlashMode
-    {
-        /// <summary>
-        /// Forward slash.
-        /// </summary>
-        Forward,
-
-        /// <summary>
-        /// Backward slash.
-        /// </summary>
-        Backward
-    }
-
     /// <summary>
     /// Abstract base class for extractors.
     /// </summary>
@@ -40,6 +26,11 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
+        /// Gets or sets the extract mode.
+        /// </summary>
+        public SlashMode ExtractMode { get; set; }
+
+        /// <summary>
         /// Gets or sets Received input.
         /// </summary>
         public string InputString { get; set; }
@@ -50,22 +41,10 @@ namespace Dirfile_lib.API.Extraction
         protected string _NormalizedInputString { get; set; }
 
         /// <summary>
-        /// Gets or sets the extract mode.
+        /// Extracts the input string.
         /// </summary>
-        public SlashMode ExtractMode { get; set; }
-
-        /// <summary>
-        /// Checks whether passed input is consistent, i.w. have only '/' or '\' based on SlashMode.
-        /// </summary>
-        /// <param name="input">Input string to check.</param>
-        /// <returns>True, if consistent, otherwise false.</returns>
-        protected bool IsInputConsistent(string input)
-        {
-            if (this.ExtractMode == SlashMode.Forward)
-                return !(input.Where(ch => ch == '\\').Any()) && input.Where(ch => ch == '/').Count() > 0;
-            else
-                return input.Where(ch => ch == '\\').Count() > 0 && !(input.Where(ch => ch == '/').Any());
-        }
+        /// <param name="input">Input string to extract.</param>
+        public abstract void Extract(string input);
 
         /// <summary>
         /// Switches slash mode between '\' and '/'.
@@ -85,14 +64,21 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
-        /// Extracts the input string.
+        /// Checks whether passed input is consistent, i.w. have only '/' or '\' based on SlashMode.
         /// </summary>
-        /// <param name="input">Input string to extract.</param>
-        public abstract void Extract(string input);
+        /// <param name="input">Input string to check.</param>
+        /// <returns>True, if consistent, otherwise false.</returns>
+        protected bool IsInputConsistent(string input)
+        {
+            if (this.ExtractMode == SlashMode.Forward)
+                return !(input.Where(ch => ch == '\\').Any()) && input.Where(ch => ch == '/').Count() > 0;
+            else
+                return input.Where(ch => ch == '\\').Count() > 0 && !(input.Where(ch => ch == '/').Any());
+        }
 
         /// <summary>
         /// Normalizes the input string, so it workds only with '\' character.
         /// </summary>
-        protected void NormalizeInput() => this._NormalizedInputString = this.InputString.Replace("/", "\\").Trim();
+        protected void NormalizeInput() => this._NormalizedInputString = this.InputString.Replace(CT.FSlash, CT.BSlash).Trim();
     }
 }

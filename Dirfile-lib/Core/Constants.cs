@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 18/03/2023     \\
+//                              Last change: 05/04/2023     \\
 
 namespace Dirfile_lib.Core.Constants
 {
@@ -31,8 +31,10 @@ namespace Dirfile_lib.Core.Constants
     /// </summary>
     internal static class Texts
     {
+        internal const string BSlash = "\\";
         internal const string Director = "Director";
         internal const string Filer = "Filer";
+        internal const string FSlash = "/";
 
         /// <summary>
         /// Text constants related to properties.

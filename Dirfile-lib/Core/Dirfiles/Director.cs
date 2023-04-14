@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 13/03/2023     \\
+//                              Last change: 06/04/2023     \\
 
 using System;
 using System.IO;
@@ -22,31 +22,16 @@ namespace Dirfile_lib.Core.Dirfiles
     internal class Director : AbstractMetadata
     {
         /// <summary>
-        /// Gets if current directory is root directory.
-        /// </summary>
-        public bool IsRoot { get => this.Parent == null && this.Root == null; }
-
-        /// <summary>
-        /// Gets parent directory.
-        /// </summary>
-        public Director Parent { get; private set; }
-
-        /// <summary>
-        /// Gets root directory.
-        /// </summary>
-        public Director Root { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Director"/> class.
         /// </summary>
         /// <param name="path">Path of the directory.</param>
         public Director(string path)
         {
             // Root name should be followed by '\'
-            var lastIndex = path.LastIndexOf('\\');
+            var lastIndex = path.LastIndexOf(CT.BSlash);
 
             if (lastIndex == -1)
-                path += "\\";
+                path += CT.BSlash;
 
             if (lastIndex == 2)
                 this.Initialize(path, true);
@@ -65,8 +50,28 @@ namespace Dirfile_lib.Core.Dirfiles
             this.Path = this.FullName;
             this.Extension = null;
 
-            this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf('\\')));
-            this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf('\\')));
+            this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(CT.BSlash)));
+            this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(CT.BSlash)));
+        }
+
+        /// <summary>
+        /// Gets if current directory is root directory.
+        /// </summary>
+        public bool IsRoot { get => this.Parent == null && this.Root == null; }
+
+        /// <summary>
+        /// Gets parent directory.
+        /// </summary>
+        public Director Parent { get; private set; }
+
+        /// <summary>
+        /// Gets root directory.
+        /// </summary>
+        public Director Root { get; private set; }
+
+        public Director ChangePath(string path)
+        {
+            return new Director(path);
         }
 
         /// <summary>
@@ -99,9 +104,17 @@ namespace Dirfile_lib.Core.Dirfiles
         /// Deletes directory specified by path.
         /// </summary>
         /// <param name="path">Path to the directory.</param>
-        public void Delete(string path)
+        public void Delete(bool deleteEverything = false)
         {
-            this.Delete(path);
+            try
+            {
+                Directory.Delete(this.FullName, deleteEverything);
+                this.Exists = false;
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
         }
 
         /// <summary>
@@ -109,71 +122,9 @@ namespace Dirfile_lib.Core.Dirfiles
         /// </summary>
         /// <param name="path">Path to the directory.</param>
         /// <param name="recursive">If true, deletes any subdirectories and files.</param>
-        public void Delete(string path, bool recursive = false)
+        public void Delete(string path, bool deleteEverything = false)
         {
-            Directory.Delete(path, recursive);
-        }
-
-        /// <summary>
-        /// Creates a directory.
-        /// </summary>
-        /// <param name="path">Path to the directory.</param>
-        /// <param name="security">Security.</param>
-        private void Create(string path)
-        {
-            var info = Directory.CreateDirectory(path);
-            this.Parent = new Director(info.Parent);
-            this.Root = new Director(info.Root);
-            this.SetMetadata(info);
-        }
-
-        public Director ChangePath(string path)
-        {
-            return new Director(path);
-        }
-
-        /// <summary>
-        /// Initializes a Director
-        /// </summary>
-        /// <param name="path">Path of the directoy.</param>
-        /// <param name="root">True if root, otherwise false.</param>
-        private void Initialize(string path, bool root)
-        {
-            this.Path = path;
-
-            this.Exists = Directory.Exists(this.Path);
-            this.Attributes = FileAttributes.Directory;
-
-            if (this.Exists)
-                this.SetMetadata(new DirectoryInfo(this.Path));
-
-            this.FullName = this.Path;
-            this.Extension = null;
-
-            var index = this.Path.LastIndexOf('\\');
-            var lastIndex = this.Path.LastIndexOf('\\');
-
-            if (index == 2 && lastIndex == 2)
-                root = true;
-
-            if (lastIndex != 2)
-                this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf('\\')));
-
-            if (index == 2 && !root)
-                this.Root = new Director(this.Path);
-
-            if (this.IsRoot)
-            {
-                this.Root = null;
-                this.Parent = null;
-                this.Name = this.FullName;
-                this.Path = this.FullName;
-            }
-            else
-            {
-                this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf('\\')));
-                this.Name = this.Path.Substring(lastIndex + 1);
-            }
+            Directory.Delete(path, deleteEverything);
         }
 
         /// <inheritdoc />
@@ -205,6 +156,63 @@ namespace Dirfile_lib.Core.Dirfiles
                         break;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Creates a directory.
+        /// </summary>
+        /// <param name="path">Path to the directory.</param>
+        /// <param name="security">Security.</param>
+        private void Create(string path)
+        {
+            var info = Directory.CreateDirectory(path);
+            this.Parent = new Director(info.Parent);
+            this.Root = new Director(info.Root);
+            this.SetMetadata(info);
+        }
+
+        /// <summary>
+        /// Initializes a Director
+        /// </summary>
+        /// <param name="path">Path of the directoy.</param>
+        /// <param name="root">True if root, otherwise false.</param>
+        private void Initialize(string path, bool root)
+        {
+            this.Path = path;
+
+            this.Exists = Directory.Exists(this.Path);
+            this.Attributes = FileAttributes.Directory;
+
+            if (this.Exists)
+                this.SetMetadata(new DirectoryInfo(this.Path));
+
+            this.FullName = this.Path;
+            this.Extension = null;
+
+            var index = this.Path.LastIndexOf(CT.BSlash);
+            var lastIndex = this.Path.LastIndexOf(CT.BSlash);
+
+            if (index == 2 && lastIndex == 2)
+                root = true;
+
+            if (lastIndex != 2)
+                this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(CT.BSlash)));
+
+            if (index == 2 && !root)
+                this.Root = new Director(this.Path);
+
+            if (this.IsRoot)
+            {
+                this.Root = null;
+                this.Parent = null;
+                this.Name = this.FullName;
+                this.Path = this.FullName;
+            }
+            else
+            {
+                this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(CT.BSlash)));
+                this.Name = this.Path.Substring(lastIndex + 1);
             }
         }
     }
