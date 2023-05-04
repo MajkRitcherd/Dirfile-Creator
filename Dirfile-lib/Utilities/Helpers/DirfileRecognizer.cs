@@ -3,25 +3,22 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 26/04/2023     \\
 
-using System.Runtime.CompilerServices;
 using Dirfile_lib.Utilities.Validation;
-using CT = Dirfile_lib.Core.Constants.Texts;
-
-[assembly: InternalsVisibleTo("Dirfile-Creator-TEST")]
+using DirfileType = Dirfile_lib.Core.Constants.DirFile.Types;
 
 namespace Dirfile_lib.Utilities
 {
     /// <summary>
-    /// Can recognize if given string is filer or director.
+    /// Recognizes if given string is filer or director.
     /// </summary>
-    internal class DirfileNameRecognizer
+    internal class DirfileRecognizer
     {
         /// <summary>
-        /// Gets <see cref="ExtensionChecker"/> class.
+        /// Gets <see cref="ExtensionValidator"/> class.
         /// </summary>
-        private readonly ExtensionChecker _ExtensionChecker = new ExtensionChecker();
+        private readonly ExtensionValidator _ExtensionChecker = new ExtensionValidator();
 
         /// <summary>
         /// Gets or sets the string to recognize.
@@ -31,68 +28,64 @@ namespace Dirfile_lib.Utilities
         /// <summary>
         /// Recognizes if given string is Filer or Director.
         /// </summary>
-        /// <param name="strToRecognize">Text to check.</param>
-        /// <param name="dirfileName">Out parameter: Returns name.</param>
-        /// <param name="extensionStr">Out parameter: Returns extension.</param>
-        /// <returns>Recognizes if given string is extension or not.</returns>
-        public string Recognize(string strToRecognize, out string dirfileName, out string extensionStr, out bool isValidExtension)
+        /// <param name="stringToRecognize">String to recognize.</param>
+        /// <param name="dirfileName">Out parameter: Returns name of a Filer or Director.</param>
+        /// <param name="extensionString">Out parameter: Returns Extension with dot represented by a string.</param>
+        /// <returns>Type of a Dirfile, either Filer or Director.</returns>
+        internal string Recognize(string stringToRecognize, out string dirfileName, out string extensionString, out bool isValidExtension)
         {
-            this._StringToRecognize = strToRecognize;
-            var dotIndex = this._StringToRecognize.LastIndexOf('.');
+            this._StringToRecognize = stringToRecognize;
+            var lastIndexOfDot = this._StringToRecognize.LastIndexOf('.');
 
-            var dirfileType = this.GetData(dotIndex, out dirfileName, out extensionStr, out isValidExtension);
+            var dirfileType = this.GetDirfileData(lastIndexOfDot, out dirfileName, out extensionString, out isValidExtension);
             this._StringToRecognize = null;
 
             return dirfileType;
         }
 
         /// <summary>
-        /// Gets data from string
+        /// Gets data (type, name, extension name [if existts], extension [if existts]) from string to recognize.
         /// </summary>
-        /// <param name="index">Index of a '.' in name.</param>
-        /// <param name="strToRecognize">String to recognize.</param>
+        /// <param name="dotIndex">Index of a dot inside a string to recognize.</param>
         /// <param name="dirfileName">Name of a Filer or Director.</param>
-        /// <param name="extensionString">Extension name.</param>
+        /// <param name="extensionString">Extension with dot represented by a string.</param>
         /// <param name="isValidExtension">True, if extension is valid, otherwise false.</param>
-        /// <returns>Type of a Dirfilte, either Filer or Director.</returns>
-        private string GetData(int index, out string dirfileName, out string extensionString, out bool isValidExtension)
+        /// <returns>Type of a Dirfile, either Filer or Director.</returns>
+        private string GetDirfileData(int dotIndex, out string dirfileName, out string extensionString, out bool isValidExtension)
         {
-            if (index == -1)
+            if (dotIndex == -1)
             {
                 isValidExtension = false;
                 dirfileName = this._StringToRecognize;
                 extensionString = string.Empty;
-                return CT.Director;
+                return DirfileType.Director;
             }
             else
             {
-                var extension = this._StringToRecognize.Substring(index);
+                var extension = this._StringToRecognize.Substring(dotIndex);
                 isValidExtension = this.IsValidExtension(extension);
 
                 if (isValidExtension)
                 {
-                    dirfileName = this._StringToRecognize.Substring(0, index);
+                    dirfileName = this._StringToRecognize.Substring(0, dotIndex);
                     extensionString = extension;
-                    return CT.Filer;
+                    return DirfileType.Filer;
                 }
                 else
                 {
                     dirfileName = this._StringToRecognize;
                     extensionString = string.Empty;
                     this._StringToRecognize = null;
-                    return CT.Director;
+                    return DirfileType.Director;
                 }
             }
         }
 
         /// <summary>
-        /// Checks whether given string is extension or not.
+        /// Validates whether given string is extension or not.
         /// </summary>
-        /// <param name="extension">Text to check.</param>
+        /// <param name="extensionToValidate">Extension to validate.</param>
         /// <returns>True if it's extension, otherwise false.</returns>
-        private bool IsValidExtension(string extension)
-        {
-            return this._ExtensionChecker.IsValid(extension);
-        }
+        private bool IsValidExtension(string extensionToValidate) => this._ExtensionChecker.IsValid(extensionToValidate);
     }
 }

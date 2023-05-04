@@ -3,9 +3,11 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 15/03/2023     \\
+//                              Last change: 26/04/2023     \\
 
-using CT = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
+using DirfileOperations = Dirfile_lib.Core.Constants.DirFile.Operations;
+using DirfileTypes = Dirfile_lib.Core.Constants.DirFile.Types;
 
 namespace Dirfile_lib_TEST.APITests.ExtractTests
 {
@@ -25,7 +27,7 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         /// Prepares test data with expected data.
         /// </summary>
         /// <returns>Dictionary of test data (string with arguments) and expected data.</returns>
-        protected static Dictionary<string, ArgumentExtractorExpectedData?> PrepareArgExtractorTestData()
+        protected static Dictionary<string, ArgumentExtractorExpectedData?> GetArgumentExtractorTestData()
         {
             return new Dictionary<string, ArgumentExtractorExpectedData?>()
             {
@@ -39,9 +41,9 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     new ArgumentExtractorExpectedData()
                     {
                         OperationsInOrder = new List<string>() {},
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir")
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir")
                         }
                     }
                 },
@@ -53,11 +55,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "\\testDir > testDir2",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
                         }
                     }
                 },
@@ -65,11 +67,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "\\testDir > testFile.txt",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.txt"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.txt"),
                         }
                     }
                 },
@@ -77,12 +79,12 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "\\testDir > testDir2 :> testDir3",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">", ":>" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next, DirfileOperations.Prev },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir3"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3"),
                         }
                     }
                 },
@@ -94,11 +96,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "\\test dir     >    testFile.csv",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "test dir"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.csv"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "test dir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.csv"),
                         }
                     }
                 },
@@ -106,13 +108,13 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "\\testDir > testDir2\\testFile.csv :> testDir3",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">", "\\", ":>" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Prev },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.csv"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir3"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.csv"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3"),
                         }
                     }
                 },
@@ -131,9 +133,9 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     new ArgumentExtractorExpectedData()
                     {
                         OperationsInOrder = new List<string>() {},
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir")
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir")
                         }
                     }
                 },
@@ -145,11 +147,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "/testDir > testDir2",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
                         }
                     }
                 },
@@ -157,11 +159,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "/testDir > testFile.txt",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.txt"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.txt"),
                         }
                     }
                 },
@@ -169,12 +171,12 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "/testDir > testDir2 :> testDir3",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">", ":>" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next, DirfileOperations.Prev },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir3"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3"),
                         }
                     }
                 },
@@ -186,11 +188,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "/test dir     >    testFile.csv",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "test dir"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.csv"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "test dir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.csv"),
                         }
                     }
                 },
@@ -198,13 +200,13 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     "/testDir > testDir2/testFile.csv :> testDir3",
                     new ArgumentExtractorExpectedData()
                     {
-                        OperationsInOrder = new List<string>() { ">", "\\", ":>" },
-                        ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                        OperationsInOrder = new List<string>() { DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Prev },
+                        ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>(CT.Director, "testDir"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                            new KeyValuePair<string, string>(CT.Filer, "testFile.csv"),
-                            new KeyValuePair<string, string>(CT.Director, "testDir3"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                            new KeyValuePair<string, string>(DirfileTypes.Filer, "testFile.csv"),
+                            new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3"),
                         }
                     }
                 },
@@ -219,109 +221,109 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         /// Prepares test data.
         /// </summary>
         /// <returns>Dictionary of test data (input string) and expected data.</returns>
-        protected static Dictionary<string, ExtractorExpectedData?> PrepareExtractorTestData()
+        protected static Dictionary<string, ExtractorExpectedData?> GetExtractorTestData()
         {
-            var currDir = Directory.GetCurrentDirectory();
-            currDir = currDir[..currDir.LastIndexOf('\\')];
-            var inputStrings = GetTestInputStrings();
+            var currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory[..currentDirectory.LastIndexOf(Chars.BSlash)];
+            var testStrings = GetTestStrings();
 
             return new Dictionary<string, ExtractorExpectedData?>()
             {
                 {
-                    inputStrings.ElementAt(0),
+                    testStrings.ElementAt(0),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(0),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = string.Empty
+                        ExpectedInput = testStrings.ElementAt(0),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = string.Empty
                     }
                 },
                 {
-                    inputStrings.ElementAt(1),
+                    testStrings.ElementAt(1),
                     null
                 },
                 {
-                    inputStrings.ElementAt(2),
+                    testStrings.ElementAt(2),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(2),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
+                        ExpectedInput = testStrings.ElementAt(2),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                     }
                 },
                 {
-                    inputStrings.ElementAt(3),
+                    testStrings.ElementAt(3),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(3),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                        ExpectedInput = testStrings.ElementAt(3),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
                     }
                 },
                 {
-                    inputStrings.ElementAt(4),
+                    testStrings.ElementAt(4),
                     null
                 },
                 {
-                    inputStrings.ElementAt(5),
+                    testStrings.ElementAt(5),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(5),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
+                        ExpectedInput = testStrings.ElementAt(5),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                     }
                 },
                 {
-                    inputStrings.ElementAt(6),
+                    testStrings.ElementAt(6),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(6),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                        ExpectedInput = testStrings.ElementAt(6),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                     }
                 },
                 {
-                    inputStrings.ElementAt(7),
+                    testStrings.ElementAt(7),
                     null
                 },
                 {
-                    inputStrings.ElementAt(8),
+                    testStrings.ElementAt(8),
                     null
                 },
                 {
-                    inputStrings.ElementAt(9),
+                    testStrings.ElementAt(9),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(9),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
+                        ExpectedInput = testStrings.ElementAt(9),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                     }
                 },
                 {
-                    inputStrings.ElementAt(10),
+                    testStrings.ElementAt(10),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(10),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
+                        ExpectedInput = testStrings.ElementAt(10),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                     }
                 },
                 {
-                    inputStrings.ElementAt(11),
+                    testStrings.ElementAt(11),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(11),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp3"
+                        ExpectedInput = testStrings.ElementAt(11),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp3"
                     }
                 },
                 {
-                    inputStrings.ElementAt(12),
+                    testStrings.ElementAt(12),
                     new ExtractorExpectedData()
                     {
-                        ExpInput = inputStrings.ElementAt(12),
-                        ExpDirectorPath = currDir,
-                        ExpArgument = "        > "
+                        ExpectedInput = testStrings.ElementAt(12),
+                        ExpectedDirectorPath = currentDirectory,
+                        ExpectedArgument = "        > "
                     }
                 }
             };
@@ -331,217 +333,217 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         /// Prepares test data with expected data.
         /// </summary>
         /// <returns>Dictionary of test data (input string) and expected data.</returns>
-        protected static Dictionary<string, ExpectedData?> PrepareTestData()
+        protected static Dictionary<string, ExpectedData?> GetExtractingTestData()
         {
-            var currDir = Directory.GetCurrentDirectory();
-            currDir = currDir[..currDir.LastIndexOf('\\')];
-            var inputStrings = GetTestInputStrings();
+            var currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory[..currentDirectory.LastIndexOf(Chars.BSlash)];
+            var testStrings = GetTestStrings();
 
             return new Dictionary<string, ExpectedData?>()
             {
                 {
-                    inputStrings.ElementAt(0), // currDir
+                    testStrings.ElementAt(0), // currDir
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = new ExtractorExpectedData()
+                        ArgumentExpData = null,
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(0),
-                            ExpDirectorPath = inputStrings.ElementAt(0),
-                            ExpArgument = string.Empty
+                            ExpectedInput = testStrings.ElementAt(0),
+                            ExpectedDirectorPath = testStrings.ElementAt(0),
+                            ExpectedArgument = string.Empty
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(1), // currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1"
+                    testStrings.ElementAt(1), // currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = null
+                        ArgumentExpData = null,
+                        ExtractorExpData = null
                     }
                 },
                 {
-                    inputStrings.ElementAt(2), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
+                    testStrings.ElementAt(2), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                     new ExpectedData()
                     {
-                        ArgExpData = new ArgumentExtractorExpectedData()
+                        ArgumentExpData = new ArgumentExtractorExpectedData()
                         {
-                            ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                            ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                             {
-                                new KeyValuePair<string, string>(CT.Director, "testDir"),
-                                new KeyValuePair<string, string>(CT.Filer, "test.txt"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                                new KeyValuePair<string, string>(CT.Director, "test2.csv #"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir3")
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test.txt"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "test2.csv #"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3")
                             },
-                            OperationsInOrder = new List<string>() { "\\", ">", "\\", ">" }
+                            OperationsInOrder = new List<string>() { DirfileOperations.Change, DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Next }
                         },
-                        ExtExpData = new ExtractorExpectedData()
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(2),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
+                            ExpectedInput = testStrings.ElementAt(2),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(3), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                    testStrings.ElementAt(3), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
                     new ExpectedData()
                     {
-                        ArgExpData = new ArgumentExtractorExpectedData()
+                        ArgumentExpData = new ArgumentExtractorExpectedData()
                         {
-                            ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                            ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                             {
-                                new KeyValuePair<string, string>(CT.Director, "testDir"),
-                                new KeyValuePair<string, string>(CT.Filer, "test.txt"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                                new KeyValuePair<string, string>(CT.Filer, "test2.csv"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir3")
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test.txt"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test2.csv"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir3")
                             },
-                            OperationsInOrder = new List<string>() { "\\", ">", "\\", ":>" }
+                            OperationsInOrder = new List<string>() { DirfileOperations.Change, DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Prev }
                         },
-                        ExtExpData = new ExtractorExpectedData()
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(3),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
+                            ExpectedInput = testStrings.ElementAt(3),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(4), // currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp"
+                    testStrings.ElementAt(4), // currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = null
+                        ArgumentExpData = null,
+                        ExtractorExpData = null
                     }
                 },
                 {
-                    inputStrings.ElementAt(5), // currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
+                    testStrings.ElementAt(5), // currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = new ExtractorExpectedData()
+                        ArgumentExpData = null,
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(5),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
+                            ExpectedInput = testStrings.ElementAt(5),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(6), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                    testStrings.ElementAt(6), // currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = new ArgumentExtractorExpectedData()
+                        ArgumentExpData = new ArgumentExtractorExpectedData()
                         {
-                            ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                            ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                             {
-                                new KeyValuePair<string, string>(CT.Director, "testDir"),
-                                new KeyValuePair<string, string>(CT.Filer, "test.txt"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                                new KeyValuePair<string, string>(CT.Filer, "test2.csv"),
-                                new KeyValuePair<string, string>(CT.Filer, "test3.cpp")
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test.txt"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test2.csv"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test3.cpp")
                             },
-                            OperationsInOrder = new List<string>() { "\\", ">", "\\", ">" }
+                            OperationsInOrder = new List<string>() { DirfileOperations.Change, DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Next }
                         },
-                        ExtExpData = new ExtractorExpectedData()
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(6),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                            ExpectedInput = testStrings.ElementAt(6),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(7), // currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
+                    testStrings.ElementAt(7), // currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = null
+                        ArgumentExpData = null,
+                        ExtractorExpData = null
                     }
                 },
                 {
-                    inputStrings.ElementAt(8), // currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp"
+                    testStrings.ElementAt(8), // currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = null
+                        ArgumentExpData = null,
+                        ExtractorExpData = null
                     }
                 },
                 {
-                    inputStrings.ElementAt(9), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
+                    testStrings.ElementAt(9), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = new ExtractorExpectedData()
+                        ArgumentExpData = null,
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(9),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
+                            ExpectedInput = testStrings.ElementAt(9),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "/testDir/test.txt > testDir2/test2.csv > test3.cpp2"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(10), // currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
+                    testStrings.ElementAt(10), // currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = new ArgumentExtractorExpectedData()
+                        ArgumentExpData = new ArgumentExtractorExpectedData()
                         {
-                            ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                            ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                             {
-                                new KeyValuePair<string, string>(CT.Director, "testDir"),
-                                new KeyValuePair<string, string>(CT.Director, "test"),
-                                new KeyValuePair<string, string>(CT.Director, "."),
-                                new KeyValuePair<string, string>(CT.Director, "txt"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                                new KeyValuePair<string, string>(CT.Filer, "test2.csv"),
-                                new KeyValuePair<string, string>(CT.Filer, "test3.cpp")
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "test"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "."),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "txt"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test2.csv"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test3.cpp")
                             },
-                            OperationsInOrder = new List<string>() { "\\", ">", "\\", ">" }
+                            OperationsInOrder = new List<string>() { DirfileOperations.Change, DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Next }
                         },
-                        ExtExpData = new ExtractorExpectedData()
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(10),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
+                            ExpectedInput = testStrings.ElementAt(10),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "/testDir/test/./txt > testDir2/test2.csv > test3.cpp"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(11), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv :> test3.cpp"
+                    testStrings.ElementAt(11), // currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv :> test3.cpp"
                     new ExpectedData()
                     {
-                        ArgExpData = new ArgumentExtractorExpectedData()
+                        ArgumentExpData = new ArgumentExtractorExpectedData()
                         {
-                            ArgumentsInOrder = new List<KeyValuePair<string, string>>()
+                            ArgumentsByTypeInOrder = new List<KeyValuePair<string, string>>()
                             {
-                                new KeyValuePair<string, string>(CT.Director, "testDir"),
-                                new KeyValuePair<string, string>(CT.Filer, "test.txt"),
-                                new KeyValuePair<string, string>(CT.Director, "testDir2"),
-                                new KeyValuePair<string, string>(CT.Filer, "test2.csv"),
-                                new KeyValuePair<string, string>(CT.Filer, "test3.cpp")
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test.txt"),
+                                new KeyValuePair<string, string>(DirfileTypes.Director, "testDir2"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test2.csv"),
+                                new KeyValuePair<string, string>(DirfileTypes.Filer, "test3.cpp")
                             },
-                            OperationsInOrder = new List<string>() { "\\", ">", "\\", ":>" }
+                            OperationsInOrder = new List<string>() { DirfileOperations.Change, DirfileOperations.Next, DirfileOperations.Change, DirfileOperations.Prev }
                         },
-                        ExtExpData = new ExtractorExpectedData()
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(11),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "/testDir/test.txt > testDir2/test2.csv :> test3.cpp3"
+                            ExpectedInput = testStrings.ElementAt(11),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "/testDir/test.txt > testDir2/test2.csv :> test3.cpp3"
                         }
                     }
                 },
                 {
-                    inputStrings.ElementAt(12), // currDir.Replace("\\", "/") + "        > "
+                    testStrings.ElementAt(12), // currDir.Replace("\\", "/") + "        > "
                     new ExpectedData()
                     {
-                        ArgExpData = null,
-                        ExtExpData = new ExtractorExpectedData()
+                        ArgumentExpData = null,
+                        ExtractorExpData = new ExtractorExpectedData()
                         {
-                            ExpInput = inputStrings.ElementAt(12),
-                            ExpDirectorPath = currDir,
-                            ExpArgument = "        > "
+                            ExpectedInput = testStrings.ElementAt(12),
+                            ExpectedDirectorPath = currentDirectory,
+                            ExpectedArgument = "        > "
                         }
                     }
                 }
@@ -552,26 +554,26 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         /// Gets test input strings.
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetTestInputStrings()
+        private static List<string> GetTestStrings()
         {
-            var currDir = Directory.GetCurrentDirectory();
-            currDir = currDir[..currDir.LastIndexOf('\\')];
+            var currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory[..currentDirectory.LastIndexOf(Chars.BSlash)];
 
             return new List<string>()
             {
-                currDir,
-                currDir + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1",
-                currDir + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3",
-                currDir + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3",
-                currDir + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp",
-                currDir + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp",
-                currDir + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
-                currDir.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
-                currDir.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp",
-                currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2",
-                currDir.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp",
-                currDir.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp3",
-                currDir.Replace("\\", "/") + "        > "
+                currentDirectory,
+                currentDirectory + "\\testDir/test.txt > testDir2/test2.csv > test3.cpp1",
+                currentDirectory + "\\testDir\\test.txt > testDir2\\test2.csv #> testDir3",
+                currentDirectory + "\\testDir\\test.txt > testDir2\\test2.csv :> testDir3",
+                currentDirectory + "\\testDir\\test.txt > testDir2/test2.csv > test3.cpp",
+                currentDirectory + "\\testDir\\test.txt > testDir2\\\\\\test2.csv > test3.cpp",
+                currentDirectory + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
+                currentDirectory.Replace("\\", "/") + "\\testDir\\test.txt > testDir2\\test2.csv > test3.cpp",
+                currentDirectory.Replace("\\", "/") + "\\testDir/test.txt > testDir2\\test2.csv #> test3.cpp",
+                currentDirectory.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp2",
+                currentDirectory.Replace("\\", "/") + "/testDir/test/./txt > testDir2/test2.csv > test3.cpp",
+                currentDirectory.Replace("\\", "/") + "/testDir/test.txt > testDir2/test2.csv > test3.cpp3",
+                currentDirectory.Replace("\\", "/") + "        > "
             };
         }
 
@@ -583,7 +585,7 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
             /// <summary>
             /// Gets or sets list which holds arguments in order.
             /// </summary>
-            public List<KeyValuePair<string, string>> ArgumentsInOrder = new();
+            public List<KeyValuePair<string, string>> ArgumentsByTypeInOrder = new();
 
             /// <summary>
             /// Gets or sets list which holds operations in order.
@@ -599,12 +601,12 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
             /// <summary>
             /// Gets or sets <see cref="ArgumentExtractorExpectedData"/> class.
             /// </summary>
-            public ArgumentExtractorExpectedData? ArgExpData { get; set; }
+            public ArgumentExtractorExpectedData? ArgumentExpData { get; set; }
 
             /// <summary>
             /// Gets or sets <see cref="ExtractorExpectedData"/> class.
             /// </summary>
-            public ExtractorExpectedData? ExtExpData { get; set; }
+            public ExtractorExpectedData? ExtractorExpData { get; set; }
         }
 
         /// <summary>
@@ -615,17 +617,17 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
             /// <summary>
             /// Gets or sets the expected argument.
             /// </summary>
-            public string ExpArgument { get; set; } = string.Empty;
+            public string ExpectedArgument { get; set; } = string.Empty;
 
             /// <summary>
             /// Gets or sets the expected path to director.
             /// </summary>
-            public string ExpDirectorPath { get; set; } = string.Empty;
+            public string ExpectedDirectorPath { get; set; } = string.Empty;
 
             /// <summary>
             /// Gets or sets the expected input string.
             /// </summary>
-            public string ExpInput { get; set; } = string.Empty;
+            public string ExpectedInput { get; set; } = string.Empty;
         }
     }
 }

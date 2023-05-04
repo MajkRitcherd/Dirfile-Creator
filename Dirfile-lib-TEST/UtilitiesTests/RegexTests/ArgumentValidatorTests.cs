@@ -3,38 +3,36 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 28/04/2023     \\
 
 using Dirfile_lib.Utilities.Validation;
 
 namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
 {
     /// <summary>
-    /// Tests <see cref="ArgumentParser"/> class.
+    /// Tests <see cref="ArgumentValidator"/> class.
     /// </summary>
     [TestClass]
-    public class ArgumentParserTests
+    public class ArgumentValidatorTests
     {
         /// <summary>
-        /// Tests argument string using <see cref="ArgumentParser"/> class.
+        /// Tests argument string using <see cref="ArgumentValidator"/> class.
         /// </summary>
         [TestMethod]
         public void TestArgumentParser()
         {
-            var data = this.PrepareTestData();
-
-            foreach (var testData in data)
+            foreach (var isValidByArgument in GetTestData())
             {
-                var valid = ArgumentParser.Instance.IsValid(testData.Key);
-                Assert.AreEqual(testData.Value, valid, $"[CASE]: {testData.Key}");
+                var isArgumentValid = ArgumentValidator.Instance.IsValid(isValidByArgument.Key);
+                Assert.AreEqual(isValidByArgument.Value, isArgumentValid, $"Should be {isValidByArgument.Value}, Actual is: {isArgumentValid}");
             }
         }
 
         /// <summary>
         /// Prepares test data for test.
         /// </summary>
-        /// <returns>Test data.</returns>
-        private Dictionary<string, bool> PrepareTestData()
+        /// <returns>Is valid by argument string.</returns>
+        private static Dictionary<string, bool> GetTestData()
         {
             return new Dictionary<string, bool>()
             {

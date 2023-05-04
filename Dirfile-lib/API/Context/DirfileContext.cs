@@ -3,14 +3,17 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 06/04/2023     \\
+//                              Last change: 24/04/2023     \\
 
 using System;
 using System.Linq;
 using Dirfile_lib.API.Extraction;
 using Dirfile_lib.API.Extraction.Modes;
+using Dirfile_lib.Core.Dirfiles;
 using Dirfile_lib.Exceptions;
-using CT = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
+using DirfileOperations = Dirfile_lib.Core.Constants.DirFile.Operations;
+using DirTypes = Dirfile_lib.Core.Constants.DirFile.Types;
 
 namespace Dirfile_lib.API.Context
 {
@@ -50,10 +53,10 @@ namespace Dirfile_lib.API.Context
         ///     - (initial) slash mode: BACKWARDS. <br />
         ///     - (initial) path mode: RELATIVE.
         /// </summary>
-        /// <param name="path">Path to director to work from (like relative path).</param>
+        /// <param name="directorPath">Path to the director to work from (like relative path).</param>
         /// <param name="slashMode">Slash mode to use.</param>
-        public DirfileContext(string path, SlashMode slashMode = SlashMode.Backward)
-            : base(path, slashMode, PathMode.Relative)
+        public DirfileContext(string directorPath, SlashMode slashMode = SlashMode.Backward)
+            : base(directorPath, slashMode, PathMode.Relative)
         {
         }
 
@@ -66,32 +69,32 @@ namespace Dirfile_lib.API.Context
         /// Creates Directors and Filers. <br />
         ///     - Also changes current directory to directory from absolute path in input (only in mode ABSOLUTE).
         /// </summary>
-        /// <param name="input">Input string.</param>
-        public void Create(string input)
+        /// <param name="inputString">Input string.</param>
+        public void Create(string inputString)
         {
             if (this.PathMode == PathMode.Absolute)
             {
-                this.Extractor.Extract(input);
-                this.DirectorChange(this.Extractor.DirectorPath);
+                this.Extractor.Extract(inputString);
+                this.ChangeCurrentDirector(this.Extractor.DirectorPath);
 
-                this.CreateImpl(this.Extractor.Arguments);
+                this.CreateInternal(this.Extractor.ArgumentString);
             }
             else
-                this.CreateImpl(input);
+                this.CreateInternal(inputString);
         }
 
         /// <inheritdoc/>
-        protected override void Initialize(string path, SlashMode slashMode, PathMode pathMode)
+        protected override void Initialize(string initialDirectorPath, SlashMode slashMode, PathMode pathMode)
         {
             this.Extractor = new Extractor(slashMode);
-            this.Extractor.Extract(path);
+            this.Extractor.Extract(initialDirectorPath);
             this.ArgumentExtractor = new ArgumentExtractor(slashMode);
 
-            if (string.IsNullOrEmpty(this.Extractor.Arguments))
-                base.Initialize(path, slashMode, pathMode);
+            if (string.IsNullOrEmpty(this.Extractor.ArgumentString))
+                base.Initialize(initialDirectorPath, slashMode, pathMode);
             else
             {
-                this.ArgumentExtractor.Extract(this.Extractor.Arguments);
+                this.ArgumentExtractor.Extract(this.Extractor.ArgumentString);
                 base.Initialize(this.Extractor.DirectorPath, slashMode, pathMode);
             }
         }
@@ -100,38 +103,46 @@ namespace Dirfile_lib.API.Context
         /// Creates filers and directors from given input. Can be either arguments (works from relative path)
         ///     or can be arguments with path (like absolute path).
         /// </summary>
-        /// <param name="input"></param>
-        private void CreateImpl(string input)
+        /// <param name="inputString"></param>
+        private void CreateInternal(string inputString)
         {
-            this.ArgumentExtractor.Extract(input);
+            this.ArgumentExtractor.Extract(inputString);
+            var indexOffset = -1;
 
-            foreach (var arg in this.ArgumentExtractor.ArgumentsInOrder.Select((val, ind) => new { val, ind }))
+            foreach (var argumentWithIndex in this.ArgumentExtractor.ArgumentsByTypeInOrder.Select((argument, index) => new { argument, index }))
             {
-                var slash = this.SlashMode == SlashMode.Backward ? CT.BSlash : CT.FSlash;
+                var slashMode = this.SlashMode == SlashMode.Backward ? Chars.BSlash : Chars.FSlash;
 
-                Action<string> func = null;
-                if (arg.ind == 0)
+                if (argumentWithIndex.index == 0)
                 {
-                    func = this.GetDirfileFunc(arg.val.Key);
-                    func(arg.val.Value);
+                    this.GetOperationFunctionByType(argumentWithIndex.argument.Key).Invoke(argumentWithIndex.argument.Value);
                     continue;
                 }
 
-                switch (this.ArgumentExtractor.OperationsInOrder[arg.ind - 1])
+                switch (this.ArgumentExtractor.OperationsInOrder.ElementAt(argumentWithIndex.index + indexOffset))
                 {
-                    case CT.BSlash:
-                        this.DirectorChange(this.CurrentDirectorPath + slash + this.ArgumentExtractor.ArgumentsInOrder[arg.ind - 1].Value);
-                        this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
+                    case DirfileOperations.Change:
+                        this.ChangeCurrentDirector(this.CurrentPath + slashMode + this.ArgumentExtractor.ArgumentsByTypeInOrder[argumentWithIndex.index - 1].Value);
+                        this.GetOperationFunctionByType(argumentWithIndex.argument.Key).Invoke(argumentWithIndex.argument.Value);
                         break;
 
-                    case ">":
-                        this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
+                    case DirfileOperations.Next:
+                        this.GetOperationFunctionByType(argumentWithIndex.argument.Key).Invoke(argumentWithIndex.argument.Value);
                         break;
 
-                    case ":>":
-                        this.DirectorChange(this.CurrentDirectorPath.Substring(0, this.CurrentDirectorPath.LastIndexOf(slash)));
-                        this.GetDirfileFunc(arg.val.Key).Invoke(arg.val.Value);
+                    case DirfileOperations.Prev:
+                        this.ChangeCurrentDirector(this.CurrentPath.Substring(0, this.CurrentPath.LastIndexOf(slashMode)));
+                        this.GetOperationFunctionByType(argumentWithIndex.argument.Key).Invoke(argumentWithIndex.argument.Value);
                         break;
+                    case DirfileOperations.StartOfText:
+                        {
+                            if (this.ArgumentExtractor.ArgumentsByTypeInOrder[argumentWithIndex.index - 1].Key != DirTypes.Filer)
+                                throw new DirfileException("Text can be initially created only in Filers!");
+
+                            this.WriteInitialTextToFiler(argumentWithIndex.index);
+                            indexOffset++;
+                            break;
+                        }
                 }
             }
         }
@@ -140,37 +151,47 @@ namespace Dirfile_lib.API.Context
         /// Gets function from BaseDirfileContext based on whether its type is 'Director' or 'Filer'
         ///     is absolute path or not, is creation function or deletion function.
         /// </summary>
-        /// <param name="type">Type of dirfile.</param>
+        /// <param name="type">Type of dirfile (either Filer or Director).</param>
         /// <param name="isPath">Use absolute path or not.</param>
         /// <param name="isCreate">Use creation function or deletion function.</param>
         /// <returns>Function with desired type, isPath and isCreate.</returns>
         /// <exception cref="DirfileException">Throws exception when no suitable function is found.</exception>
-        private Action<string> GetDirfileFunc(string type, bool isPath = false, bool isCreate = true)
+        private Action<string> GetOperationFunctionByType(string type, bool isPath = false, bool isCreate = true)
         {
             switch (type)
             {
-                case CT.Director:
+                case DirTypes.Director:
                     if (isCreate && !isPath)
                         return this.CreateDirector;
                     else if (isCreate)
-                        return this.CreateDirectorPath;
+                        return this.CreateDirectorFromAbsolutePath;
                     else if (!isPath)
                         return this.DeleteDirector;
                     else
-                        return this.DeleteDirectorPath;
+                        return this.DeleteDirectorFromAbsolutePath;
 
-                case CT.Filer:
+                case DirTypes.Filer:
                     if (isCreate && !isPath)
                         return this.CreateFiler;
                     else if (isCreate)
-                        return this.CreateFilerPath;
+                        return this.CreateFilerFromAbsolutePath;
                     else if (!isPath)
                         return this.DeleteFiler;
                     else
-                        return this.DeleteFilerPath;
+                        return this.DeleteFilerFromAbsolutePath;
             }
 
-            throw new DirfileException("No suitable function was found!");
+            throw new DirfileException($"No suitable function was found for type: {type}!");
+        }
+
+        /// <summary>
+        /// Writes initial text into filer.
+        /// </summary>
+        /// <param name="indexOfInitTextInArguments">Index of InitText in arguments list.</param>
+        private void WriteInitialTextToFiler(int indexOfInitTextInArguments)
+        {
+            var filer = new Filer(this.CurrentPath + Chars.BSlash + this.ArgumentExtractor.ArgumentsByTypeInOrder.ElementAt(indexOfInitTextInArguments - 1).Value.ToString());
+            filer.WriteString(this.ArgumentExtractor.ArgumentsByTypeInOrder.ElementAt(indexOfInitTextInArguments).Value);
         }
     }
 }

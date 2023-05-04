@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Dirfile-lib")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for creating directories and files from commands. Also files can have pre-defined text inside.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Dirfile-lib")]
@@ -34,3 +35,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+// Internals visible to Dirfile-lib-TEST for unit testing
+[assembly: InternalsVisibleTo("Dirfile-lib-TEST")]
+[assembly: NeutralResourcesLanguage("en-GB")]

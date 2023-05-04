@@ -16,7 +16,7 @@ namespace Dirfile_lib_TEST.UtilitiesTests.ValidatorTests
     /// <summary>
     /// 
     /// </summary>
-    internal class ExtensionCheckerTests
+    internal class ExtensionValidatorTests
     {
     }
 }

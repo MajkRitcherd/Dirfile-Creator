@@ -3,45 +3,51 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2022     \\
+//                              Last change: 28/04/2022     \\
 
 namespace Dirfile_lib.Utilities.Validation
 {
     /// <summary>
     /// Base abstract class for validators.
     /// </summary>
-    internal abstract class AbstractBaseValidator
+    internal abstract class AbstractBaseValidator : IValidation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractBaseValidator"/> class.
         /// </summary>
         protected AbstractBaseValidator()
         {
-            this.ErrorMsg = null;
+            this.ErrorMessage = null;
         }
 
         /// <summary>
-        /// Gets or sets error message if check was unsuccessful.
+        /// Gets or sets error message if validation was unsuccessful.
         /// </summary>
-        public string ErrorMsg { get; set; }
+        internal string ErrorMessage { get; set; }
 
         /// <summary>
-        /// Gets or sets whether check was successful or not.
+        /// Gets or sets whether validation was successful or not.
         /// </summary>
-        public bool? Successful { get; protected set; }
+        internal bool? IsSuccess { get; set; }
 
         /// <summary>
-        /// Gets whether check was unsuccessful.
+        /// Gets whether validation was unsuccessful.
         /// </summary>
-        public bool? Unsuccessful => !this.Successful;
+        internal bool? IsUnsuccess => !this.IsSuccess;
 
         /// <summary>
         /// Cleans members of a class.
         /// </summary>
-        public virtual void Clean()
+        internal virtual void Clean()
         {
-            this.ErrorMsg = null;
-            this.Successful = null;
+            this.ErrorMessage = null;
+            this.IsSuccess = null;
         }
+
+        /// <inheritdoc/>
+        public abstract bool IsValid(string stringToValidate);
+
+        /// <inheritdoc/>
+        public virtual bool IsInvalid(string stringToValidate) => !this.IsValid(stringToValidate);
     }
 }

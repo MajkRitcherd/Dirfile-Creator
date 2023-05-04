@@ -3,14 +3,17 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 06/04/2023     \\
+//                              Last change: 24/04/2023     \\
 
 using System;
 using Dirfile_lib.Core.Dirfiles;
-using CT = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib.API
 {
+    /// <summary>
+    /// <see cref="DirfileCreator"/> creates or deletes dirfiles.
+    /// </summary>
     public class DirfileCreator
     {
         /// <summary>
@@ -33,27 +36,27 @@ namespace Dirfile_lib.API
         /// <summary>
         /// Creates Director.
         /// </summary>
-        /// <param name="path">Path to director.</param>
-        /// <param name="dirName">Name of a new director.</param>
-        public void CreateDirector(string path, string dirName = "")
+        /// <param name="directorPath">Path to director.</param>
+        /// <param name="directorName">Name of a new director.</param>
+        public void CreateDirector(string directorPath, string directorName = "")
         {
-            var director = new Director(string.Join(CT.BSlash, path, dirName));
+            var director = new Director(string.Join(Chars.BSlash.ToString(), directorPath, directorName));
             director.Create();
         }
 
         /// <summary>
         /// Creates Filer.
         /// </summary>
-        /// <param name="path">path to filer.</param>
+        /// <param name="filerPath">Path to filer.</param>
         /// <param name="filerName">Name of a new filer.</param>
-        public void CreateFiler(string path, string filerName = "")
+        public void CreateFiler(string filerPath, string filerName = "")
         {
             Filer filer;
 
             if (!string.IsNullOrEmpty(filerName))
-                filer = new Filer(string.Join(CT.BSlash, path, filerName));
+                filer = new Filer(string.Join(Chars.BSlash.ToString(), filerPath, filerName));
             else
-                filer = new Filer(path);
+                filer = new Filer(filerPath);
 
             filer.Create();
         }
@@ -61,27 +64,27 @@ namespace Dirfile_lib.API
         /// <summary>
         /// Deletes Director.
         /// </summary>
-        /// <param name="path">Path to director.</param>
-        /// <param name="dirName">Name of a director to delete.</param>
-        public void DeleteDirector(string path, string dirName = "", bool deleteEverything = false)
+        /// <param name="directorPath">Path to director.</param>
+        /// <param name="directorName">Name of a director to delete.</param>
+        public void DeleteDirector(string directorPath, string directorName = "", bool deleteEverything = false)
         {
-            var director = new Director(string.Join(CT.BSlash, path, dirName));
+            var director = new Director(string.Join(Chars.BSlash.ToString(), directorPath, directorName));
             director.Delete(deleteEverything);
         }
 
         /// <summary>
         /// Deletes Filer.
         /// </summary>
-        /// <param name="path">Path to filer.</param>
+        /// <param name="filerPath">Path to filer.</param>
         /// <param name="filerName">Name of a filer to delete.</param>
-        public void DeleteFiler(string path, string filerName = "")
+        public void DeleteFiler(string filerPath, string filerName = "")
         {
             Filer filer;
 
             if (!string.IsNullOrEmpty(filerName))
-                filer = new Filer(string.Join(CT.BSlash, path, filerName));
+                filer = new Filer(string.Join(Chars.BSlash.ToString(), filerPath, filerName));
             else
-                filer = new Filer(path);
+                filer = new Filer(filerPath);
 
             filer.Delete();
         }

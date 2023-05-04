@@ -35,23 +35,23 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         [TestMethod]
         public override void TestExtracting()
         {
-            foreach (var data in PrepareArgExtractorTestData())
+            foreach (var ExpectedDataByTestString in GetArgumentExtractorTestData())
             {
-                if (data.Key == "/")
+                if (ExpectedDataByTestString.Key == "/")
                     _SlashMode = SlashMode.Forward;
 
                 try
                 {
-                    var extractor = new ArgumentExtractor(this._SlashMode);
-                    extractor.Extract(data.Key);
+                    var argumentExtractor = new ArgumentExtractor(this._SlashMode);
+                    argumentExtractor.Extract(ExpectedDataByTestString.Key);
 
-                    if (data.Value != null)
+                    if (ExpectedDataByTestString.Value != null)
                     {
-                        for (int i = 0; i < data.Value.OperationsInOrder.Count; i++)
-                            Assert.AreEqual(data.Value.OperationsInOrder[i], extractor.OperationsInOrder[i], $"Operation in order were not the same! (CASE: {data.Key})");
+                        for (int i = 0; i < ExpectedDataByTestString.Value.OperationsInOrder.Count; i++)
+                            Assert.AreEqual(ExpectedDataByTestString.Value.OperationsInOrder[i], argumentExtractor.OperationsInOrder[i], $"Operation in order were not the same! (CASE: {ExpectedDataByTestString.Key})");
 
-                        for (int i = 0; i < data.Value.ArgumentsInOrder.Count; i++)
-                            Assert.AreEqual(data.Value.ArgumentsInOrder[i], extractor.ArgumentsInOrder[i], $"Arguments in order were not the same! (CASE: {data.Key})");
+                        for (int i = 0; i < ExpectedDataByTestString.Value.ArgumentsByTypeInOrder.Count; i++)
+                            Assert.AreEqual(ExpectedDataByTestString.Value.ArgumentsByTypeInOrder[i], argumentExtractor.ArgumentsByTypeInOrder[i], $"Arguments in order were not the same! (CASE: {ExpectedDataByTestString.Key})");
                     }
                 }
                 catch (DirfileException)

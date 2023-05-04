@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -60,13 +63,13 @@
     <Compile Include="Utilities\Validation\AbstractBaseValidator.cs" />
     <Compile Include="Utilities\Validation\IValidation.cs" />
     <Compile Include="Utilities\Validation\RegexValidators\AbstractRegexValidator.cs" />
-    <Compile Include="Utilities\Validation\RegexValidators\ArgumentParser.cs" />
+    <Compile Include="Utilities\Validation\RegexValidators\ArgumentValidator.cs" />
     <Compile Include="Utilities\Validation\Validators\AbstractValidator.cs" />
-    <Compile Include="Utilities\Validation\Validators\NameChecker.cs" />
+    <Compile Include="Utilities\Validation\Validators\NameValidator.cs" />
     <Compile Include="Utilities\Helpers\DirfileException.cs" />
     <Compile Include="Utilities\Helpers\DirfileRecognizer.cs" />
-    <Compile Include="Utilities\Validation\Validators\ExtensionChecker.cs" />
-    <Compile Include="Utilities\Helpers\EnumFinder.cs" />
+    <Compile Include="Utilities\Validation\Validators\ExtensionValidator.cs" />
+    <Compile Include="Utilities\Helpers\ExtensionFinder.cs" />
     <Compile Include="Utilities\Helpers\IOverEnums.cs" />
     <Compile Include="Utilities\Validation\RegexValidators\PathValidator.cs" />
   </ItemGroup>

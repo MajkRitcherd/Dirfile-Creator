@@ -41,26 +41,29 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         [TestMethod]
         public override void TestExtracting()
         {
-            foreach (var testData in PrepareTestData().Select((value, index) => new { value, index }))
+            foreach (var testData in GetExtractingTestData().Select((ExpectedDataByTestString, Index) => new { ExpectedDataByTestString, Index }))
             {
-                if (testData.index >= 5)
+                if (testData.Index >= 5)
                     this._SlashMode = SlashMode.Forward;
 
                 try
                 {
-                    this._Extractor?.Extract(testData.value.Key);
+                    this._Extractor?.Extract(testData.ExpectedDataByTestString.Key);
                     var argExtractor = new ArgumentExtractor(this._SlashMode);
-                    argExtractor.Extract(this._Extractor?.Arguments);
+                    argExtractor.Extract(this._Extractor?.ArgumentString);
 
-                    Assert.AreEqual(testData.value.Value?.ExtExpData?.ExpInput, this._Extractor?.InputString, $"Input strings were not the same: {testData.value.Value?.ExtExpData?.ExpInput}");
-                    Assert.AreEqual(testData.value.Value?.ExtExpData?.ExpDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.value.Value?.ExtExpData?.ExpDirectorPath}");
-                    Assert.AreEqual(testData.value.Value?.ExtExpData?.ExpArgument, this._Extractor?.Arguments, $"Input strings were not the same: {testData.value.Value?.ExtExpData?.ExpArgument}");
+                    Assert.AreEqual(
+                        testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedInput, this._Extractor?.ReceivedString, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedInput}");
+
+                    Assert.AreEqual(testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedDirectorPath}");
+
+                    Assert.AreEqual(testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedArgument, this._Extractor?.ArgumentString, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value?.ExtractorExpData?.ExpectedArgument}");
 
                     for (int i = 0; i < argExtractor.OperationsInOrder.Count; i++)
-                        Assert.AreEqual(testData.value.Value?.ArgExpData?.OperationsInOrder[i], argExtractor.OperationsInOrder[i], $"Operation in order were not the same! (CASE: {testData.value.Value?.ArgExpData?.OperationsInOrder[i]})");
+                        Assert.AreEqual(testData.ExpectedDataByTestString.Value?.ArgumentExpData?.OperationsInOrder[i], argExtractor.OperationsInOrder[i], $"Operation in order were not the same! (CASE: {testData.ExpectedDataByTestString.Value?.ArgumentExpData?.OperationsInOrder[i]})");
 
-                    for (int i = 0; i < argExtractor.ArgumentsInOrder.Count; i++)
-                        Assert.AreEqual(testData.value.Value?.ArgExpData?.ArgumentsInOrder[i], argExtractor.ArgumentsInOrder[i], $"Arguments in order were not the same! (CASE: {testData.value.Value?.ArgExpData?.ArgumentsInOrder[i]})");
+                    for (int i = 0; i < argExtractor.ArgumentsByTypeInOrder.Count; i++)
+                        Assert.AreEqual(testData.ExpectedDataByTestString.Value?.ArgumentExpData?.ArgumentsByTypeInOrder[i], argExtractor.ArgumentsByTypeInOrder[i], $"Arguments in order were not the same! (CASE: {testData.ExpectedDataByTestString.Value?.ArgumentExpData?.ArgumentsByTypeInOrder[i]})");
                 }
                 catch (DirfileException)
                 {

@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 05/04/2023     \\
+//                              Last change: 26/04/2023     \\
 
 using System;
 using System.IO;
@@ -11,8 +11,9 @@ using System.Reflection;
 using Dirfile_lib.Core.Abstraction;
 using Dirfile_lib.Exceptions;
 using Dirfile_lib.Utilities;
-using CD = Dirfile_lib.Core.Constants.DefaultValues;
-using CT = Dirfile_lib.Core.Constants.Texts;
+using ValueConsts = Dirfile_lib.Core.Constants.DefaultValues;
+using TextConsts = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib.Core.Dirfiles
 {
@@ -23,44 +24,44 @@ namespace Dirfile_lib.Core.Dirfiles
     internal class Filer : AbstractMetadata
     {
         /// <summary>
-        /// Enum finder to find item in enums.
+        /// Extension finder to find extension inside extension enums.
         /// </summary>
-        private readonly EnumFinder EnumFinder = new EnumFinder();
+        private readonly ExtensionFinder ExtensionFinder = new ExtensionFinder();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Filer"/> class.
         /// </summary>
         /// <param name="fileInfo">File information.</param>
-        public Filer(FileInfo fileInfo)
+        internal Filer(FileInfo fileInfo)
         {
             this.SetMetadata(fileInfo);
 
             this.Path = fileInfo.FullName.Remove(fileInfo.FullName.LastIndexOf('.'));
-            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(CT.BSlash)));
+            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(Chars.BSlash)));
             this.DirectoryName = this.Directory.FullName;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Filer"/> class.
         /// </summary>
-        /// <param name="path">Path to the file.</param>
+        /// <param name="filerPath">Path to the file.</param>
         /// <param name="bufferSize">Buffer size.</param>
-        /// <param name="options">File options.</param>
-        public Filer(string path, int bufferSize = CD.BufferSize, FileOptions options = FileOptions.None)
+        /// <param name="fileOptions">File options.</param>
+        internal Filer(string filerPath, int bufferSize = ValueConsts.BufferSize, FileOptions fileOptions = FileOptions.None)
         {
-            this.Exists = File.Exists(path);
+            this.Exists = File.Exists(filerPath);
 
-            var fileName = path.Substring(path.LastIndexOf(CT.BSlash) + 1);
+            var fileName = filerPath.Substring(filerPath.LastIndexOf(Chars.BSlash) + 1);
 
             if (fileName.LastIndexOf('.') != -1)
-                this.Extension = path.Substring(path.LastIndexOf('.')).ToLowerInvariant();
+                this.Extension = filerPath.Substring(filerPath.LastIndexOf('.')).ToLowerInvariant();
             else
                 this.Extension = null;
 
-            if (path.LastIndexOf('.') == -1)
-                this.Path = path;
+            if (filerPath.LastIndexOf('.') == -1)
+                this.Path = filerPath;
             else
-                this.Path = path.Remove(path.LastIndexOf('.'));
+                this.Path = filerPath.Remove(filerPath.LastIndexOf('.'));
 
             if (!string.IsNullOrEmpty(this.Extension))
                 this.FullName = this.Path + this.Extension;
@@ -68,8 +69,8 @@ namespace Dirfile_lib.Core.Dirfiles
                 this.FullName = this.Path;
 
             this.BufferSize = bufferSize;
-            this.Options = options;
-            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(CT.BSlash)));
+            this.Options = fileOptions;
+            this.Directory = new Director(this.Path.Remove(this.Path.LastIndexOf(Chars.BSlash)));
 
             this.DirectoryName = this.Directory.FullName;
 
@@ -87,43 +88,43 @@ namespace Dirfile_lib.Core.Dirfiles
             else
                 this.Attributes = FileAttributes.Archive;
 
-            this.Name = this.Path.Substring(this.Path.LastIndexOf(CT.BSlash) + 1) + this.Extension;
+            this.Name = this.Path.Substring(this.Path.LastIndexOf(Chars.BSlash) + 1) + this.Extension;
         }
 
         /// <summary>
         /// Gets or sets buffer size.
         /// </summary>
-        public int BufferSize { get; set; }
+        internal int BufferSize { get; set; }
 
         /// <summary>
         /// Gets directory.
         /// </summary>
-        public Director Directory { get; private set; }
+        internal Director Directory { get; private set; }
 
         /// <summary>
         /// Gets directory name.
         /// </summary>
-        public string DirectoryName { get; private set; }
+        internal string DirectoryName { get; private set; }
 
         /// <summary>
         /// Gets or sets if file is readonly.
         /// </summary>
-        public bool IsReadOnly { get; set; }
+        internal bool IsReadOnly { get; set; }
 
         /// <summary>
         /// Gets the byte size of a file.
         /// </summary>
-        public long Length { get; private set; }
+        internal long Length { get; private set; }
 
         /// <summary>
         /// Gets or sets file options.
         /// </summary>
-        public FileOptions Options { get; set; }
+        internal FileOptions Options { get; set; }
 
         /// <summary>
         /// Creates a file.
         /// </summary>
-        public override void Create()
+        internal override void Create()
         {
             if (string.IsNullOrEmpty(this.Extension))
             {
@@ -131,15 +132,14 @@ namespace Dirfile_lib.Core.Dirfiles
                 this.Exists = true;
             }
             else
-                this.Create(this.EnumFinder.FindOverEnums(this.Extension)/*(DirfileExtensions)Enum.Parse(typeof(DirfileExtensions), this.Extension.Substring(1).ToUpperInvariant())*/);
+                this.Create(this.ExtensionFinder.FindOverEnums(this.Extension));
         }
 
         /// <summary>
         /// Creates a file.
         /// </summary>
-        /// <param name="name">Name of the file.</param>
         /// <param name="extension">Extension of the file.</param>
-        public void Create(object extension)
+        internal void Create(object extension)
         {
             // Set times
             this.CreationTime = DateTime.Now;
@@ -163,7 +163,7 @@ namespace Dirfile_lib.Core.Dirfiles
         /// Deletes the file.
         /// </summary>
         /// <exception cref="Exception">Thrown if trying to delete file that does not exist.</exception>
-        public override void Delete()
+        internal override void Delete()
         {
             try
             {
@@ -179,27 +179,36 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <summary>
         /// Deletes the file specified by path.
         /// </summary>
-        /// <param name="path">Path to the file.</param>
-        public void Delete(string path)
+        /// <param name="filerPath">Path to the file.</param>
+        internal void Delete(string filerPath)
         {
-            File.Delete(path);
+            File.Delete(filerPath);
+        }
+
+        /// <summary>
+        /// Writes text info Filer.
+        /// </summary>
+        /// <param name="textToWrite">Text to write.</param>
+        internal void WriteString(string textToWrite)
+        {
+            File.WriteAllText(this.FullName, textToWrite);
         }
 
         /// <inheritdoc />
-        protected override void SetMetadata<T>(T info)
+        protected override void SetMetadata<T>(T fileInfo)
         {
             if (typeof(T) != typeof(FileInfo))
                 throw new DirfileException("Only FileInfo can be passed to the Filer.SetMetadata!");
 
-            PropertyInfo[] infoProperties = info.GetType().GetProperties();
-            PropertyInfo[] thisProperties = this.GetType().GetProperties();
+            PropertyInfo[] fileInfoProperties = fileInfo.GetType().GetProperties();
+            PropertyInfo[] thisFilerProperties = this.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
             // Check if file exists, if not metadata are not set
-            foreach (var property in infoProperties)
+            foreach (var infoProperty in fileInfoProperties)
             {
-                if (property.Name == CT.Props.Exists)
+                if (infoProperty.Name == TextConsts.Props.Exists)
                 {
-                    if (property.GetValue(info).ToString() == false.ToString().ToLowerInvariant())
+                    if (infoProperty.GetValue(fileInfo).ToString() == false.ToString().ToLowerInvariant())
                     {
                         this.Exists = false;
                         break;
@@ -208,16 +217,16 @@ namespace Dirfile_lib.Core.Dirfiles
             }
 
             // Sets the properties from FileInfo into Filer properties
-            foreach (var property in infoProperties)
+            foreach (var infoProperty in fileInfoProperties)
             {
-                foreach (var thisProperty in thisProperties)
+                foreach (var thisProperty in thisFilerProperties)
                 {
-                    if (thisProperty.Name == property.Name && thisProperty.Name != CT.Props.Directory)
+                    if (thisProperty.Name == infoProperty.Name && thisProperty.Name != TextConsts.Props.Directory)
                     {
-                        if (thisProperty.Name == CT.Props.Length && !this.Exists)
+                        if (thisProperty.Name == TextConsts.Props.Length && !this.Exists)
                             break;
 
-                        thisProperty.SetValue(this, property.GetValue(info));
+                        thisProperty.SetValue(this, infoProperty.GetValue(fileInfo));
                     }
                 }
             }
@@ -226,12 +235,12 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <summary>
         /// Creates a file.
         /// </summary>
-        /// <param name="path">Path to the file.</param>
+        /// <param name="filerPath">Path to the file.</param>
         /// <param name="bufferSize">Buffer size.</param>
         /// <param name="options">File options.</param>
-        private void Create(string path, int bufferSize, FileOptions options)
+        private void Create(string filerPath, int bufferSize, FileOptions options)
         {
-            FileStream file = File.Create(path, bufferSize, options);
+            FileStream file = File.Create(filerPath, bufferSize, options);
             file.Close();
         }
     }

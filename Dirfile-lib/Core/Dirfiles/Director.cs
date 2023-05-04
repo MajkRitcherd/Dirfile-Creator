@@ -3,16 +3,15 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 06/04/2023     \\
+//                              Last change: 24/04/2023     \\
 
 using System;
 using System.IO;
 using System.Reflection;
 using Dirfile_lib.Core.Abstraction;
 using Dirfile_lib.Exceptions;
-using CT = Dirfile_lib.Core.Constants.Texts;
-
-//[assembly: InternalsVisibleTo("Dirfile-Creator")]
+using TextConsts = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib.Core.Dirfiles
 {
@@ -24,60 +23,55 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <summary>
         /// Initializes a new instance of the <see cref="Director"/> class.
         /// </summary>
-        /// <param name="path">Path of the directory.</param>
-        public Director(string path)
+        /// <param name="directorPath">Path of the directory.</param>
+        internal Director(string directorPath)
         {
             // Root name should be followed by '\'
-            var lastIndex = path.LastIndexOf(CT.BSlash);
+            var lastIndexOfSlash = directorPath.LastIndexOf(Chars.BSlash);
 
-            if (lastIndex == -1)
-                path += CT.BSlash;
+            if (lastIndexOfSlash == -1)
+                directorPath += Chars.BSlash;
 
-            if (lastIndex == 2)
-                this.Initialize(path, true);
+            if (lastIndexOfSlash == 2)
+                this.Initialize(directorPath, true);
             else
-                this.Initialize(path, false);
+                this.Initialize(directorPath, false);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direcotr"/> class.
         /// </summary>
-        /// <param name="info">Directory info.</param>
-        public Director(DirectoryInfo info)
+        /// <param name="directoryInfo">Directory info.</param>
+        internal Director(DirectoryInfo directoryInfo)
         {
-            this.SetMetadata(info);
+            this.SetMetadata(directoryInfo);
 
             this.Path = this.FullName;
             this.Extension = null;
 
-            this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(CT.BSlash)));
-            this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(CT.BSlash)));
+            this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(Chars.BSlash)));
+            this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(Chars.BSlash)));
         }
 
         /// <summary>
         /// Gets if current directory is root directory.
         /// </summary>
-        public bool IsRoot { get => this.Parent == null && this.Root == null; }
+        internal bool IsRoot { get => this.Parent == null && this.Root == null; }
 
         /// <summary>
         /// Gets parent directory.
         /// </summary>
-        public Director Parent { get; private set; }
+        internal Director Parent { get; private set; }
 
         /// <summary>
         /// Gets root directory.
         /// </summary>
-        public Director Root { get; private set; }
-
-        public Director ChangePath(string path)
-        {
-            return new Director(path);
-        }
+        internal Director Root { get; private set; }
 
         /// <summary>
         /// Creates a directory.
         /// </summary>
-        public override void Create()
+        internal override void Create()
         {
             if (!this.Exists)
                 this.Create(this.Path);
@@ -87,7 +81,7 @@ namespace Dirfile_lib.Core.Dirfiles
         /// Deletes directory.
         /// </summary>
         /// <exception cref="Exception">Thrown if directory does not exist.</exception>
-        public override void Delete()
+        internal override void Delete()
         {
             try
             {
@@ -104,7 +98,7 @@ namespace Dirfile_lib.Core.Dirfiles
         /// Deletes directory specified by path.
         /// </summary>
         /// <param name="path">Path to the directory.</param>
-        public void Delete(bool deleteEverything = false)
+        internal void Delete(bool deleteEverything = false)
         {
             try
             {
@@ -120,39 +114,39 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <summary>
         /// Deletes the directory specified by path, if recursive then it deletes any subdirectories and files.
         /// </summary>
-        /// <param name="path">Path to the directory.</param>
+        /// <param name="directorPath">Path to the directory.</param>
         /// <param name="recursive">If true, deletes any subdirectories and files.</param>
-        public void Delete(string path, bool deleteEverything = false)
+        internal void Delete(string directorPath, bool deleteEverything = false)
         {
-            Directory.Delete(path, deleteEverything);
+            Directory.Delete(directorPath, deleteEverything);
         }
 
         /// <inheritdoc />
-        protected override void SetMetadata<T>(T info)
+        protected override void SetMetadata<T>(T directoryInfo)
         {
             if (typeof(T) != typeof(DirectoryInfo))
                 throw new DirfileException("Only DirectoryInfo can be passed to the Director.SetMetadata!");
 
-            PropertyInfo[] infoProperties = info.GetType().GetProperties();
-            PropertyInfo[] thisProperties = this.GetType().GetProperties();
+            PropertyInfo[] directoryInfoProperties = directoryInfo.GetType().GetProperties();
+            PropertyInfo[] thisDirectorProperties = this.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public); // To be able to find internals
 
             // Check if directory exists, if not metadata are not set
-            foreach (var property in infoProperties)
+            foreach (var infoProperty in directoryInfoProperties)
             {
-                if (property.Name == CT.Props.Exists)
+                if (infoProperty.Name == TextConsts.Props.Exists)
                 {
-                    if (property.GetValue(info).ToString() == false.ToString().ToLowerInvariant())
+                    if (infoProperty.GetValue(directoryInfo).ToString() == false.ToString().ToLowerInvariant())
                         return;
                 }
             }
 
-            foreach (var property in infoProperties)
+            foreach (var infoProperty in directoryInfoProperties)
             {
-                foreach (var thisProperty in thisProperties)
+                foreach (var thisProperty in thisDirectorProperties)
                 {
-                    if (thisProperty.Name == property.Name && thisProperty.Name != CT.Props.Parent && thisProperty.Name != CT.Props.Root)
+                    if (thisProperty.Name == infoProperty.Name && thisProperty.Name != TextConsts.Props.Parent && thisProperty.Name != TextConsts.Props.Root)
                     {
-                        thisProperty.SetValue(this, property.GetValue(info, null));
+                        thisProperty.SetValue(this, infoProperty.GetValue(directoryInfo, null));
                         break;
                     }
                 }
@@ -162,24 +156,24 @@ namespace Dirfile_lib.Core.Dirfiles
         /// <summary>
         /// Creates a directory.
         /// </summary>
-        /// <param name="path">Path to the directory.</param>
+        /// <param name="directorPath">Path to the directory.</param>
         /// <param name="security">Security.</param>
-        private void Create(string path)
+        private void Create(string directorPath)
         {
-            var info = Directory.CreateDirectory(path);
-            this.Parent = new Director(info.Parent);
-            this.Root = new Director(info.Root);
-            this.SetMetadata(info);
+            var directoryInfo = Directory.CreateDirectory(directorPath);
+            this.Parent = new Director(directoryInfo.Parent);
+            this.Root = new Director(directoryInfo.Root);
+            this.SetMetadata(directoryInfo);
         }
 
         /// <summary>
         /// Initializes a Director
         /// </summary>
-        /// <param name="path">Path of the directoy.</param>
-        /// <param name="root">True if root, otherwise false.</param>
-        private void Initialize(string path, bool root)
+        /// <param name="directorPath">Path of the directoy.</param>
+        /// <param name="isRoot">True if root, otherwise false.</param>
+        private void Initialize(string directorPath, bool isRoot)
         {
-            this.Path = path;
+            this.Path = directorPath;
 
             this.Exists = Directory.Exists(this.Path);
             this.Attributes = FileAttributes.Directory;
@@ -190,16 +184,16 @@ namespace Dirfile_lib.Core.Dirfiles
             this.FullName = this.Path;
             this.Extension = null;
 
-            var index = this.Path.LastIndexOf(CT.BSlash);
-            var lastIndex = this.Path.LastIndexOf(CT.BSlash);
+            var index = this.Path.LastIndexOf(Chars.BSlash);
+            var lastIndex = this.Path.LastIndexOf(Chars.BSlash);
 
             if (index == 2 && lastIndex == 2)
-                root = true;
+                isRoot = true;
 
             if (lastIndex != 2)
-                this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(CT.BSlash)));
+                this.Parent = new Director(this.Path.Substring(0, this.Path.LastIndexOf(Chars.BSlash)));
 
-            if (index == 2 && !root)
+            if (index == 2 && !isRoot)
                 this.Root = new Director(this.Path);
 
             if (this.IsRoot)
@@ -211,7 +205,7 @@ namespace Dirfile_lib.Core.Dirfiles
             }
             else
             {
-                this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(CT.BSlash)));
+                this.Root = new Director(this.Path.Substring(0, this.Path.IndexOf(Chars.BSlash)));
                 this.Name = this.Path.Substring(lastIndex + 1);
             }
         }

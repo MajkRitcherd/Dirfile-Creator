@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 06/04/2023     \\
+//                              Last change: 26/04/2023     \\
 
 using System;
 using System.IO;
@@ -12,7 +12,7 @@ using Dirfile_lib.API.Extraction.Modes;
 using Dirfile_lib.Core.Dirfiles;
 using Dirfile_lib.Exceptions;
 using Dirfile_lib.Utilities.Validation;
-using CT = Dirfile_lib.Core.Constants.Texts;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib.API.Context
 {
@@ -24,30 +24,35 @@ namespace Dirfile_lib.API.Context
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
         /// </summary>
-        protected BaseDirfileContext()
+        internal BaseDirfileContext()
         {
             this.Initialize(Directory.GetCurrentDirectory(), SlashMode.Backward, PathMode.Absolute);
-        }
-
-        protected BaseDirfileContext(SlashMode slashMode = SlashMode.Backward, PathMode pathMode = PathMode.Relative)
-        {
-            this.Initialize(slashMode == SlashMode.Backward ? Directory.GetCurrentDirectory() : Directory.GetCurrentDirectory().Replace(CT.BSlash, CT.FSlash), slashMode, pathMode);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
         /// </summary>
-        /// <param name="path">Path to director to work from (like relative path).</param>
         /// <param name="slashMode">Slash mode to use.</param>
-        protected BaseDirfileContext(string path, SlashMode slashMode, PathMode pathMode)
+        /// <param name="pathMode">Path mode to use.</param>
+        internal BaseDirfileContext(SlashMode slashMode = SlashMode.Backward, PathMode pathMode = PathMode.Relative)
         {
-            this.Initialize(path, slashMode, pathMode);
+            this.Initialize(slashMode == SlashMode.Backward ? Directory.GetCurrentDirectory() : Directory.GetCurrentDirectory().Replace(Chars.BSlash, Chars.FSlash), slashMode, pathMode);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseDirfileContext"/> class.
+        /// </summary>
+        /// <param name="initialDirectorPath">Path to director to work from (like relative path).</param>
+        /// <param name="slashMode">Slash mode to use.</param>
+        internal BaseDirfileContext(string initialDirectorPath, SlashMode slashMode, PathMode pathMode)
+        {
+            this.Initialize(initialDirectorPath, slashMode, pathMode);
         }
 
         /// <summary>
         /// Gets or sets the current director path of the context.
         /// </summary>
-        internal string CurrentDirectorPath => this.SlashMode == SlashMode.Backward ? this.CurrentDirector.Path : this.CurrentDirector.Path.Replace(CT.BSlash, CT.FSlash);
+        internal string CurrentPath => this.SlashMode == SlashMode.Backward ? this.CurrentDirector.Path : this.CurrentDirector.Path.Replace(Chars.BSlash, Chars.FSlash);
 
         /// <summary>
         /// Gets or sets the Disk manager.
@@ -82,78 +87,78 @@ namespace Dirfile_lib.API.Context
         /// <summary>
         /// Creates Director.
         /// </summary>
-        /// <param name="dirName">Name of a new director.</param>
-        public virtual void CreateDirector(string dirName) => DirfileCreator.Instance.CreateDirector(this.NormalizeString(this.CurrentDirectorPath), dirName);
+        /// <param name="nameOfDirector">Name of a new director.</param>
+        public virtual void CreateDirector(string nameOfDirector) => DirfileCreator.Instance.CreateDirector(this.NormalizeString(this.CurrentPath), nameOfDirector);
 
         /// <summary>
         /// Creates Director.
         /// </summary>
-        /// <param name="path">Path to the director to create.</param>
-        public virtual void CreateDirectorPath(string path) => DirfileCreator.Instance.CreateDirector(this.NormalizeString(path));
+        /// <param name="directorPath">Path to the director to create.</param>
+        public virtual void CreateDirectorFromAbsolutePath(string directorPath) => DirfileCreator.Instance.CreateDirector(this.NormalizeString(directorPath));
 
         /// <summary>
         /// Creates Filer.
         /// </summary>
-        /// <param name="dirName">Name of a new filer.</param>
-        public virtual void CreateFiler(string dirName) => DirfileCreator.Instance.CreateFiler(this.NormalizeString(this.CurrentDirectorPath), dirName);
+        /// <param name="nameOfFiler">Name of a new filer.</param>
+        public virtual void CreateFiler(string nameOfFiler) => DirfileCreator.Instance.CreateFiler(this.NormalizeString(this.CurrentPath), nameOfFiler);
 
         /// <summary>
         /// Creates Filer.
         /// </summary>
-        /// <param name="path">Path to the filer to create.</param>
-        public virtual void CreateFilerPath(string path) => DirfileCreator.Instance.CreateFiler(this.NormalizeString(path));
+        /// <param name="filerPath">Path to the filer to create.</param>
+        public virtual void CreateFilerFromAbsolutePath(string filerPath) => DirfileCreator.Instance.CreateFiler(this.NormalizeString(filerPath));
 
         /// <summary>
         /// Deletes Director.
         /// </summary>
-        /// <param name="dirName">Name of a director to delete.</param>
-        public virtual void DeleteDirector(string dirName) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(this.CurrentDirectorPath), dirName);
+        /// <param name="nameOfDirector">Name of a director to delete.</param>
+        public virtual void DeleteDirector(string nameOfDirector) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(this.CurrentPath), nameOfDirector);
 
         /// <summary>
         /// Deletes Director.
         /// </summary>
-        /// <param name="path">Path to the director to delete.</param>
-        public virtual void DeleteDirectorPath(string path) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(path));
+        /// <param name="directorPath">Path to the director to delete.</param>
+        public virtual void DeleteDirectorFromAbsolutePath(string directorPath) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(directorPath));
 
         /// <summary>
-        /// Deletes Director.
+        /// Deletes Director and its content.
         /// </summary>
-        /// <param name="path">Path to the director to delete.</param>
-        public virtual void DeleteDirectorPathRecursive(string path) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(path), deleteEverything: true);
+        /// <param name="directorPath">Path to the director to delete.</param>
+        public virtual void DeleteDirectorFromAbsolutePathRecursive(string directorPath) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(directorPath), deleteEverything: true);
 
         /// <summary>
         /// Deletes Director recursively.
         /// </summary>
-        /// <param name="dirName">Name of a director to delete.</param>
-        public virtual void DeleteDirectorRecursive(string dirName) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(this.CurrentDirectorPath), dirName, true);
+        /// <param name="nameOfDirector">Name of a director to delete.</param>
+        public virtual void DeleteDirectorRecursive(string nameOfDirector) => DirfileCreator.Instance.DeleteDirector(this.NormalizeString(this.CurrentPath), nameOfDirector, true);
 
         /// <summary>
         /// Deletes Filer.
         /// </summary>
-        /// <param name="dirName">Name of a filer to delete.</param>
-        public virtual void DeleteFiler(string dirName) => DirfileCreator.Instance.DeleteFiler(this.NormalizeString(this.CurrentDirectorPath), dirName);
+        /// <param name="fileName">Name of a filer to delete.</param>
+        public virtual void DeleteFiler(string fileName) => DirfileCreator.Instance.DeleteFiler(this.NormalizeString(this.CurrentPath), fileName);
 
         /// <summary>
         /// Deletes Filer.
         /// </summary>
-        /// <param name="path">Path to the filer to delete.</param>
-        public virtual void DeleteFilerPath(string path) => DirfileCreator.Instance.DeleteFiler(this.NormalizeString(path));
+        /// <param name="filerPath">Path to the filer to delete.</param>
+        public virtual void DeleteFilerFromAbsolutePath(string filerPath) => DirfileCreator.Instance.DeleteFiler(this.NormalizeString(filerPath));
 
         /// <summary>
         /// Changes the actual director and sets current path.
         /// </summary>
         /// <param name="newPath">New path of director.</param>
         /// <returns>Current path.</returns>
-        public virtual void DirectorChange(string newPath)
+        public virtual void ChangeCurrentDirector(string newPath)
         {
             if (PathValidator.Instance.IsInvalid(newPath))
                 throw new DirfileException($"Invalid path when changing director: {newPath}");
 
             if (this.SlashMode == SlashMode.Forward)
-                newPath = newPath.Replace(CT.FSlash, CT.BSlash);
+                newPath = newPath.Replace(Chars.FSlash, Chars.BSlash);
 
             this.CurrentDirector = new Director(newPath);
-            this.DiskManager.ChangeDrive(this.CurrentDirectorPath.Substring(0, 1));
+            this.DiskManager.ChangeDrive(this.CurrentPath.Substring(0, 1));
         }
 
         /// <summary>
@@ -201,18 +206,14 @@ namespace Dirfile_lib.API.Context
         protected virtual void Dispose(bool disposing)
         {
             if (!_Disposed)
-            {
                 if (!disposing)
-                {
                     this._Disposed = true;
-                }
-            }
         }
 
         /// <summary>
         /// Initializes a context.
         /// </summary>
-        protected virtual void Initialize(string path, SlashMode slashMode, PathMode pathMode)
+        protected virtual void Initialize(string initialDirectorPath, SlashMode slashMode, PathMode pathMode)
         {
             this.SlashMode = slashMode;
             this.PathMode = pathMode;
@@ -221,26 +222,26 @@ namespace Dirfile_lib.API.Context
             if (this.SlashMode != SlashMode.Backward)
                 PathValidator.Instance.SwitchSlashMode();
 
-            if (PathValidator.Instance.IsInvalid(path))
-                throw new DirfileException($"Invalid path when initializing: {path}");
+            if (PathValidator.Instance.IsInvalid(initialDirectorPath))
+                throw new DirfileException($"Invalid path when initializing: {initialDirectorPath}");
 
-            this.Extractor.Extract(path);
+            this.Extractor.Extract(initialDirectorPath);
 
             this.CurrentDirector = new Director(this.Extractor.NormalizedDirectorPath);
             this.DiskManager = new DiskManager(this.Extractor.NormalizedDirectorPath.Substring(0, 1));
         }
 
         /// <summary>
-        ///
+        /// Normalizes given string (replaces '/' for '\').
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private string NormalizeString(string str)
+        /// <param name="stringToReplace">String to replace.</param>
+        /// <returns>Normalized string.</returns>
+        private string NormalizeString(string stringToReplace)
         {
             if (this.SlashMode == SlashMode.Backward)
-                return str;
+                return stringToReplace;
             else
-                return str.Replace(CT.FSlash, CT.BSlash);
+                return stringToReplace.Replace(Chars.FSlash, Chars.BSlash);
         }
     }
 }

@@ -3,18 +3,14 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 21/02/2023     \\
+//                              Last change: 28/04/2023     \\
 
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Dirfile-Creator")]
-
-namespace Dirfile_lib.Core
+namespace Dirfile_lib.Extensions
 {
     /// <summary>
     /// Contains file extensions, not all of them
     /// </summary>
-    internal class DirfileExtensions
+    public class DirfileExtensions
     {
         #region Audio file extensions
 

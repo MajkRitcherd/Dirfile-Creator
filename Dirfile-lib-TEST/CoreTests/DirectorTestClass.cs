@@ -73,40 +73,40 @@ namespace Dirfile_lib_TEST.CoreTests
             TestRootDirectory();
 
             // Test non-existing directory using DirectoryInfo
-            var dirInfo = new DirectoryInfo(_TestPath);
-            var dict = new Dictionary<string, object?>();
-            var director = new Director(dirInfo);
+            var directoryInfo = new DirectoryInfo(_TestPath);
+            var expectedDirectorProperties = new Dictionary<string, object?>();
+            var director = new Director(directoryInfo);
 
-            bool result = ICoreTest.CompareProperties(dirInfo, dict, director, false);
-            Assert.IsTrue(result, "Properties are not the same!");
+            bool arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, expectedDirectorProperties, director, false);
+            Assert.IsTrue(arePropertiesEqual, "Properties are not the same!");
 
             // Test existing directory using DirectoryInfo
             Directory.CreateDirectory(_TestPath);
-            dirInfo = new DirectoryInfo(_TestPath);
-            director = new Director(dirInfo);
+            directoryInfo = new DirectoryInfo(_TestPath);
+            director = new Director(directoryInfo);
 
-            result = ICoreTest.CompareProperties(dirInfo, dict, director, true);
-            Assert.IsTrue(result, "Properties are not the same!");
+            arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, expectedDirectorProperties, director, true);
+            Assert.IsTrue(arePropertiesEqual, "Properties are not the same!");
             Directory.Delete(_TestPath);
 
             // Test non-existing directory using path
-            dirInfo = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\DirFileTest");
+            directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\DirFileTest");
             director = new Director(_TestPath);
-            var parentDir = new Director(Directory.GetCurrentDirectory());
-            var rootDir = new Director("C:\\");
-            dict = CreateTestDictionary(false, _TestPath, rootDir, parentDir);
+            var parentDirector = new Director(Directory.GetCurrentDirectory());
+            var rootDirector = new Director("C:\\");
+            expectedDirectorProperties = GetExpectedProperties(false, _TestPath, rootDirector, parentDirector);
 
-            result = ICoreTest.CompareProperties(dirInfo, dict, director, false);
-            Assert.IsTrue(result, "Properties are not the same!");
-            dict.Clear();
+            arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, expectedDirectorProperties, director, false);
+            Assert.IsTrue(arePropertiesEqual, "Properties are not the same!");
+            expectedDirectorProperties.Clear();
 
             // Test existing directory using path
             Directory.CreateDirectory(_TestPath);
             director = new Director(_TestPath);
-            dict = CreateTestDictionary(true, _TestPath, rootDir, parentDir);
+            expectedDirectorProperties = GetExpectedProperties(true, _TestPath, rootDirector, parentDirector);
 
-            result = ICoreTest.CompareProperties(dirInfo, dict, director, true);
-            Assert.IsTrue(result, "Properties are not the same!");
+            arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, expectedDirectorProperties, director, true);
+            Assert.IsTrue(arePropertiesEqual, "Properties are not the same!");
 
             Directory.Delete(_TestPath);
         }
@@ -119,53 +119,54 @@ namespace Dirfile_lib_TEST.CoreTests
             // Test root directory without '\' character
             var rootPath = "C:";
             var director = new Director(rootPath);
-            var dirInfo = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\DirFileTest");
+            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\DirFileTest");
 
-            bool result = ICoreTest.CompareProperties(dirInfo, GetRootDirectory(), director, true);
-            Assert.IsTrue(result, $"Properties of a root '{rootPath}' are wrong!");
+            bool arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, GetRootDirectoryProperties(), director, true);
+            Assert.IsTrue(arePropertiesEqual, $"Properties of a root '{rootPath}' are wrong!");
 
             // Test root directory with '\' character
             rootPath += "\\";
             director = new Director(rootPath);
 
-            result = ICoreTest.CompareProperties(dirInfo, GetRootDirectory(), director, true);
-            Assert.IsTrue(result, $"Properties of a root '{rootPath}' are wrong!");
+            arePropertiesEqual = ICoreTest.CompareProperties(directoryInfo, GetRootDirectoryProperties(), director, true);
+            Assert.IsTrue(arePropertiesEqual, $"Properties of a root '{rootPath}' are wrong!");
         }
 
         /// <summary>
-        /// Creates test dictionary of expected properties for Director.
+        /// Gets expected properties.
         /// </summary>
-        /// <param name="dictExist">True if directory exists, otherwise false.</param>
-        /// <param name="pathToDict">Path to the directory.</param>
-        /// <param name="root">Root director.</param>
-        /// <param name="parent">Parent director.</param>
-        /// <returns>Dictionary of expected properties.</returns>
-        private static Dictionary<string, object?> CreateTestDictionary(bool dictExist, string pathToDict, Director root, Director parent)
+        /// <param name="directoryExists">True if directory exists, otherwise false.</param>
+        /// <param name="pathToDirectory">Path to the directory.</param>
+        /// <param name="rootDirector">Root director.</param>
+        /// <param name="parentDirector">Parent director.</param>
+        /// <returns>Property by property name.</returns>
+        private static Dictionary<string, object?> GetExpectedProperties(bool directoryExists, string pathToDirectory, Director rootDirector, Director parentDirector)
         {
             return new Dictionary<string, object?>()
             {
                 { "Attributes", FileAttributes.Directory },
-                { "CreationTime", dictExist ? Directory.GetCreationTime(pathToDict) : DateTime.MinValue },
-                { "CreationTimeUtc", dictExist ? Directory.GetCreationTimeUtc(pathToDict) : DateTime.MinValue },
-                { "Exists", dictExist },
+                { "CreationTime", directoryExists ? Directory.GetCreationTime(pathToDirectory) : DateTime.MinValue },
+                { "CreationTimeUtc", directoryExists ? Directory.GetCreationTimeUtc(pathToDirectory) : DateTime.MinValue },
+                { "Exists", directoryExists },
                 { "Extension", string.Empty },
                 { "FullName", _TestPath },
-                { "LastAccessTime", dictExist ? Directory.GetLastAccessTime(pathToDict) : DateTime.MinValue },
-                { "LastAccessTimeUtc", dictExist ? Directory.GetLastAccessTimeUtc(pathToDict) : DateTime.MinValue },
-                { "LastWriteTime", dictExist ? Directory.GetLastWriteTime(pathToDict) : DateTime.MinValue },
-                { "LastWriteTimeUtc", dictExist ? Directory.GetLastWriteTimeUtc(pathToDict) : DateTime.MinValue },
+                { "LastAccessTime", directoryExists ? Directory.GetLastAccessTime(pathToDirectory) : DateTime.MinValue },
+                { "LastAccessTimeUtc", directoryExists ? Directory.GetLastAccessTimeUtc(pathToDirectory) : DateTime.MinValue },
+                { "LastWriteTime", directoryExists ? Directory.GetLastWriteTime(pathToDirectory) : DateTime.MinValue },
+                { "LastWriteTimeUtc", directoryExists ? Directory.GetLastWriteTimeUtc(pathToDirectory) : DateTime.MinValue },
                 { "LinkTarget", null },
                 { "Name", "TestDirectory" },
-                { "Root", root },
-                { "Parent", parent },
+                { "Root", rootDirector },
+                { "Parent", parentDirector },
                 { "Path", _TestPath }
             };
         }
 
         /// <summary>
-        /// Gets properties of a root path of 'C:\'.
+        /// Gets properties of a root directory 'C:\'.
         /// </summary>
-        private static Dictionary<string, object?> GetRootDirectory()
+        /// <returns>Property by property name.</returns>
+        private static Dictionary<string, object?> GetRootDirectoryProperties()
         {
             return new Dictionary<string, object?>()
             {

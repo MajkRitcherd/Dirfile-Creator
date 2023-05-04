@@ -3,11 +3,11 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 18/03/2023     \\
+//                              Last change: 26/04/2023     \\
 
 using Dirfile_lib.Utilities.Validation;
-using Microsoft.Win32;
-using System;
+using Dirfile_lib.API.Extraction.Modes;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
 {
@@ -18,56 +18,71 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
     public class PathValidatorTests
     {
         /// <summary>
-        /// Test paths for Path validator.
-        /// </summary>
-        private readonly List<string> _paths = new()
-        {
-            "C:",
-            Directory.GetCurrentDirectory() + "\\Test_Lol",
-            Directory.GetCurrentDirectory() + "\\Test",
-            Directory.GetCurrentDirectory() + "\\Test\\file1.txt",
-            Directory.GetCurrentDirectory() + "\\Test\\ss",
-            Directory.GetCurrentDirectory() + "\\_Test.csv",
-            Directory.GetCurrentDirectory() + "\\Test dir",
-            Directory.GetCurrentDirectory() + "\\Test+Test",
-            Directory.GetCurrentDirectory() + "\\Test  ",
-            Directory.GetCurrentDirectory() + "\\Test*Fail",
-            Directory.GetCurrentDirectory() + "\\Test\\Test/v",
-            Directory.GetCurrentDirectory() + "\\>Test File /"
-        };
-
-        /// <summary>
         /// Tests path validating using <see cref="PathValidator"/> class.
         /// </summary>
         [TestMethod]
         public void TestValidator()
         {
-            foreach (var item in _paths.Select((item, index) => new { item, index }))
+            if (PathValidator.Instance.SlashMode != SlashMode.Backward)
+                PathValidator.Instance.SwitchSlashMode();
+
+            foreach (var expectedData in GetTestData().Select((Path, Index) => new { Path, Index }))
             {
-                var strToValidate = item.item;
-                if (item.index < 8)
+                var stringToValidate = expectedData.Path;
+
+                // Valid paths
+                if (expectedData.Index < 8)
                 {
-                    Assert.IsTrue(PathValidator.Instance.IsValid(strToValidate), $"Path with index: {item.index} was badly classified.");
+                    Assert.IsTrue(PathValidator.Instance.IsValid(stringToValidate), $"Path '{stringToValidate}' should be valid.");
                     PathValidator.Instance.SwitchSlashMode();
-                    Assert.IsTrue(PathValidator.Instance.IsValid(strToValidate.Replace("\\", "/")));
+                    Assert.IsTrue(PathValidator.Instance.IsValid(stringToValidate.Replace(Chars.BSlash, Chars.FSlash)), $"Path '{stringToValidate}' should be valid.");
                 }
-                else
+                else 
                 {
-                    Assert.IsFalse(PathValidator.Instance.IsValid(strToValidate), $"Path with index: {item.index} was badly classified.");
+                    // Invalid paths
+                    Assert.IsFalse(PathValidator.Instance.IsValid(stringToValidate), $"Path '{stringToValidate}' should not be valid.");
                     PathValidator.Instance.SwitchSlashMode();
                     
-                    if (item.index >= 10)
+                    stringToValidate = stringToValidate.Replace(Chars.BSlash, Chars.FSlash);
+                    
+                    // Replace all occurences of '\' for '/' and replace '/' for '\'
+                    if (expectedData.Index >= 10)
                     {
-                        strToValidate = strToValidate.Replace("\\", "/");
-                        var strToReplace = strToValidate[strToValidate.LastIndexOf("/")..];
-                        strToValidate = string.Concat(strToValidate.AsSpan(0, strToValidate.LastIndexOf("/") - 1), strToReplace.Replace("/", "\\"));
+                        var stringToReplace = stringToValidate[stringToValidate.LastIndexOf(Chars.FSlash)..];
+                        stringToValidate = string.Concat(stringToValidate.AsSpan(0, stringToValidate.LastIndexOf(Chars.FSlash) - 1), stringToReplace.Replace(Chars.FSlash, Chars.BSlash));
                     }
                     
-                    Assert.IsFalse(PathValidator.Instance.IsValid(item.item.Replace("\\", "/")), $"Path with index: {item.index} was badly classified.");
+                    Assert.IsFalse(PathValidator.Instance.IsValid(stringToValidate), $"Path '{stringToValidate}' should not be valid.");
                 }
 
                 PathValidator.Instance.SwitchSlashMode();
             }
+        }
+
+        /// <summary>
+        /// Prepares test data.
+        /// </summary>
+        /// <returns>List of test strings.</returns>
+        private static List<string> GetTestData()
+        {
+            return new List<string>()
+            {
+                // Valid 
+                "C:",
+                Directory.GetCurrentDirectory() + "\\Test_Lol",
+                Directory.GetCurrentDirectory() + "\\Test",
+                Directory.GetCurrentDirectory() + "\\Test\\file1.txt",
+                Directory.GetCurrentDirectory() + "\\Test\\ss",
+                Directory.GetCurrentDirectory() + "\\_Test.csv",
+                Directory.GetCurrentDirectory() + "\\Test dir",
+                Directory.GetCurrentDirectory() + "\\Test+Test",
+
+                // Invalid
+                Directory.GetCurrentDirectory() + "\\Test  ",
+                Directory.GetCurrentDirectory() + "\\Test*Fail",
+                Directory.GetCurrentDirectory() + "\\Test\\Test/v",
+                Directory.GetCurrentDirectory() + "\\>Test File /"
+            };
         }
     }
 }

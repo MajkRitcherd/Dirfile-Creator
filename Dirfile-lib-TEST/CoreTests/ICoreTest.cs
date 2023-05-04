@@ -3,9 +3,10 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 16/03/2023     \\
+//                              Last change: 26/04/2023     \\
 
 using System.Reflection;
+using PropConsts = Dirfile_lib.Core.Constants.Texts.Props;
 
 namespace Dirfile_lib_TEST.CoreTests
 {
@@ -31,45 +32,45 @@ namespace Dirfile_lib_TEST.CoreTests
             if (actual == null)
                 return false;
 
-            PropertyInfo[] actProperties = actual.GetType().GetProperties();
+            PropertyInfo[] actualProperties = actual.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-            foreach (var expValue in expectedDictionary)
+            foreach (var expectedPropertyByPropertyName in expectedDictionary)
             {
-                foreach (var actProperty in actProperties)
+                foreach (var actualPropertyByPropertyName in actualProperties)
                 {
-                    if (expValue.Key == actProperty.Name && expValue.Key == "Directory")
+                    if (expectedPropertyByPropertyName.Key == actualPropertyByPropertyName.Name && expectedPropertyByPropertyName.Key == PropConsts.Directory)
                     {
-                        var expected = ((Director)expValue.Value!).FullName;
+                        var expectedName = ((Director)expectedPropertyByPropertyName.Value!).FullName;
 
-                        if (actProperty.GetValue(actual) is not Director actValue)
+                        if (actualPropertyByPropertyName.GetValue(actual) is not Director actValue)
                             return false;
 
-                        if (expected != actValue.FullName)
+                        if (expectedName != actValue.FullName)
                             return false;
 
                         setProperties++;
                     }
-                    else if (expValue.Key == actProperty.Name)
+                    else if (expectedPropertyByPropertyName.Key == actualPropertyByPropertyName.Name)
                     {
-                        if (expValue.Key == "Length" && !exists)
+                        if (expectedPropertyByPropertyName.Key == PropConsts.Length && !exists)
                         {
-                            var len = actProperty.GetValue(actual, null);
-                            len ??= string.Empty;
+                            var fileLength = actualPropertyByPropertyName.GetValue(actual, null);
+                            fileLength ??= string.Empty;
 
-                            if (len.ToString() != "0")
+                            if (fileLength.ToString() != "0")
                                 return false;
 
                             setProperties++;
                             break;
                         }
 
-                        var expected = expValue.Value;
-                        var actValue = actProperty.GetValue(actual);
+                        var expectedProperty = expectedPropertyByPropertyName.Value;
+                        var actualProperty = actualPropertyByPropertyName.GetValue(actual);
 
-                        expected ??= string.Empty;
-                        actValue ??= string.Empty;
+                        expectedProperty ??= string.Empty;
+                        actualProperty ??= string.Empty;
 
-                        if (expected.ToString() != actValue.ToString())
+                        if (expectedProperty.ToString() != actualProperty.ToString())
                             return false;
 
                         setProperties++;
@@ -104,7 +105,7 @@ namespace Dirfile_lib_TEST.CoreTests
                 return false;
             }
 
-            PropertyInfo[] actProperties = actual.GetType().GetProperties();
+            PropertyInfo[] actProperties = actual.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
             PropertyInfo[] expProperties = expectedInfo.GetType().GetProperties();
 
             // Compare everything
@@ -113,7 +114,7 @@ namespace Dirfile_lib_TEST.CoreTests
                 foreach (var actProperty in actProperties)
                 {
                     if (expProperty.Name == actProperty.Name && 
-                        (expProperty.Name == "Directory" || expProperty.Name == "Parent" || expProperty.Name == "Root"))
+                        (expProperty.Name == PropConsts.Directory || expProperty.Name == PropConsts.Parent || expProperty.Name == PropConsts.Root))
                     {
                         var expected = expProperty.GetValue(expectedInfo);
 
@@ -126,9 +127,9 @@ namespace Dirfile_lib_TEST.CoreTests
 
                         setProperties++;
                     }
-                    else if (expProperty.Name == actProperty.Name && expProperty.Name != "Directory")
+                    else if (expProperty.Name == actProperty.Name && expProperty.Name != PropConsts.Directory)
                     {
-                        if (expProperty.Name == "Length" && !exists)
+                        if (expProperty.Name == PropConsts.Length && !exists)
                         {
                             var len = actProperty.GetValue(actual, null);
                             len ??= string.Empty;

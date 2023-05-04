@@ -3,17 +3,17 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 05/04/2022     \\
+//                              Last change: 28/04/2022     \\
 
 using System.Text.RegularExpressions;
-using CT = Dirfile_lib.Core.Constants.Texts;
+using DirfileOperations = Dirfile_lib.Core.Constants.DirFile.Operations;
 
 namespace Dirfile_lib.Utilities.Validation
 {
     /// <summary>
     /// Abstract class for custom regex validators.
     /// </summary>
-    internal abstract class AbstractRegexValidator : AbstractBaseValidator, IValidation
+    internal abstract class AbstractRegexValidator : AbstractBaseValidator
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractRegexValidator"/> class.
@@ -37,19 +37,23 @@ namespace Dirfile_lib.Utilities.Validation
         /// <summary>
         /// Initializes instance.
         /// </summary>
-        public abstract void Initialize();
+        internal abstract void Initialize();
 
         /// <inheritdoc/>
-        public bool IsInvalid(string strToValidate) => !this.IsValid(strToValidate);
-
-        /// <inheritdoc/>
-        public bool IsValid(string strToValidate) => this._Regex.IsMatch(strToValidate) && !EndsWithControlCharacter(strToValidate);
+        public override bool IsValid(string stringToValidate) => this._Regex.IsMatch(stringToValidate) && !EndsWithControlCharacter(stringToValidate);
 
         /// <summary>
-        /// Checks whether string ends with control character.
+        /// Validates whether string ends with control character.
         /// </summary>
-        /// <param name="strToValidate">String to validate.</param>
+        /// <param name="stringToValidate">String to validate.</param>
         /// <returns>True, if ends with an operator, otherwise false.</returns>
-        private bool EndsWithControlCharacter(string strToValidate) => strToValidate.EndsWith(CT.BSlash) || strToValidate.EndsWith(">") || strToValidate.EndsWith(":>");
+        private bool EndsWithControlCharacter(string stringToValidate)
+        {
+            return stringToValidate.EndsWith(DirfileOperations.Change) ||
+                   stringToValidate.EndsWith(DirfileOperations.Next) ||
+                   stringToValidate.EndsWith(DirfileOperations.Prev) ||
+                   stringToValidate.EndsWith(DirfileOperations.StartOfText) ||
+                   stringToValidate.EndsWith(DirfileOperations.EndOfText);
+        }
     }
 }

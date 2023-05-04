@@ -3,14 +3,14 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/03/2023     \\
+//                              Last change: 28/04/2023     \\
 
 namespace Dirfile_lib.Utilities.Validation
 {
     /// <summary>
-    /// Abstract class for <see cref="ExtensionChecker"/> and <see cref="NameChecker"/> classes.
+    /// Abstract class for <see cref="ExtensionValidator"/> and <see cref="NameValidator"/> classes.
     /// </summary>
-    internal abstract class AbstractValidator : AbstractBaseValidator, IValidation
+    internal abstract class AbstractValidator : AbstractBaseValidator
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractValidator"/> class.
@@ -18,33 +18,30 @@ namespace Dirfile_lib.Utilities.Validation
         protected AbstractValidator()
             : base()
         {
-            this.DirfileExtension = null;
+            this.ExtensionName = null;
         }
 
         /// <summary>
         /// Gets or sets extension of a Filer.
         /// </summary>
-        public string DirfileExtension { get; protected set; }
+        internal string ExtensionName { get; set; }
 
         /// <inheritdoc/>
-        public override void Clean()
+        internal override void Clean()
         {
             base.Clean();
 
-            this.DirfileExtension = null;
+            this.ExtensionName = null;
         }
 
         /// <inheritdoc/>
-        public bool IsInvalid(string strToValidate) => !this.IsValid(strToValidate);
-
-        /// <inheritdoc/>
-        public bool IsValid(string strToCheck) => (this.Successful = this.Validate(strToCheck)).Value;
+        public override bool IsValid(string stringToValidate) => (this.IsSuccess = this.Validate(stringToValidate)).Value;
 
         /// <summary>
-        /// Checks whether given string is valid or not.
+        /// Validates whether given string is valid or not.
         /// </summary>
-        /// <param name="strToCheck">String to check.</param>
-        /// <returns></returns>
-        protected abstract bool Validate(string strToCheck);
+        /// <param name="stringToValidate">String to validate.</param>
+        /// <returns>True, if string is valid, otherwise false.</returns>
+        protected abstract bool Validate(string stringToValidate);
     }
 }

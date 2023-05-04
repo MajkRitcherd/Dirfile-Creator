@@ -7,37 +7,37 @@
 
 using System;
 using System.Text.RegularExpressions;
-using CRP = Dirfile_lib.Core.Constants.RegexPatterns;
+using RegexConsts = Dirfile_lib.Core.Constants.RegexPatterns;
 
 namespace Dirfile_lib.Utilities.Validation
 {
     /// <summary>
     /// Parses string with arguments.
     /// </summary>
-    internal class ArgumentParser : AbstractRegexValidator
+    internal class ArgumentValidator : AbstractRegexValidator
     {
         /// <summary>
-        /// 
+        /// Lazily instantiate a new instance of the <see cref="ArgumentValidator"/> class.
         /// </summary>
-        private static readonly Lazy<ArgumentParser> _Parser = new Lazy<ArgumentParser>(() => new ArgumentParser());
+        internal static readonly Lazy<ArgumentValidator> _Validator = new Lazy<ArgumentValidator>(() => new ArgumentValidator());
 
         /// <summary>
-        /// 
+        /// Gets the <see cref="ArgumentValidator"/> instance.
         /// </summary>
-        public static ArgumentParser Instance => _Parser.Value;
+        internal static ArgumentValidator Instance => _Validator.Value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentParser"/> class.
+        /// Initializes a new instance of the <see cref="ArgumentValidator"/> class.
         /// </summary>
-        private ArgumentParser()
+        internal ArgumentValidator()
             : base()
         {
         }
 
         /// <inheritdoc/>
-        public override void Initialize()
+        internal override void Initialize()
         {
-            this._Pattern = CRP.ArgumentsPattern;
+            this._Pattern = RegexConsts.ArgumentsPattern;
             this._Regex = new Regex(this._Pattern);
         }
     }

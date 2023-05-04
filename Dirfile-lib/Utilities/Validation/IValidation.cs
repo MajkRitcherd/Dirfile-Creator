@@ -13,17 +13,17 @@ namespace Dirfile_lib.Utilities.Validation
     internal interface IValidation
     {
         /// <summary>
-        /// Checks, whether given string is valid or not.
+        /// Validates, whether given string is valid or not.
         /// </summary>
-        /// <param name="strToValidateue">String to validate.</param>
+        /// <param name="stringToValidate">String to validate.</param>
         /// <returns>True, if valid, otherwise false.</returns>
-        bool IsValid(string strToValidate);
+        bool IsValid(string stringToValidate);
 
         /// <summary>
-        /// Checks, whether given string is invalid or not.
+        /// Validates, whether given string is invalid or not.
         /// </summary>
-        /// <param name="strToValidate">String to validate.</param>
+        /// <param name="stringToValidate">String to validate.</param>
         /// <returns>True, if invalid, otherwise false.</returns>
-        bool IsInvalid(string strToValidate);
+        bool IsInvalid(string stringToValidate);
     }
 }

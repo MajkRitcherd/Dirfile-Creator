@@ -4,6 +4,7 @@
 ## Lib ##
 Dirfile-lib/bin/
 Dirfile-lib/obj/
+Dirfile-lib/output/
 
 ## App ##
 Dirfile-Creator/bin/

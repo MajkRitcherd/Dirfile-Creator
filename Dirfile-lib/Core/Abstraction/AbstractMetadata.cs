@@ -17,50 +17,50 @@ namespace Dirfile_lib.Core.Abstraction
         /// <summary>
         /// Gets or sets the attributes.
         /// </summary>
-        public FileAttributes Attributes { get; set; }
+        internal FileAttributes Attributes { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether it exists.
         /// </summary>
-        public bool Exists { get; protected set; }
+        internal bool Exists { get; set; }
 
         /// <summary>
         /// Gets the extension.
         /// </summary>
-        public string Extension { get; protected set; }
+        internal string Extension { get; set; }
 
         /// <summary>
         /// Gets the fullname (path with name).
         /// </summary>
-        public string FullName { get; protected set; }
+        internal string FullName { get; set; }
 
         /// <summary>
         /// Gets link target's path if exists. If it does not exist in Fullname,
         ///     or this instance does not represent a link, returns null.
         /// </summary>
-        public string LinkTarget { get; protected set; }
+        internal string LinkTarget { get; set; }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name { get; protected set; }
+        internal string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the path.
         /// </summary>
-        public string Path { get; set; }
+        internal string Path { get; set; }
 
         /// <summary>
         /// Only creates a file or directory.
         /// </summary>
         /// <param name="path">Path.</param>
-        public abstract void Create();
+        internal abstract void Create();
 
         /// <summary>
         /// Deletes a file or directory.
         /// </summary>
         /// <param name="path">Path</param>
-        public abstract void Delete();
+        internal abstract void Delete();
 
         /// <summary>
         /// Sets metadata of a type T.

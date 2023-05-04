@@ -41,14 +41,14 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
         [TestMethod]
         public override void TestExtracting()
         {
-            foreach (var testData in PrepareExtractorTestData().Select((value, index) => new { value, index }))
+            foreach (var testData in GetExtractorTestData().Select((ExpectedDataByTestString, Index) => new { ExpectedDataByTestString, Index }))
             {
-                if (testData.index >= 5)
+                if (testData.Index >= 5)
                     this._SlashMode = SlashMode.Forward;
 
                 try
                 {
-                    this._Extractor?.Extract(testData.value.Key);
+                    this._Extractor?.Extract(testData.ExpectedDataByTestString.Key);
                 }
                 catch (DirfileException)
                 {
@@ -56,11 +56,11 @@ namespace Dirfile_lib_TEST.APITests.ExtractTests
                     continue;
                 }
 
-                if (testData.value.Value != null)
+                if (testData.ExpectedDataByTestString.Value != null)
                 {
-                    Assert.AreEqual(testData.value.Value.ExpInput, this._Extractor?.InputString, $"Input strings were not the same: {testData.value.Value.ExpInput}");
-                    Assert.AreEqual(testData.value.Value.ExpDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.value.Value.ExpDirectorPath}");
-                    Assert.AreEqual(testData.value.Value.ExpArgument, this._Extractor?.Arguments, $"Input strings were not the same: {testData.value.Value.ExpArgument}");
+                    Assert.AreEqual(testData.ExpectedDataByTestString.Value.ExpectedInput, this._Extractor?.ReceivedString, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value.ExpectedInput}");
+                    Assert.AreEqual(testData.ExpectedDataByTestString.Value.ExpectedDirectorPath, this._Extractor?.DirectorPath, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value.ExpectedDirectorPath}");
+                    Assert.AreEqual(testData.ExpectedDataByTestString.Value.ExpectedArgument, this._Extractor?.ArgumentString, $"Input strings were not the same: {testData.ExpectedDataByTestString.Value.ExpectedArgument}");
                 }
             }
         }

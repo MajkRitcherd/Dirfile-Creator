@@ -8,7 +8,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Dirfile_lib.API.Extraction.Modes;
-using CRP = Dirfile_lib.Core.Constants.RegexPatterns;
+using RegexConsts = Dirfile_lib.Core.Constants.RegexPatterns;
 
 namespace Dirfile_lib.Utilities.Validation
 {
@@ -31,24 +31,24 @@ namespace Dirfile_lib.Utilities.Validation
         /// <summary>
         /// Gets the <see cref="PathValidator"/> instance.
         /// </summary>
-        public static PathValidator Instance => _Validator.Value;
+        internal static PathValidator Instance => _Validator.Value;
 
         /// <summary>
         /// Gets or sets the slash mode.
         /// </summary>
-        public SlashMode SlashMode { get; set; } = SlashMode.Backward;
+        internal SlashMode SlashMode { get; set; } = SlashMode.Backward;
 
         /// <inheritdoc/>
-        public override void Initialize()
+        internal override void Initialize()
         {
-            this._Pattern = CRP.DirfileNormalizedPathPattern;
+            this._Pattern = RegexConsts.DirfileNormalizedPathPattern;
             this._Regex = new Regex(this._Pattern);
         }
 
         /// <summary>
         /// Switches slash mode between '\' and '/'.
         /// </summary>
-        public void SwitchSlashMode()
+        internal void SwitchSlashMode()
         {
             switch (this.SlashMode)
             {
@@ -72,11 +72,11 @@ namespace Dirfile_lib.Utilities.Validation
             switch (this.SlashMode)
             {
                 case SlashMode.Backward:
-                    this._Pattern = CRP.DirfileNormalizedPathPattern;
+                    this._Pattern = RegexConsts.DirfileNormalizedPathPattern;
                     break;
 
                 case SlashMode.Forward:
-                    this._Pattern = CRP.DirfilePathPattern;
+                    this._Pattern = RegexConsts.DirfilePathPattern;
                     break;
             }
 

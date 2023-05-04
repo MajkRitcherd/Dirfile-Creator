@@ -3,9 +3,10 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 20/03/2023     \\
+//                              Last change: 26/04/2023     \\
 
 using Dirfile_lib.API.Context;
+using Chars = Dirfile_lib.Core.Constants.DirFile.Characters;
 
 namespace Dirfile_lib_TEST.APITests.ContextTests
 {
@@ -23,70 +24,70 @@ namespace Dirfile_lib_TEST.APITests.ContextTests
         {
             try
             {
-                using (var baseCtx = new DirfileContext(Directory.GetCurrentDirectory()))
+                using (var baseContext = new DirfileContext(Directory.GetCurrentDirectory()))
                 {
-                    foreach (var testData in GetTestData().Select((value, index) => new { value, index }))
+                    foreach (var testData in GetTestData().Select((testString, Index) => new { testString, Index }))
                     {
-                        if (string.IsNullOrEmpty(testData.value) && testData.index != 0)
-                            baseCtx.SwitchSlashMode();
+                        if (string.IsNullOrEmpty(testData.testString) && testData.Index != 0)
+                            baseContext.SwitchSlashMode();
 
                         // Director creation
-                        if (testData.index % 3 == 1 && testData.value.Any(x => x == '\\' || x == '/'))
-                            baseCtx.CreateDirectorPath(testData.value);
-                        else if (testData.index % 3 == 1)
-                            baseCtx.CreateDirector(testData.value);
+                        if (testData.Index % 3 == 1 && testData.testString.Any(x => x == Chars.BSlash || x == Chars.FSlash))
+                            baseContext.CreateDirectorFromAbsolutePath(testData.testString);
+                        else if (testData.Index % 3 == 1)
+                            baseContext.CreateDirector(testData.testString);
 
                         // Filer creation
-                        if (testData.index % 3 == 2 && testData.value.Any(x => x == '\\' || x == '/'))
-                            baseCtx.CreateFilerPath(testData.value);
-                        else if (testData.index % 3 == 2)
-                            baseCtx.CreateFiler(testData.value);
+                        if (testData.Index % 3 == 2 && testData.testString.Any(x => x == Chars.BSlash || x == Chars.FSlash))
+                            baseContext.CreateFilerFromAbsolutePath(testData.testString);
+                        else if (testData.Index % 3 == 2)
+                            baseContext.CreateFiler(testData.testString);
 
                         // Check if created
-                        switch (testData.index % 3)
+                        switch (testData.Index % 3)
                         {
                             case 0:
-                                if (testData.value.EndsWith("\\"))
+                                if (testData.testString.EndsWith(Chars.BSlash))
                                 {
-                                    Assert.IsTrue(Directory.Exists(testData.value[..testData.value.LastIndexOf("\\")]));
+                                    Assert.IsTrue(Directory.Exists(testData.testString[..testData.testString.LastIndexOf(Chars.BSlash)]));
                                     break;
                                 }
-                                if (testData.value.EndsWith('/'))
+                                if (testData.testString.EndsWith(Chars.FSlash))
                                 {
-                                    Assert.IsTrue(Directory.Exists(testData.value[..testData.value.LastIndexOf("/")]));
+                                    Assert.IsTrue(Directory.Exists(testData.testString[..testData.testString.LastIndexOf(Chars.FSlash)]));
                                     break;
                                 }
 
-                                Assert.IsFalse(Directory.Exists(testData.value), "Empty string should not create anything!");
-                                Assert.IsFalse(File.Exists(testData.value), "Empty string should not create anything!");
+                                Assert.IsFalse(Directory.Exists(testData.testString), "Empty string should not create anything!");
+                                Assert.IsFalse(File.Exists(testData.testString), "Empty string should not create anything!");
                                 break;
                             case 1:
-                                Assert.IsTrue(Directory.Exists(testData.value), $"Directory '{testData.value}' was not created!");
+                                Assert.IsTrue(Directory.Exists(testData.testString), $"Directory '{testData.testString}' was not created!");
                                 break;
                             case 2:
-                                Assert.IsTrue(File.Exists(testData.value), $"File '{testData.value}' was not created!");
+                                Assert.IsTrue(File.Exists(testData.testString), $"File '{testData.testString}' was not created!");
                                 break;
                         }
 
                         // Director deletion
-                        if (testData.index % 3 == 1 && testData.value.Any(x => x == '\\' || x == '/'))
-                            baseCtx.DeleteDirectorPath(testData.value);
-                        else if (testData.index % 3 == 1)
-                            baseCtx.DeleteDirector(testData.value);
+                        if (testData.Index % 3 == 1 && testData.testString.Any(x => x == Chars.BSlash || x == Chars.FSlash))
+                            baseContext.DeleteDirectorFromAbsolutePath(testData.testString);
+                        else if (testData.Index % 3 == 1)
+                            baseContext.DeleteDirector(testData.testString);
 
                         // Filer deletion
-                        if (testData.index % 3 == 2 && testData.value.Any(x => x == '\\' || x == '/'))
-                            baseCtx.DeleteFilerPath(testData.value);
-                        else if (testData.index % 3 == 2)
-                            baseCtx.DeleteFiler(testData.value);
+                        if (testData.Index % 3 == 2 && testData.testString.Any(x => x == Chars.BSlash || x == Chars.FSlash))
+                            baseContext.DeleteFilerFromAbsolutePath(testData.testString);
+                        else if (testData.Index % 3 == 2)
+                            baseContext.DeleteFiler(testData.testString);
 
-                        switch (testData.index % 3)
+                        switch (testData.Index % 3)
                         {
                             case 1:
-                                Assert.IsFalse(Directory.Exists(testData.value), $"Directory '{testData.value}' should be deleted!");
+                                Assert.IsFalse(Directory.Exists(testData.testString), $"Directory '{testData.testString}' should be deleted!");
                                 break;
                             case 2:
-                                Assert.IsFalse(File.Exists(testData.value), $"File '{testData.value}' should be deleted!");
+                                Assert.IsFalse(File.Exists(testData.testString), $"File '{testData.testString}' should be deleted!");
                                 break;
                         }
                     }
