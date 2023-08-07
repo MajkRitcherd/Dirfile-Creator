@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirfile-lib", "Dirfile-lib\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dirfile-Creator", "Dirfile-Creator\Dirfile-Creator.csproj", "{A99DA645-C856-419A-8CC1-AFE8047A527E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirfile-Creator_Graphical", "Dirfile-Creator_Graphical\Dirfile-Creator_Graphical.csproj", "{61FA5464-C578-4F6A-B370-519F376615BC}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dirfile-lib-TEST", "Dirfile-lib-TEST\Dirfile-lib-TEST.csproj", "{AE990C1F-A87F-4160-A255-F722EA2C9B0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dirfile-Creator-TEST", "Dirfile-Creator-TEST\Dirfile-Creator-TEST.csproj", "{B2EEE62E-EF47-47E1-9F07-33D4DC95E30A}"
@@ -45,6 +47,10 @@ Global
 		{B2EEE62E-EF47-47E1-9F07-33D4DC95E30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2EEE62E-EF47-47E1-9F07-33D4DC95E30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2EEE62E-EF47-47E1-9F07-33D4DC95E30A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61FA5464-C578-4F6A-B370-519F376615BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61FA5464-C578-4F6A-B370-519F376615BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61FA5464-C578-4F6A-B370-519F376615BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61FA5464-C578-4F6A-B370-519F376615BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{A99DA645-C856-419A-8CC1-AFE8047A527E} = {08297B7E-FA78-4851-ACA9-74CABA7A8214}
 		{AE990C1F-A87F-4160-A255-F722EA2C9B0F} = {5EE73224-A76D-4BEB-BC92-3297F1AE97D7}
 		{B2EEE62E-EF47-47E1-9F07-33D4DC95E30A} = {5EE73224-A76D-4BEB-BC92-3297F1AE97D7}
+		{61FA5464-C578-4F6A-B370-519F376615BC} = {08297B7E-FA78-4851-ACA9-74CABA7A8214}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {078CF34E-5EC9-4E3C-BB0D-8BD389B60BB5}

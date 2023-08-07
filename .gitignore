@@ -10,6 +10,9 @@ Dirfile-lib/output/
 Dirfile-Creator/bin/
 Dirfile-Creator/obj/
 
+Dirfile-Creator_Graphical/bin/
+Dirfile-Creator_Graphical/obj/
+
 ## Tests ##
 TestResults/
 Dirfile-lib-TEST/bin/
