@@ -30,8 +30,13 @@ namespace Dirfile_Creator.Examples
                 // First way is to call CreateDirector method, where we specify name of a new director.
                 dirfileContext.CreateDirector("testDirectory");
 
+                // Same applies for files.
+                dirfileContext.CreateFiler("testFile.txt");
+
                 // Or second way is to call Create method, here we need to use slash, based on our SlashMode, before the name.
                 dirfileContext.Create("\\testDirectory2");
+
+                dirfileContext.Create("testFile2.txt");
             }
         }
 
@@ -44,7 +49,7 @@ namespace Dirfile_Creator.Examples
             string actualDirectory = Directory.GetCurrentDirectory();
             
             // Creates 2 directories in the same path with files
-            var createString = "/testDirectory3/testFile1.txt :> testDirectory4/testFile2.json";
+            var createString = "/testDirectory3/testFile1.txt :> testDirectory4 > testFile2.json";
 
             using (var dirfileContext = new DirfileContext(actualDirectory, Mode.Backward))
             {

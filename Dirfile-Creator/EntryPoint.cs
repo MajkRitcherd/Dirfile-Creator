@@ -9,17 +9,17 @@ namespace Creator
     {
         public static void Main()
         {
-            //
-            //RelativeCreation.RunExampleOne();
+            // Simple example using Relative path.
+            RelativeCreation.RunExampleOne();
 
-            //
+            // More advanced example using Relative path.
             RelativeCreation.RunExampleTwo();
 
-            //
-            //AbsoluteCreation.RunExampleOne();
+            // Simple example using Absolute path.
+            AbsoluteCreation.RunExampleOne();
 
-            //
-            //AbsoluteCreation.RunExampleTwo();
+            // More advanced example using Absolute path.
+            AbsoluteCreation.RunExampleTwo();
         }
     }
 }

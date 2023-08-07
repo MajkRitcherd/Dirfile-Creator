@@ -24,9 +24,13 @@ namespace Dirfile_Creator.Examples
             // No need to pass path as for relative context
             using (var dirfileContext = new DirfileContext())
             {
+                // Need to set Current director (Works only as relative path)
+                dirfileContext.ChangeCurrentDirector(Directory.GetCurrentDirectory());
                 dirfileContext.CreateDirector("testDirectory1");
+                dirfileContext.CreateFiler("testFile1.txt");
 
-                dirfileContext.Create("\\testDirectory2");
+                dirfileContext.Create(Directory.GetCurrentDirectory() + "\\testDirectory2");
+                dirfileContext.Create(Directory.GetCurrentDirectory() + "testFile2.txt");
             }
         }
 
@@ -40,7 +44,7 @@ namespace Dirfile_Creator.Examples
 
             using (var dirfileContext = new DirfileContext(Mode.Forward)) // Possible to pass SlashMode
             {
-                dirfileContext.Create(createDirfiles);
+                dirfileContext.Create(Directory.GetCurrentDirectory().Replace('\\', '/') + createDirfiles);
 
                 // Also it is possible to switch between PathModes using, see Documentation.
                 dirfileContext.SwitchPathMode();
