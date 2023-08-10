@@ -8,4 +8,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Content\MKBlack.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Content\MKBlack.ico" />
+  </ItemGroup>
+
 </Project>
