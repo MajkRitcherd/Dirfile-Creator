@@ -38,12 +38,12 @@ namespace Dirfile_Creator_Graphical.Views
         /// <param name="e">Event arguments.</param>
         private void ChangePathMode(object sender, RoutedEventArgs e)
         {
-            if (RelativeRadioButton.IsChecked.HasValue)
+            if (AbsoluteRadioButton.IsChecked.HasValue)
             {
-                if (RelativeRadioButton.IsChecked.Value)
-                    this.Model.PathMode = PathMode.Relative;
-                else
+                if (AbsoluteRadioButton.IsChecked.Value)
                     this.Model.PathMode = PathMode.Absolute;
+                else
+                    this.Model.PathMode = PathMode.Relative;
             }
         }
 
@@ -70,6 +70,8 @@ namespace Dirfile_Creator_Graphical.Views
         /// <param name="e">Event arguments.</param>
         private void CreateDirFiles(object sender, RoutedEventArgs e)
         {
+            this.Model.RelativePath = RelativePathInput.Text;
+
             this.Model.CreateDirfiles(InputField.Text);
         }
     }

@@ -19,15 +19,41 @@
         </Grid.ColumnDefinitions>
 
         <!--Input field-->
-        <TextBox x:Name="InputField" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Width="520" Height="209" TextChanged="InputChanged"/>
-        
-        <!--Modes--> 
+        <TextBox x:Name="InputField" HorizontalAlignment="Center" VerticalAlignment="Center" Width="520" Height="209" TextWrapping="NoWrap"/>
+
+        <!--Modes-->
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
         <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Backward" x:Name="BackwardRadioButton" HorizontalAlignment="Left" Margin="57,44,0,0" VerticalAlignment="Top" IsChecked="true" Checked="ChangeSlashMode"/>
         <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Forward" HorizontalAlignment="Left" Margin="57,64,0,0" VerticalAlignment="Top" Checked="ChangeSlashMode"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" Text="Path mode" VerticalAlignment="Top"/>
-        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Relative" x:Name="RelativeRadioButton" HorizontalAlignment="Left" Margin="57,105,0,0" VerticalAlignment="Top" IsChecked="True" Checked="ChangePathMode"/>
-        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Absolute" HorizontalAlignment="Center" Margin="0,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
+        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Absolute" x:Name="AbsoluteRadioButton" HorizontalAlignment="Left" Margin="57,105,0,0" VerticalAlignment="Top" IsChecked="True" Checked="ChangePathMode"/>
+        <RadioButton Grid.Column="1" GroupName="PathGroup" Name="RelativeRadioButton" Content="Relative" HorizontalAlignment="Left" Margin="57,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
+        
+        <!--Show path input on relative mode-->
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" VerticalAlignment="Top" Width="35">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Center" Margin="0,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160">
+            <TextBox.Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
 
         <!--Bottom buttons-->
         <Button Grid.Column="1" Content="Create DirFiles" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="CreateDirFiles"/>
