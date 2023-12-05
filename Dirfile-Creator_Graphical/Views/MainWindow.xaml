@@ -5,17 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Dirfile-Creator"
-        Width="1280" Height="720"
+        Width="720" Height="360"
         Icon="../Content/MKBlack.ico">
     <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF08545A" Offset="0"/>
-                <GradientStop Color="#FF0F808E" Offset="0.57"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        <TextBox HorizontalAlignment="Center" Height="190" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Margin="0, 0, 0, 100" Width="903" Background="{x:Null}"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="1052,0,0,50" VerticalAlignment="Bottom"/>
-        <TextBlock HorizontalAlignment="Center" Height="269" Margin="0,50,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="904"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
+        <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Backward" x:Name="BackwardRadioButton" HorizontalAlignment="Left" Margin="57,44,0,0" VerticalAlignment="Top" IsChecked="true" Checked="ChangeSlashMode"/>
+        <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Forward" HorizontalAlignment="Left" Margin="57,64,0,0" VerticalAlignment="Top" Checked="ChangeSlashMode"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" Text="Path mode" VerticalAlignment="Top"/>
+        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Relative" x:Name="RelativeRadioButton" HorizontalAlignment="Left" Margin="57,105,0,0" VerticalAlignment="Top" IsChecked="True" Checked="ChangePathMode"/>
+        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Absolute" HorizontalAlignment="Center" Margin="0,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
+        <TextBox HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="476" Height="187" Margin="0,10,0,0" Grid.RowSpan="2"/>
+        <Button Grid.Column="1" Content="Create" HorizontalAlignment="Left" Margin="73,123,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+
+
     </Grid>
 </Window>

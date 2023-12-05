@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dirfile-lib\Dirfile-lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Content\MKBlack.ico" />
   </ItemGroup>
 
