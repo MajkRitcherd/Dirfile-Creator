@@ -22,6 +22,7 @@ namespace Dirfile_Creator_Graphical.Views
         public MainWindow()
         {
             this.Model = new MainWindowModel();
+
             InitializeComponent();
         }
 
@@ -60,6 +61,16 @@ namespace Dirfile_Creator_Graphical.Views
                 else
                     this.Model.SlashMode = SlashMode.Forward;
             }
+        }
+
+        /// <summary>
+        /// Creates dirfiles from input string.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event arguments.</param>
+        private void CreateDirFiles(object sender, RoutedEventArgs e)
+        {
+            this.Model.CreateDirfiles(InputField.Text);
         }
     }
 }
