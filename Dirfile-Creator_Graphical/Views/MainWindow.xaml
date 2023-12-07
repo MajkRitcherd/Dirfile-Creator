@@ -67,7 +67,8 @@
 
         <!--Input field-->
         <TextBox x:Name="InputField" HorizontalAlignment="Center" VerticalAlignment="Center" Width="520" Height="209" TextWrapping="NoWrap"
-                 Style="{StaticResource BorderInputField}"/>
+                 Style="{StaticResource BorderInputField}"
+                 TextChanged="InputFieldTextChanged"/>
 
         <!--Modes-->
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
@@ -83,7 +84,8 @@
 
 
         <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Center" Margin="0,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"
-                 Style="{StaticResource RelativeTextBox}"/>
+                 Style="{StaticResource RelativeTextBox}"
+                 TextChanged="RelativeInputFieldTextChanged"/>
 
         <!--Bottom buttons-->
         <Button Grid.Column="1" Content="Create DirFiles" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="CreateDirFiles"/>

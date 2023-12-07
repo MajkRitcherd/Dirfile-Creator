@@ -6,7 +6,6 @@
 //                              Last change: 05/12/2023     \\
 
 using System;
-using System.ComponentModel;
 using System.Windows;
 using Dirfile_Creator_Graphical.Models;
 using Dirfile_lib.API.Extraction.Modes;
@@ -98,21 +97,43 @@ namespace Dirfile_Creator_Graphical.Views
         private bool InputsNonEmpty()
         {
             var isNonEmptyInputField = !string.IsNullOrEmpty(this.InputField.Text);
-            
+
             if (!isNonEmptyInputField)
             {
-                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString());
+                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), true);
             }
 
             if (this.Model.PathMode == PathMode.Relative)
             {
-                if (string.IsNullOrEmpty(this.Model.RelativePath))
-                    this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString());
+                if (string.IsNullOrEmpty(this.RelativePathInput.Text))
+                    this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString(), true);
 
                 return !string.IsNullOrEmpty(this.Model.RelativePath) && isNonEmptyInputField;
             }
 
             return isNonEmptyInputField;
+        }
+
+        /// <summary>
+        /// Handle text changed event in input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="args">Event arguments.</param>
+        private void InputFieldTextChanged(object sender, RoutedEventArgs args)
+        {
+            if (this.Model.IsEmptyInputField && !string.IsNullOrEmpty(this.InputField.Text))
+                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), false);
+        }
+
+        /// <summary>
+        /// Handle text changed event in relative input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="args">Event args.</param>
+        private void RelativeInputFieldTextChanged(object sender, RoutedEventArgs args)
+        {
+            if (this.Model.IsEmptyRelativeInputField && !string.IsNullOrEmpty(this.RelativePathInput.Text))
+                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString(), false);
         }
     }
 }

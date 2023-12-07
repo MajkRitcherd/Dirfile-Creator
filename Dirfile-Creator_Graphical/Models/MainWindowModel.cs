@@ -111,13 +111,14 @@ namespace Dirfile_Creator_Graphical.Models
         /// Sets IsEmpty property by passed property name.
         /// </summary>
         /// <param name="propertyName">Name of property.</param>
-        public void SetIsEmpty(string propertyName)
+        /// <param name="isEmpty">True, if set the property to true, otherwise false.</param>
+        public void SetIsEmpty(string propertyName, bool isEmpty)
         {
             var prop = this.GetType().GetProperty(propertyName);
 
             if (prop != null)
             {
-                prop.SetValue(this, true);
+                prop.SetValue(this, isEmpty);
                 this.OnPropertyChanged(propertyName);
             }
         }
