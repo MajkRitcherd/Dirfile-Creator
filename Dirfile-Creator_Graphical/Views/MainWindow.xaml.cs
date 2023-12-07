@@ -5,6 +5,8 @@
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
 //                              Last change: 05/12/2023     \\
 
+using System;
+using System.ComponentModel;
 using System.Windows;
 using Dirfile_Creator_Graphical.Models;
 using Dirfile_lib.API.Extraction.Modes;
@@ -22,6 +24,7 @@ namespace Dirfile_Creator_Graphical.Views
         public MainWindow()
         {
             this.Model = new MainWindowModel();
+            DataContext = this.Model;
 
             InitializeComponent();
         }
@@ -70,9 +73,46 @@ namespace Dirfile_Creator_Graphical.Views
         /// <param name="e">Event arguments.</param>
         private void CreateDirFiles(object sender, RoutedEventArgs e)
         {
-            this.Model.RelativePath = RelativePathInput.Text;
+            if (!this.InputsNonEmpty())
+            {
+                MessageBox.Show("Input fields can't be empty!");
+                return;
+            }
 
-            this.Model.CreateDirfiles(InputField.Text);
+            try
+            {
+                this.Model.RelativePath = RelativePathInput.Text;
+
+                this.Model.CreateDirfiles(InputField.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Checks, whether or not the input fields (TextBoxes) are empty.
+        /// </summary>
+        /// <returns>True, if inputs are not empty, otherwise false.</returns>
+        private bool InputsNonEmpty()
+        {
+            var isNonEmptyInputField = !string.IsNullOrEmpty(this.InputField.Text);
+            
+            if (!isNonEmptyInputField)
+            {
+                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString());
+            }
+
+            if (this.Model.PathMode == PathMode.Relative)
+            {
+                if (string.IsNullOrEmpty(this.Model.RelativePath))
+                    this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString());
+
+                return !string.IsNullOrEmpty(this.Model.RelativePath) && isNonEmptyInputField;
+            }
+
+            return isNonEmptyInputField;
         }
     }
 }

@@ -7,19 +7,67 @@
         Title="Dirfile-Creator"
         Width="720" Height="360"
         Icon="../Content/MKBlack.ico">
+
+    <Window.Resources>
+        <!-- Style for text block (Whether or not it should be visible) -->
+        <Style x:Key="RelativeTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for text box (Whether or not it should be visible) -->
+        <Style x:Key="RelativeTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEmptyRelativeInputField}" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for Input field border (If was empty while when clicked on Create button, border switches to red) -->
+        <Style x:Key="BorderInputField" TargetType="{x:Type TextBox}">
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEmptyInputField}" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for Input field border (If was empty while when clicked on Create button, border switches to red) -->
+        <Style x:Key="BorderRelativeInputField" TargetType="{x:Type TextBox}">
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEmptyRelativeInputField}" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
+        <!-- Grid definition -->
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <!--Input field-->
-        <TextBox x:Name="InputField" HorizontalAlignment="Center" VerticalAlignment="Center" Width="520" Height="209" TextWrapping="NoWrap"/>
+        <TextBox x:Name="InputField" HorizontalAlignment="Center" VerticalAlignment="Center" Width="520" Height="209" TextWrapping="NoWrap"
+                 Style="{StaticResource BorderInputField}"/>
 
         <!--Modes-->
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
@@ -30,30 +78,12 @@
         <RadioButton Grid.Column="1" GroupName="PathGroup" Name="RelativeRadioButton" Content="Relative" HorizontalAlignment="Left" Margin="57,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
         
         <!--Show path input on relative mode-->
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" VerticalAlignment="Top" Width="35">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Center" Margin="0,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" VerticalAlignment="Top" Width="35"
+                   Style="{StaticResource RelativeTextBlock}"/>
+
+
+        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Center" Margin="0,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"
+                 Style="{StaticResource RelativeTextBox}"/>
 
         <!--Bottom buttons-->
         <Button Grid.Column="1" Content="Create DirFiles" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="CreateDirFiles"/>
