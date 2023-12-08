@@ -23,7 +23,8 @@ namespace Dirfile_lib.API
         internal DiskManager(string newDrive = "C")
         {
             foreach (var drive in this.Drives)
-                this.AvailableDrivesByLetterAndLabel.Add(new Tuple<string, string>(drive.Name.Substring(0, 1), drive.VolumeLabel), drive);
+                if (drive.IsReady)
+                    this.AvailableDrivesByLetterAndLabel.Add(new Tuple<string, string>(drive.Name.Substring(0, 1), drive.VolumeLabel), drive);
 
             this.ChangeDrive(newDrive);
         }
