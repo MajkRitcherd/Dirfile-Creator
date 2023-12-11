@@ -30,7 +30,7 @@ namespace Dirfile_lib.Utilities
             // Loops over every member of a class
             foreach (var dirfilePropertyAndIndex in dirfileExtensionProps.Select((Property, Index) => new { Property, Index }))
             {
-                if (dirfilePropertyAndIndex.Property.DeclaringType.Name != TextConsts.Props.DirfileExtensions || dirfilePropertyAndIndex.Property.Name == TextConsts.Props.Constructor)
+                if (dirfilePropertyAndIndex.Property.DeclaringType.Name != TextConsts.DirfileProps.DirfileExtensions || dirfilePropertyAndIndex.Property.Name == TextConsts.DirfileProps.Constructor)
                     continue;
 
                 // Finds DirfileExtensions class.

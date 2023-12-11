@@ -6,7 +6,7 @@
 //                              Last change: 26/04/2023     \\
 
 using System.Reflection;
-using PropConsts = Dirfile_lib.Core.Constants.Texts.Props;
+using PropConsts = Dirfile_lib.Core.Constants.Texts.DirfileProps;
 
 namespace Dirfile_lib_TEST.CoreTests
 {

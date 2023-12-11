@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 24/04/2023     \\
+//                              Last change: 11/12/2023     \\
 
 namespace Dirfile_lib.Core.Constants
 {
@@ -12,7 +12,14 @@ namespace Dirfile_lib.Core.Constants
     /// </summary>
     internal static class DefaultValues
     {
+        /// <summary>
+        /// Buffer's default size.
+        /// </summary>
         internal const int BufferSize = 4096;
+        
+        /// <summary>
+        /// Maximum filename length.
+        /// </summary>
         internal const int MaxNameLength = 30;
     }
 
@@ -21,8 +28,19 @@ namespace Dirfile_lib.Core.Constants
     /// </summary>
     internal static class RegexPatterns
     {
+        /// <summary>
+        /// Regex pattern for arguments.
+        /// </summary>
         internal const string ArgumentsPattern = "^\\\\(?>[^\\\\|<|>|*|/|:|?|\\\\||\"\"]{1,32}([\\\\|>|\"]|(:>|:\"))?)+$";
+        
+        /// <summary>
+        /// Regex pattern for Dirfile normalized (using backslash) path.
+        /// </summary>
         internal const string DirfileNormalizedPathPattern = @"^(?:[\w]\:|\\)(\\[^\\|<|>|*|/|:|?|\\||""]+[^ ])*$";
+        
+        /// <summary>
+        /// Regex pattern for Dirfile path.
+        /// </summary>
         internal const string DirfilePathPattern = @"^(?:[\w]\:|/)(/[^\\|<|>|*|/|:|?|\\||""]+[^ ])*$";
     }
 
@@ -34,14 +52,41 @@ namespace Dirfile_lib.Core.Constants
         /// <summary>
         /// Text constants related to properties.
         /// </summary>
-        internal static class Props
+        internal static class DirfileProps
         {
+            /// <summary>
+            /// Constructor property of Dirfile as a text.
+            /// </summary>
             internal const string Constructor = ".ctor";
+            
+            /// <summary>
+            /// Directory property of Dirfile as a text.
+            /// </summary>
             internal const string Directory = "Directory";
+            
+            /// <summary>
+            /// DirfileExtensions property of Dirfile as a text.
+            /// </summary>
             internal const string DirfileExtensions = "DirfileExtensions";
+            
+            /// <summary>
+            /// Exists property of Dirfile as a text.
+            /// </summary>
             internal const string Exists = "Exists";
+            
+            /// <summary>
+            /// Length property of Dirfile as a text.
+            /// </summary>
             internal const string Length = "Length";
+            
+            /// <summary>
+            /// Parent property of Dirfile as a text.
+            /// </summary>
             internal const string Parent = "Parent";
+            
+            /// <summary>
+            /// Root property of Dirfile as a text.
+            /// </summary>
             internal const string Root = "Root";
         }
     }
@@ -56,14 +101,29 @@ namespace Dirfile_lib.Core.Constants
         /// </summary>
         internal static class Characters
         {
+            /// <summary>
+            /// Back slash character.
+            /// </summary>
             internal const char BSlash = '\\';
             
+            /// <summary>
+            /// Forward slash character.
+            /// </summary>
             internal const char FSlash = '/';
             
+            /// <summary>
+            /// Colon character.
+            /// </summary>
             internal const char Colon = ':';
             
+            /// <summary>
+            /// Right arrow character.
+            /// </summary>
             internal const char RightArrow = '>';
 
+            /// <summary>
+            /// Quote character.
+            /// </summary>
             internal const char Quote = '\"';
         }
 

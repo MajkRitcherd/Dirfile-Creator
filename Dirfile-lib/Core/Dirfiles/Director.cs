@@ -133,7 +133,7 @@ namespace Dirfile_lib.Core.Dirfiles
             // Check if directory exists, if not metadata are not set
             foreach (var infoProperty in directoryInfoProperties)
             {
-                if (infoProperty.Name == TextConsts.Props.Exists)
+                if (infoProperty.Name == TextConsts.DirfileProps.Exists)
                 {
                     if (infoProperty.GetValue(directoryInfo).ToString() == false.ToString().ToLowerInvariant())
                         return;
@@ -144,7 +144,7 @@ namespace Dirfile_lib.Core.Dirfiles
             {
                 foreach (var thisProperty in thisDirectorProperties)
                 {
-                    if (thisProperty.Name == infoProperty.Name && thisProperty.Name != TextConsts.Props.Parent && thisProperty.Name != TextConsts.Props.Root)
+                    if (thisProperty.Name == infoProperty.Name && thisProperty.Name != TextConsts.DirfileProps.Parent && thisProperty.Name != TextConsts.DirfileProps.Root)
                     {
                         thisProperty.SetValue(this, infoProperty.GetValue(directoryInfo, null));
                         break;

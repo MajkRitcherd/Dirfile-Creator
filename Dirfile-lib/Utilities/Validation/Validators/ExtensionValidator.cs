@@ -34,7 +34,7 @@ namespace Dirfile_lib.Utilities.Validation
             // Loops over every member of a class
             foreach (var dirfilePropertyAndIndex in dirfileProps.Select((property, index) => new { property, index }))
             {
-                if (dirfilePropertyAndIndex.property.DeclaringType.Name != TextConsts.Props.DirfileExtensions || dirfilePropertyAndIndex.property.Name == TextConsts.Props.Constructor)
+                if (dirfilePropertyAndIndex.property.DeclaringType.Name != TextConsts.DirfileProps.DirfileExtensions || dirfilePropertyAndIndex.property.Name == TextConsts.DirfileProps.Constructor)
                     continue;
 
                 var dirfileClass = (Type)dirfileProps.Where(_ => true).ElementAt(dirfilePropertyAndIndex.index);
