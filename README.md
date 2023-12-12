@@ -19,12 +19,14 @@ This project is being developed as a side project to improve my coding skills an
 - [DirfileExtensions](#dirfileextensions)
 - [DirfileContext](#dirfilecontext)
 - [DirfileCreator](#dirfilecreator)
-- [SlashMode](#SlashMode)
-- [PathMode](#PathMode)
+- [SlashMode](#slashmode)
+- [PathMode](#pathmode)
 
 ## DirfileExtensions
 **Namespace**: Dirfile_lib.Extensions
+
 **Type**: Class containing enums
+
 **About**: 
 - Contains definition of file extensions grouped by enums. You can't create files, that are not defined in this namespace.
 
@@ -48,7 +50,9 @@ There are enums:
 
 ## DirfileContext
 **Namespace**: Dirfile_lib.API.Context
+
 **Type**: Class
+
 **About**:
 - API to create **multiple** directories with files from **one input string**.
 - Allows to create files with initial text.
@@ -59,7 +63,9 @@ There are enums:
 
 ## DirfileCreator
 **Namespace**: Dirfile_lib.API
+
 **Type**: Class
+
 **About**:
 - Has defined methods for creating and deleting directories and files.
 
@@ -91,7 +97,9 @@ There are enums:
 
 ## SlashMode
 **Namespace**: Dirfile_lib.API.Extraction.Modes
+
 **Type**: Enum
+
 **About**: 
 - Holds different types of slash mode used in [DirfileContext](#dirfilecontext).
 - Used when creating [DirfileContext](#dirfilecontext) to specify which [SlashMode](#slashmode) to use when creating directories and files.
@@ -100,7 +108,9 @@ There are enums:
 
 ## PathMode
 **Namespace**: Dirfile_lib.API.Extraction.Modes
+
 **Type**: Enum
+
 **About**: 
 - Holds different types of path mode to use in [DirfileContext](#dirfilecontext).
 - Used when creating [DirfileContext](#dirfilecontext) to specify which [PathMode](#pathmode) to use when creating directories and files.
