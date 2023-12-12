@@ -3,12 +3,15 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 05/12/2023     \\
+//                              Last change: 11/12/2023     \\
 
 using System;
 using System.Windows;
 using Dirfile_Creator_Graphical.Models;
+using Dirfile_Creator_Graphical.UIHelpers;
 using Dirfile_lib.API.Extraction.Modes;
+using Dirfile_lib.Core.Constants;
+using Ookii.Dialogs.Wpf;
 
 namespace Dirfile_Creator_Graphical.Views
 {
@@ -34,6 +37,61 @@ namespace Dirfile_Creator_Graphical.Views
         private MainWindowModel Model { get; set; }
 
         /// <summary>
+        /// Adds Dirfile's create operation to Input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
+        private void ButtonClick_CreateDirfile(object sender, RoutedEventArgs e)
+        {
+            this.InputField.AddText($" {DirFile.Operations.Next} ");
+        }
+
+        /// <summary>
+        /// Adds Dirfile's end of text operations to Input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Events args.</param>
+        private void ButtonClick_EndOfText(object sender, RoutedEventArgs e)
+        {
+            this.InputField.AddText(DirFile.Operations.EndOfText);
+        }
+
+        /// <summary>
+        /// Adds Dirfile's redirect to previous directory and create Dirfile operation to Input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Events args.</param>
+        private void ButtonClick_RedirectBackAndCreateDirfile(object sender, RoutedEventArgs e)
+        {
+            this.InputField.AddText($" {DirFile.Operations.Prev} ");
+        }
+
+        /// <summary>
+        /// Adds Dirfile's create operation in the last dirfile to Input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
+        private void ButtonClick_RedirectToLastAndCreateDirfile(object sender, RoutedEventArgs e)
+        {
+            const string changeOperation = DirFile.Operations.Change;
+
+            var useBSlash = this.Model.DirfileModel.SlashMode == SlashMode.Backward;
+            var textToAdd = useBSlash ? changeOperation : changeOperation.Replace('\\', '/');
+
+            this.InputField.AddText(textToAdd);
+        }
+
+        /// <summary>
+        /// Adds Dirfile's start of text operations to Input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Events args.</param>
+        private void ButtonClick_StartOfText(object sender, RoutedEventArgs e)
+        {
+            this.InputField.AddText(DirFile.Operations.StartOfText);
+        }
+
+        /// <summary>
         /// Changes the path mode to be used in context.
         /// </summary>
         /// <param name="sender">Sender.</param>
@@ -43,9 +101,9 @@ namespace Dirfile_Creator_Graphical.Views
             if (AbsoluteRadioButton.IsChecked.HasValue)
             {
                 if (AbsoluteRadioButton.IsChecked.Value)
-                    this.Model.PathMode = PathMode.Absolute;
+                    this.Model.DirfileModel.PathMode = PathMode.Absolute;
                 else
-                    this.Model.PathMode = PathMode.Relative;
+                    this.Model.DirfileModel.PathMode = PathMode.Relative;
             }
         }
 
@@ -59,9 +117,9 @@ namespace Dirfile_Creator_Graphical.Views
             if (BackwardRadioButton.IsChecked.HasValue)
             {
                 if (BackwardRadioButton.IsChecked.Value)
-                    this.Model.SlashMode = SlashMode.Backward;
+                    this.Model.DirfileModel.SlashMode = SlashMode.Backward;
                 else
-                    this.Model.SlashMode = SlashMode.Forward;
+                    this.Model.DirfileModel.SlashMode = SlashMode.Forward;
             }
         }
 
@@ -82,12 +140,23 @@ namespace Dirfile_Creator_Graphical.Views
             {
                 this.Model.RelativePath = RelativePathInput.Text;
 
-                this.Model.CreateDirfiles(InputField.Text);
+                this.Model.DirfileModel.CreateDirfiles(InputField.Text, RelativePathInput.Text);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Handle text changed event in input field.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="args">Event arguments.</param>
+        private void InputFieldTextChanged(object sender, RoutedEventArgs args)
+        {
+            if (this.Model.IsEmptyInputField && !string.IsNullOrEmpty(this.InputField.Text))
+                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), false);
         }
 
         /// <summary>
@@ -103,7 +172,7 @@ namespace Dirfile_Creator_Graphical.Views
                 this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), true);
             }
 
-            if (this.Model.PathMode == PathMode.Relative)
+            if (this.Model.DirfileModel.PathMode == PathMode.Relative)
             {
                 if (string.IsNullOrEmpty(this.RelativePathInput.Text))
                     this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString(), true);
@@ -115,14 +184,18 @@ namespace Dirfile_Creator_Graphical.Views
         }
 
         /// <summary>
-        /// Handle text changed event in input field.
+        /// Opens folder browser dialog and sets path to Relative path input.
         /// </summary>
         /// <param name="sender">Sender.</param>
-        /// <param name="args">Event arguments.</param>
-        private void InputFieldTextChanged(object sender, RoutedEventArgs args)
+        /// <param name="e">Mouse button event args.</param>
+        private void MouseDoubleClick_ChooseRelativePath(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (this.Model.IsEmptyInputField && !string.IsNullOrEmpty(this.InputField.Text))
-                this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), false);
+            var folderBrowserDialog = new VistaFolderBrowserDialog();
+            bool? result = folderBrowserDialog.ShowDialog();
+
+            // If user clicks OK button
+            if (result == true)
+                this.RelativePathInput.Text = folderBrowserDialog.SelectedPath;
         }
 
         /// <summary>

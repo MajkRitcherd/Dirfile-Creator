@@ -94,7 +94,7 @@ namespace Dirfile_lib.Core.Constants
     /// <summary>
     /// Dirfile constants
     /// </summary>
-    internal static class DirFile
+    public static class DirFile
     {
         /// <summary>
         /// Character constants.
@@ -130,32 +130,32 @@ namespace Dirfile_lib.Core.Constants
         /// <summary>
         /// Holds dirfile operation constants.
         /// </summary>
-        internal static class Operations
+        public static class Operations
         {
             /// <summary>
             /// Start of initial text;
             /// </summary>
-            internal const string StartOfText = ":\"";
+            public const string StartOfText = ":\"";
 
             /// <summary>
             /// End of inital text.
             /// </summary>
-            internal const string EndOfText = "\"";
+            public const string EndOfText = "\"";
 
             /// <summary>
             /// Director change to child.
             /// </summary>
-            internal const string Change = "\\";
+            public const string Change = "\\";
 
             /// <summary>
             /// Next dirfile to create.
             /// </summary>
-            internal const string Next = ">";
+            public const string Next = ">";
 
             /// <summary>
             /// Director change to parent.
             /// </summary>
-            internal const string Prev = ":>";
+            public const string Prev = ":>";
         }
 
         /// <summary>

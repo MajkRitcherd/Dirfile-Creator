@@ -53,7 +53,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <!-- Grid definition -->
         <Grid.RowDefinitions>
@@ -66,9 +66,9 @@
         </Grid.ColumnDefinitions>
 
         <!--Input field-->
-        <TextBox x:Name="InputField" HorizontalAlignment="Center" VerticalAlignment="Center" Width="520" Height="209" TextWrapping="NoWrap"
+        <TextBox x:Name="InputField" TextWrapping="NoWrap"
                  Style="{StaticResource BorderInputField}"
-                 TextChanged="InputFieldTextChanged"/>
+                 TextChanged="InputFieldTextChanged" Margin="20,20,20,20"/>
 
         <!--Modes-->
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
@@ -77,18 +77,26 @@
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" Text="Path mode" VerticalAlignment="Top"/>
         <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Absolute" x:Name="AbsoluteRadioButton" HorizontalAlignment="Left" Margin="57,105,0,0" VerticalAlignment="Top" IsChecked="True" Checked="ChangePathMode"/>
         <RadioButton Grid.Column="1" GroupName="PathGroup" Name="RelativeRadioButton" Content="Relative" HorizontalAlignment="Left" Margin="57,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
-        
+
         <!--Show path input on relative mode-->
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" VerticalAlignment="Top" Width="35"
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" Width="35" Height="16" VerticalAlignment="Top"
                    Style="{StaticResource RelativeTextBlock}"/>
 
 
-        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Center" Margin="0,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"
-                 Style="{StaticResource RelativeTextBox}"
-                 TextChanged="RelativeInputFieldTextChanged"/>
+        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Left" Margin="10,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"
+                 MouseDoubleClick="MouseDoubleClick_ChooseRelativePath"
+                 TextChanged="RelativeInputFieldTextChanged"
+                 Style="{StaticResource RelativeTextBox}"/>
 
         <!--Bottom buttons-->
         <Button Grid.Column="1" Content="Create DirFiles" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="CreateDirFiles"/>
 
+        <!-- Dirfile buttons for help when creating string -->
+        <Button Content="Redirect and create" Margin="20,38,0,0" Click="ButtonClick_RedirectToLastAndCreateDirfile" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106"/>
+        <Button Content="Create" Margin="131,38,0,0" RenderTransformOrigin="0.023,0.511" Click="ButtonClick_CreateDirfile" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38"/>
+        <Button Content="Redirect back and create" Margin="174,38,0,0" Click="ButtonClick_RedirectBackAndCreateDirfile" Grid.Row="1" HorizontalAlignment="Left" Width="134" Height="20" VerticalAlignment="Top"/>
+        <Button Content="Start of text" Margin="313,38,0,0" Click="ButtonClick_StartOfText" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66"/>
+        <Button Content="End of text" Margin="384,38,0,0" Click="ButtonClick_EndOfText" Grid.Row="1" HorizontalAlignment="Left" Width="61" Height="20" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="20,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Dirfile operations" VerticalAlignment="Top"/>
     </Grid>
 </Window>
