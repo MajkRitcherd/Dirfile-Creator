@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 11/12/2023     \\
+//                              Last change: 12/12/2023     \\
 
 using System;
 using System.Windows;
@@ -20,6 +20,16 @@ namespace Dirfile_Creator_Graphical.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Back slash constant.
+        /// </summary>
+        private const char BSlash = '\\';
+
+        /// <summary>
+        /// Forward slash constant.
+        /// </summary>
+        private const char FSlash = '/';
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
@@ -76,7 +86,7 @@ namespace Dirfile_Creator_Graphical.Views
             const string changeOperation = DirFile.Operations.Change;
 
             var useBSlash = this.Model.DirfileModel.SlashMode == SlashMode.Backward;
-            var textToAdd = useBSlash ? changeOperation : changeOperation.Replace('\\', '/');
+            var textToAdd = useBSlash ? changeOperation : changeOperation.Replace(BSlash, FSlash);
 
             this.InputField.AddText(textToAdd);
         }
@@ -108,7 +118,26 @@ namespace Dirfile_Creator_Graphical.Views
         }
 
         /// <summary>
-        /// Changes the slash mode to be used in context.
+        /// Changes slashes in the Input field and relative path input field.
+        /// </summary>
+        private void ChangeSlashes()
+        {
+            var isFSlash = this.Model.DirfileModel.SlashMode == SlashMode.Forward;
+            var oldSlash = isFSlash ? BSlash : FSlash;
+            var newSlash = isFSlash ? FSlash : BSlash;
+
+            // Replace slashes in the Input field, if there's any text
+            if (this.InputField != null && !string.IsNullOrEmpty(this.InputField.Text))
+                this.InputField.Text = this.InputField.Text.Replace(oldSlash, newSlash);
+
+            // Replace slashes in the relative path input field, if there's any text
+            if (this.RelativePathInput != null && !string.IsNullOrEmpty(this.RelativePathInput.Text))
+                this.RelativePathInput.Text = this.RelativePathInput.Text.Replace(oldSlash, newSlash);
+        }
+
+        /// <summary>
+        /// Changes the slash mode to be used in context. <br />
+        /// Also it changes used slashes in the Input field and relative input path, if there's any text.
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event arguments.</param>
@@ -121,6 +150,8 @@ namespace Dirfile_Creator_Graphical.Views
                 else
                     this.Model.DirfileModel.SlashMode = SlashMode.Forward;
             }
+
+            this.ChangeSlashes();
         }
 
         /// <summary>
@@ -130,9 +161,9 @@ namespace Dirfile_Creator_Graphical.Views
         /// <param name="e">Event arguments.</param>
         private void CreateDirFiles(object sender, RoutedEventArgs e)
         {
-            if (!this.InputsNonEmpty())
+            if (!this.InputsNonEmpty(out string msg))
             {
-                MessageBox.Show("Input fields can't be empty!");
+                MessageBox.Show("When creating dirfiles, an error occurred:\n" + msg);
                 return;
             }
 
@@ -141,10 +172,12 @@ namespace Dirfile_Creator_Graphical.Views
                 this.Model.RelativePath = RelativePathInput.Text;
 
                 this.Model.DirfileModel.CreateDirfiles(InputField.Text, RelativePathInput.Text);
+
+                MessageBox.Show("Dirfiles successfully created.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"An internal error occured:\nMessage: \"{ex.Message}\"");
             }
         }
 
@@ -163,21 +196,32 @@ namespace Dirfile_Creator_Graphical.Views
         /// Checks, whether or not the input fields (TextBoxes) are empty.
         /// </summary>
         /// <returns>True, if inputs are not empty, otherwise false.</returns>
-        private bool InputsNonEmpty()
+        private bool InputsNonEmpty(out string msg)
         {
+            msg = string.Empty;
             var isNonEmptyInputField = !string.IsNullOrEmpty(this.InputField.Text);
 
+            // In case of empty Input field
             if (!isNonEmptyInputField)
             {
                 this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyInputField.ToString(), true);
+                msg = "Input field cannot be empty!";
             }
 
+            // In case of empty relative path input field.
             if (this.Model.DirfileModel.PathMode == PathMode.Relative)
             {
                 if (string.IsNullOrEmpty(this.RelativePathInput.Text))
+                {
                     this.Model.SetIsEmpty(MainWindowModel.IsEmptyProperties.IsEmptyRelativeInputField.ToString(), true);
 
-                return !string.IsNullOrEmpty(this.Model.RelativePath) && isNonEmptyInputField;
+                    if (isNonEmptyInputField)
+                        msg = "Relative path input cannot be empty!";
+                    else
+                        msg = "Input field and relative path input cannot be empty!";
+                }
+
+                return !this.Model.IsEmptyRelativeInputField && isNonEmptyInputField;
             }
 
             return isNonEmptyInputField;
@@ -195,7 +239,14 @@ namespace Dirfile_Creator_Graphical.Views
 
             // If user clicks OK button
             if (result == true)
-                this.RelativePathInput.Text = folderBrowserDialog.SelectedPath;
+            {
+                var relativePath = folderBrowserDialog.SelectedPath;
+
+                if (this.Model.DirfileModel.SlashMode == SlashMode.Forward)
+                    relativePath = relativePath.Replace(BSlash, FSlash);
+
+                this.RelativePathInput.Text = relativePath;
+            }
         }
 
         /// <summary>

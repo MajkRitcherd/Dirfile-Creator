@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Dirfile_Creator_Graphical.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Dirfile-Creator"
@@ -11,46 +11,66 @@
     <Window.Resources>
         <!-- Style for text block (Whether or not it should be visible) -->
         <Style x:Key="RelativeTextBlock" TargetType="{x:Type TextBlock}">
-            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
-                    <Setter Property="Visibility" Value="Visible"/>
+                    <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <!-- Style for text box (Whether or not it should be visible) -->
         <Style x:Key="RelativeTextBox" TargetType="{x:Type TextBox}">
-            <Setter Property="Visibility" Value="Hidden"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=RelativeRadioButton, Path=IsChecked}" Value="True">
-                    <Setter Property="Visibility" Value="Visible"/>
+                    <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsEmptyRelativeInputField}" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderBrush" Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <!-- Style for Input field border (If was empty while when clicked on Create button, border switches to red) -->
         <Style x:Key="BorderInputField" TargetType="{x:Type TextBox}">
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="Gray" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsEmptyInputField}" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderBrush" Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <!-- Style for Input field border (If was empty while when clicked on Create button, border switches to red) -->
         <Style x:Key="BorderRelativeInputField" TargetType="{x:Type TextBox}">
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="Gray" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsEmptyRelativeInputField}" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderBrush" Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+
+        <!-- DirFile button style (Buttons under DirFile operations text) -->
+        <Style x:Key="DirFileButtonStyle" TargetType="{x:Type Button}">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4" />
+                </Style>
+            </Style.Resources>
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <!-- Tooltip style for DirFile button's tooltips -->
+        <Style x:Key="TooltipStyle" TargetType="{x:Type ToolTip}">
+            <Setter Property="HasDropShadow" Value="True" />
+            <Setter Property="Placement" Value="Top" />
+            <Setter Property="VerticalOffset" Value="4" />
         </Style>
     </Window.Resources>
 
@@ -65,38 +85,123 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <!--Input field-->
-        <TextBox x:Name="InputField" TextWrapping="NoWrap"
+        <!-- Input field -->
+        <TextBox x:Name="InputField"
+                 TextChanged="InputFieldTextChanged"
                  Style="{StaticResource BorderInputField}"
-                 TextChanged="InputFieldTextChanged" Margin="20,20,20,20"/>
+                 Margin="20,20,20,20"
+                 TextWrapping="Wrap" AcceptsReturn="True">
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="10" />
+                </Style>
+            </TextBox.Resources>
+        </TextBox>
 
-        <!--Modes-->
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="Slash mode" VerticalAlignment="Top"/>
-        <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Backward" x:Name="BackwardRadioButton" HorizontalAlignment="Left" Margin="57,44,0,0" VerticalAlignment="Top" IsChecked="true" Checked="ChangeSlashMode"/>
-        <RadioButton Grid.Column="1" GroupName="SlashGroup" Content="Forward" HorizontalAlignment="Left" Margin="57,64,0,0" VerticalAlignment="Top" Checked="ChangeSlashMode"/>
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" Text="Path mode" VerticalAlignment="Top"/>
-        <RadioButton Grid.Column="1" GroupName="PathGroup" Content="Absolute" x:Name="AbsoluteRadioButton" HorizontalAlignment="Left" Margin="57,105,0,0" VerticalAlignment="Top" IsChecked="True" Checked="ChangePathMode"/>
-        <RadioButton Grid.Column="1" GroupName="PathGroup" Name="RelativeRadioButton" Content="Relative" HorizontalAlignment="Left" Margin="57,125,0,0" VerticalAlignment="Top" Checked="ChangePathMode"/>
+        <!-- Modes -->
+        <!-- Slash -->
+        <TextBlock Text="Slash mode"
+                   Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,23,0,0" 
+                   TextWrapping="Wrap" />
+
+        <RadioButton x:Name="BackwardRadioButton" Content="Backward" GroupName="SlashGroup"
+                     Checked="ChangeSlashMode" IsChecked="true"
+                     Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,44,0,0" />
+
+        <RadioButton Content="Forward" GroupName="SlashGroup"
+                     Checked="ChangeSlashMode"
+                     Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,64,0,0" />
+
+        <!-- Path -->
+        <TextBlock Text="Path mode"
+                   Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,84,0,0"
+                   TextWrapping="Wrap" />
+
+        <RadioButton x:Name="AbsoluteRadioButton" Content="Absolute" GroupName="PathGroup"
+                     Checked="ChangePathMode" IsChecked="True"
+                     Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,105,0,0" />
+
+        <RadioButton Content="Relative" GroupName="PathGroup" Name="RelativeRadioButton"
+                     Checked="ChangePathMode"
+                     Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,125,0,0" />
 
         <!--Show path input on relative mode-->
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,149,0,0" TextWrapping="Wrap" Text="Path:" TextAlignment="Center" Width="35" Height="16" VerticalAlignment="Top"
-                   Style="{StaticResource RelativeTextBlock}"/>
+        <TextBlock Text="Path:"
+                   Style="{StaticResource RelativeTextBlock}"
+                   Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,149,0,0" Width="35" Height="16"
+                   TextWrapping="Wrap"  TextAlignment="Center" />
 
-
-        <TextBox x:Name="RelativePathInput" Grid.Column="1" HorizontalAlignment="Left" Margin="10,172,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"
+        <TextBox x:Name="RelativePathInput"
                  MouseDoubleClick="MouseDoubleClick_ChooseRelativePath"
                  TextChanged="RelativeInputFieldTextChanged"
-                 Style="{StaticResource RelativeTextBox}"/>
+                 Cursor="Hand"
+                 Style="{StaticResource RelativeTextBox}" 
+                 Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,172,0,0" Width="160"
+                 TextWrapping="Wrap" />
 
         <!--Bottom buttons-->
-        <Button Grid.Column="1" Content="Create DirFiles" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="CreateDirFiles"/>
+        <Button Content="Create DirFiles"
+                Click="CreateDirFiles"
+                Style="{StaticResource DirFileButtonStyle}"
+                Grid.Column="1" Margin="50,38,0,0" />
 
         <!-- Dirfile buttons for help when creating string -->
-        <Button Content="Redirect and create" Margin="20,38,0,0" Click="ButtonClick_RedirectToLastAndCreateDirfile" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106"/>
-        <Button Content="Create" Margin="131,38,0,0" RenderTransformOrigin="0.023,0.511" Click="ButtonClick_CreateDirfile" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38"/>
-        <Button Content="Redirect back and create" Margin="174,38,0,0" Click="ButtonClick_RedirectBackAndCreateDirfile" Grid.Row="1" HorizontalAlignment="Left" Width="134" Height="20" VerticalAlignment="Top"/>
-        <Button Content="Start of text" Margin="313,38,0,0" Click="ButtonClick_StartOfText" Grid.Row="1" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66"/>
-        <Button Content="End of text" Margin="384,38,0,0" Click="ButtonClick_EndOfText" Grid.Row="1" HorizontalAlignment="Left" Width="61" Height="20" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="20,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Dirfile operations" VerticalAlignment="Top"/>
+        <TextBlock Text="Dirfile operations"
+                   Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,10,0,0" TextWrapping="Wrap" />
+
+        <Button Content="Go into and create"
+                Click="ButtonClick_RedirectToLastAndCreateDirfile"
+                Style="{StaticResource DirFileButtonStyle}"
+                Margin="20,38,0,0" Width="106">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource TooltipStyle}">
+                    Goes into last directory and creates new DirFile (after creation it stays in that directory).
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <Button Content="Create"
+                Click="ButtonClick_CreateDirfile"
+                Style="{StaticResource DirFileButtonStyle}"
+                Margin="131,38,0,0" Width="38">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource TooltipStyle}">
+                    Creates new DirFile in current directory it is in.
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <Button Content="Go back and create"
+                Click="ButtonClick_RedirectBackAndCreateDirfile"
+                Style="{StaticResource DirFileButtonStyle}"
+                Margin="174,38,0,0" Width="134">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource TooltipStyle}">
+                    Goes back to the previous directory and creates new DirFile (after creation it stays in that directory).
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <Button Content="Start of text"
+                Click="ButtonClick_StartOfText"
+                Style="{StaticResource DirFileButtonStyle}"
+                Margin="313,38,0,0" Width="66">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource TooltipStyle}">
+                    Start of File's initial text.
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <Button Content="End of text"
+                Click="ButtonClick_EndOfText"
+                Style="{StaticResource DirFileButtonStyle}"
+                Margin="384,38,0,0" Width="61">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource TooltipStyle}">
+                    End of File's initial text.
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
     </Grid>
 </Window>
