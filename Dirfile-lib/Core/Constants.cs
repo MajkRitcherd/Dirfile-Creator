@@ -31,8 +31,8 @@ namespace Dirfile_lib.Core.Constants
         /// <summary>
         /// Regex pattern for arguments.
         /// </summary>
-        internal const string ArgumentsPattern = "^\\\\(?>[^\\\\|<|>|*|/|:|?|\\\\||\"\"]{1,32}([\\\\|>|\"]|(:>|:\"))?)+$";
-        
+        internal const string ArgumentsPattern = @"^\\(?>[^<>:\""/\|\\?*]{1,32}(\\|>|:>|(:""[\w\s]*""){1})?)+$";
+
         /// <summary>
         /// Regex pattern for Dirfile normalized (using backslash) path.
         /// </summary>

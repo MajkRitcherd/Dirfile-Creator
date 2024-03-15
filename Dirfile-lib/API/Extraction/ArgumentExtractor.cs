@@ -77,47 +77,6 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
-        /// Extracts the input string.
-        /// </summary>
-        /// <exception cref="DirfileException">Throws exception when one of arguments name is not valid.</exception>
-        private void ExtractInternal()
-        {
-            // Loop over every argument in a string and
-            //  decide whether it is of a type 'Filer' or 'Director' or 'InitText'
-            while (!string.IsNullOrEmpty(this._TemporaryString))
-            {
-                var argumentText = this.ExtractArgumentAndOperations(out int startIndexOfArgumentText);
-
-                if (this.NameChecker.IsInvalid(argumentText))
-                    throw new DirfileException($"{this.NameChecker.ErrorMessage}");
-
-                if (this.OperationsInOrder.Count > 1 && this.OperationsInOrder.ElementAt(this.OperationsInOrder.Count - 2) == DirfileOperations.StartOfText)
-                {
-                    this.ExtractInitialText(ref startIndexOfArgumentText);
-
-                    if (this.OperationsInOrder.Last() != DirfileOperations.Next && this.OperationsInOrder.Last() != DirfileOperations.Prev)
-                        throw new DirfileException($"After initialization text must be either '{DirfileOperations.Next}' or '{DirfileOperations.Prev}' operation!");
-                }
-                else
-                {
-                    switch (this.NameChecker.DirfileType)
-                    {
-                        case DirfileType.Director:
-                            this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.Director, this.NameChecker.DirfileName));
-                            break;
-
-                        case DirfileType.Filer:
-                            this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.Filer, this.NameChecker.DirfileName + this.NameChecker.ExtensionName));
-                            break;
-                    }
-                }
-
-                this.RemoveArgumentAndOperations(startIndexOfArgumentText);
-                this.NameChecker.Clean();
-            }
-        }
-
-        /// <summary>
         /// Extracts one argument from argument string.
         /// </summary>
         /// <returns>String argument.</returns>
@@ -152,6 +111,63 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
+        /// Extracts inital text from inputString.
+        /// </summary>
+        /// <exception cref="DirfileException">Throws exception either if initialization text is not closed or is not followed by Dirfile operation.</exception>
+        private void ExtractInitialText()
+        {
+            if (this.OperationsInOrder.Last() == DirfileOperations.EndOfText)
+            {
+                this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.InitText, this.NameChecker.DirfileName));
+            }
+            else
+                throw new DirfileException($"Initialization text must be closed with character [{DirfileOperations.EndOfText}]!");
+        }
+
+        /// <summary>
+        /// Extracts the input string.
+        /// </summary>
+        /// <exception cref="DirfileException">Throws exception when one of arguments name is not valid.</exception>
+        private void ExtractInternal()
+        {
+            // Loop over every argument in a string and
+            //  decide whether it is of a type 'Filer' or 'Director' or 'InitText'
+            while (!string.IsNullOrEmpty(this._TemporaryString))
+            {
+                var argumentText = this.ExtractArgumentAndOperations(out int startIndexOfArgumentText);
+
+                if (this.NameChecker.IsInvalid(argumentText))
+                    throw new DirfileException($"{this.NameChecker.ErrorMessage}");
+
+                if (this.OperationsInOrder.Count > 1 && this.OperationsInOrder.ElementAt(this.OperationsInOrder.Count - 2) == DirfileOperations.StartOfText)
+                {
+                    this.ExtractInitialText();
+
+                    string operation = this.GetOperationAfterEndOfText(ref startIndexOfArgumentText);
+
+                    if (!string.IsNullOrEmpty(operation))
+                        this.OperationsInOrder.Add(operation);
+                }
+                else
+                {
+                    switch (this.NameChecker.DirfileType)
+                    {
+                        case DirfileType.Director:
+                            this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.Director, this.NameChecker.DirfileName));
+                            break;
+
+                        case DirfileType.Filer:
+                            this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.Filer, this.NameChecker.DirfileName + this.NameChecker.ExtensionName));
+                            break;
+                    }
+                }
+
+                this.RemoveArgumentAndOperations(startIndexOfArgumentText);
+                this.NameChecker.Clean();
+            }
+        }
+
+        /// <summary>
         /// Gets new argument string from index.
         /// </summary>
         /// <param name="startIndex">Index of a new substring.</param>
@@ -168,32 +184,49 @@ namespace Dirfile_lib.API.Extraction
         }
 
         /// <summary>
+        /// Gets operation followed after end of text operation.
+        /// </summary>
+        /// <param name="startIndexOfArgumentText">Start index of argument text.</param>
+        /// <returns>Operation or string.Empty.</returns>
+        private string GetOperationAfterEndOfText(ref int startIndexOfArgumentText)
+        {
+            string temporarySubstring = this._TemporaryString.Substring(startIndexOfArgumentText + 1).Trim();
+
+            if (string.IsNullOrEmpty(temporarySubstring))
+                return string.Empty;
+
+            var nextCharacter = temporarySubstring?.First();
+
+            string operation;
+            if (nextCharacter == Chars.Colon)
+                operation = $"{nextCharacter}{temporarySubstring.ElementAt(1)}";
+            else
+                operation = nextCharacter.ToString();
+
+            startIndexOfArgumentText = this._TemporaryString.IndexOf(operation);
+
+            if (this.IsOperationAfterEndOfText(operation))
+                return operation;
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Checks whether given operation is allowed after the end of text operation.
+        /// </summary>
+        /// <param name="operation">Operation.</param>
+        /// <returns>True, if operation is allowed, otherwise false.</returns>
+        private bool IsOperationAfterEndOfText(string operation)
+        {
+            return operation == DirfileOperations.Change ||
+                operation == DirfileOperations.Prev ||
+                operation == DirfileOperations.Next;
+        }
+
+        /// <summary>
         /// Removes argument from argument string.
         /// </summary>
         /// <param name="startIndex">Index of a new substring.</param>
         private void RemoveArgumentAndOperations(int startIndex) => this._TemporaryString = this.GetArgumentSubstring(startIndex).Trim();
-
-        /// <summary>
-        /// Extracts inital text from inputString.
-        /// </summary>
-        /// <param name="startIndexOfArgumentText">Start index of a new argument substring.</param>
-        /// <exception cref="DirfileException">Throws exception either if initialization text is not closed or is not followed by Dirfile operation.</exception>
-        private void ExtractInitialText(ref int startIndexOfArgumentText)
-        {
-            if (this.OperationsInOrder.Last() == DirfileOperations.EndOfText)
-            {
-                this.ArgumentsByTypeInOrder.Add(new KeyValuePair<string, string>(DirfileType.InitText, this.NameChecker.DirfileName));
-
-                var endOfTextIndex = this._TemporaryString.Trim().IndexOfAny(new char[] { Chars.BSlash, Chars.RightArrow, Chars.Colon, Chars.Quote }, 0);
-                startIndexOfArgumentText = this._TemporaryString.Trim().IndexOfAny(new char[] { Chars.BSlash, Chars.RightArrow, Chars.Colon, Chars.Quote }, endOfTextIndex + 1);
-
-                if (!string.IsNullOrWhiteSpace(this._TemporaryString.Substring(endOfTextIndex + 1, startIndexOfArgumentText - endOfTextIndex - 1)))
-                    throw new DirfileException($"After initialization text must follow operation!");
-
-                this.OperationsInOrder.Add(this._TemporaryString[startIndexOfArgumentText].ToString());
-            }
-            else
-                throw new DirfileException($"Initialization text must be closed with character [{DirfileOperations.EndOfText}]!");
-        }
     }
 }

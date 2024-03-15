@@ -46,14 +46,13 @@ namespace Dirfile_lib.Utilities.Validation
         /// Validates whether string ends with control character.
         /// </summary>
         /// <param name="stringToValidate">String to validate.</param>
-        /// <returns>True, if ends with an operator, otherwise false.</returns>
+        /// <returns>True, if ends with an operator (except DirfileOperations.EndOfText, can end with this operator), otherwise false.</returns>
         private bool EndsWithControlCharacter(string stringToValidate)
         {
             return stringToValidate.EndsWith(DirfileOperations.Change) ||
                    stringToValidate.EndsWith(DirfileOperations.Next) ||
                    stringToValidate.EndsWith(DirfileOperations.Prev) ||
-                   stringToValidate.EndsWith(DirfileOperations.StartOfText) ||
-                   stringToValidate.EndsWith(DirfileOperations.EndOfText);
+                   stringToValidate.EndsWith(DirfileOperations.StartOfText);
         }
     }
 }

@@ -19,6 +19,11 @@ namespace Dirfile_lib_TEST.APITests.ContextTests
     public class DirfileContextTests
     {
         /// <summary>
+        /// Initialized text in Filer during test.
+        /// </summary>
+        private const string TestText = "TEST INITIAL TEXT";
+
+        /// <summary>
         /// Tests <see cref="DirfileContext"/> class.
         /// </summary>
         [TestMethod]
@@ -135,11 +140,13 @@ namespace Dirfile_lib_TEST.APITests.ContextTests
             // Actual dirfile creation
             var testPaths = this.GetTestPaths(pathToTestDirectory);
 
-            context.Create($"{pathToTestDirectory}{slash}TestDir3{slash}TestDir4 > TestFile1.txt > TestDir5{slash}TestFile2.csv > TestFile3.exe :> TestFile4.xlsx :> TestComplete > TestComplete.txt");
+            context.Create($"{pathToTestDirectory}{slash}TestDir3{slash}TestDir4 > TestFile1.txt :\"{TestText}\" > TestDir5{slash}TestFile2.csv > TestFile3.exe :> TestFile4.xlsx :> TestComplete > TestComplete.txt");
 
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(0)), "TestDir3 is not created inside TestDir1!");
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(1)), "TestDir4 is not created in TestDir3!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(2)), "TestFile1.txt is not created in TestDir3!");
+            var initializedText = File.ReadAllText(testPaths.ElementAt(2));
+            Assert.AreEqual(TestText, initializedText, $"Initialized text is not the same as the one inserted!\nText in Filer: '{initializedText}', should be: {TestText}");
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(3)), "TestDir5 is not created inside TestDir3!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(4)), "TestFile2.csv was not created in TestDir5!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(5)), "TestFile3.exe was not created in TestDir5!");
@@ -193,11 +200,13 @@ namespace Dirfile_lib_TEST.APITests.ContextTests
             var testPaths = this.GetTestPaths(pathToTestDirectory);
 
             context.ChangeCurrentDirector(pathToTestDirectory);
-            context.Create($"{slash}TestDir3{slash}TestDir4 > TestFile1.txt > TestDir5{slash}TestFile2.csv > TestFile3.exe :> TestFile4.xlsx :> TestComplete > TestComplete.txt");
+            context.Create($"{slash}TestDir3{slash}TestDir4 > TestFile1.txt :\"{TestText}\" > TestDir5{slash}TestFile2.csv > TestFile3.exe :> TestFile4.xlsx :> TestComplete > TestComplete.txt");
 
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(0)), "TestDir3 is not created inside TestDir1!");
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(1)), "TestDir4 is not created in TestDir3!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(2)), "TestFile1.txt is not created in TestDir3!");
+            var initializedText = File.ReadAllText(testPaths.ElementAt(2));
+            Assert.AreEqual(TestText, initializedText, $"Initialized text is not the same as the one inserted!\nText in Filer: '{initializedText}', should be: {TestText}");
             Assert.IsTrue(Directory.Exists(testPaths.ElementAt(3)), "TestDir5 is not created inside TestDir3!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(4)), "TestFile2.csv was not created in TestDir5!");
             Assert.IsTrue(File.Exists(testPaths.ElementAt(5)), "TestFile3.exe was not created in TestDir5!");

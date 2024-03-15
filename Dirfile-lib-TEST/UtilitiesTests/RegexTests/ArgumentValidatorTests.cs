@@ -24,7 +24,7 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
             foreach (var isValidByArgument in GetTestData())
             {
                 var isArgumentValid = ArgumentValidator.Instance.IsValid(isValidByArgument.Key);
-                Assert.AreEqual(isValidByArgument.Value, isArgumentValid, $"Should be {isValidByArgument.Value}, Actual is: {isArgumentValid}");
+                Assert.AreEqual(isValidByArgument.Value, isArgumentValid, $"\nVALIDATION FAILED: '{isValidByArgument.Key}'.\nIt should be {isValidByArgument.Value}, Actual is: {isArgumentValid}");
             }
         }
 
@@ -44,6 +44,8 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
                 { "\\testDir > testFile1.txt > testFile2.txt", true },
                 { "\\testDir > testDir2 > testDir3\\ testFile1.txt > testFile2.txt :> testFile3.csv", true },
                 { "\\testDir :> testFile1.avi > aa\\ testFile2.csv > testFile3.png :> testFile4.pdf", true },
+                { "\\testDir > file.txt :\"Initial text\"", true },
+                { "\\testDir > file.txt :\"Initial text\" > file2.txt", true },
                 {
                     "\\testDir :> testFile1.avi > aa\\ testFile2.csv > testFile3.png :> testFile4.pdf > testDir2\\" +
                     " testDir3\\ testFile5.log > testFile6.cpp :> testFile7.c :> testFile8.java > testDir4\\ > testFile9.php > testFile10.jpeg" +
@@ -61,6 +63,8 @@ namespace Dirfile_lib_TEST.UtilitiesTests.RegexTests
                 { "\\testDir ?> testFile.txt", false },
                 { "\\testDir.ahoj > testDir2/ testFile1.txt", false },
                 { "\\testDir :> testFile1.avi > aa\\ testFile2.csv > testFile3.png ?> testFile4.pdf", false },
+                { "\\:\"Test\"", false },
+                { "\\testDir >:\"Initial text\"", false },
                 {
                     "\\testDir :> testFile1.avi > aa\\ testFile2.csv > testFile3.png :> testFile4.pdf > testDir2\\" +
                     " testDir3\\ testFile5.log > testFile6.cpp :> testFile7.c :> testFile8.java > testDir4\\ > testFile9.php > testFile10.jpeg" +

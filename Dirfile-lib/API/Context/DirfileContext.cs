@@ -190,7 +190,11 @@ namespace Dirfile_lib.API.Context
         /// <param name="indexOfInitTextInArguments">Index of InitText in arguments list.</param>
         private void WriteInitialTextToFiler(int indexOfInitTextInArguments)
         {
-            var filer = new Filer(this.CurrentPath + Chars.BSlash + this.ArgumentExtractor.ArgumentsByTypeInOrder.ElementAt(indexOfInitTextInArguments - 1).Value.ToString());
+            string path = this.SlashMode == SlashMode.Forward ? this.CurrentPath.Replace('/', '\\') : this.CurrentPath;
+
+            path += Chars.BSlash + this.ArgumentExtractor.ArgumentsByTypeInOrder.ElementAt(indexOfInitTextInArguments - 1).Value.ToString();
+
+            var filer = new Filer(path);
             filer.WriteString(this.ArgumentExtractor.ArgumentsByTypeInOrder.ElementAt(indexOfInitTextInArguments).Value);
         }
     }
