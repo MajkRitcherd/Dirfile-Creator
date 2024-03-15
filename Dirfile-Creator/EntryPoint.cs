@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 07/08/2023     \\
+//                              Last change: 15/03/2024     \\
 
 using Dirfile_Creator.Examples;
 
@@ -16,17 +16,16 @@ namespace Creator
     {
         public static void Main()
         {
-            //Simple example using Relative path.
-            RelativeCreation.RunExampleOne();
+            // See Run method for further information about the examples.
+            RelativeCreation.Run_BackwardMode();
 
-            // More advanced example using Relative path.
-            //RelativeCreation.RunExampleTwo();
+            //RelativeCreation.Run_ForwardMode();
 
             // Simple example using Absolute path.
-            //AbsoluteCreation.RunExampleOne();
+            //AbsoluteCreation.Run_BackwardMode();
 
             // More advanced example using Absolute path.
-            //AbsoluteCreation.RunExampleTwo();
+            //AbsoluteCreation.Run_ForwardMode();
         }
     }
 }

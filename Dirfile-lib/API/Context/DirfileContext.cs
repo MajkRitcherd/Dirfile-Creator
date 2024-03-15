@@ -3,7 +3,7 @@
 // ||    <Author>       Majk Ritcherd       </Author>    || \\
 // ||                                                    || \\
 // ||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|| \\
-//                              Last change: 24/04/2023     \\
+//                              Last change: 15/03/2024     \\
 
 using System;
 using System.Linq;
@@ -75,7 +75,7 @@ namespace Dirfile_lib.API.Context
             if (this.PathMode == PathMode.Absolute)
             {
                 this.Extractor.Extract(inputString);
-                this.ChangeCurrentDirector(this.Extractor.DirectorPath);
+                this.ChangeCurrentDirector(this.Extractor.DirectorPath.Trim());
 
                 this.CreateInternal(this.Extractor.ArgumentString);
             }
